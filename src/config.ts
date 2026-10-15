@@ -1,7 +1,7 @@
 export const config = {
   brand: import.meta.env.VITE_BRAND_NAME || 'AP Creative Studio',
   whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || '919286034026',
-  email: import.meta.env.VITE_CONTACT_EMAIL || 'anantgoyal1001@gmail.com',
+  email: import.meta.env.VITE_CONTACT_EMAIL || 'apcreativestudio0@gmail.com',
   googleFormUrl: import.meta.env.VITE_GOOGLE_FORM_URL || 'https://forms.gle/giqJYaECf3upcc6Y7',
   services: [
     { title: 'Professional Resume Creation', description: 'A sharp, story-led resume that makes your strengths easy to see.', price: 799, icon: 'file' },
