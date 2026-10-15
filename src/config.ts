@@ -1,9 +1,10 @@
 export const config = {
   brand: import.meta.env.VITE_BRAND_NAME || 'AP Creative Studio',
-  whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000',
-  email: import.meta.env.VITE_CONTACT_EMAIL || 'hello@example.com',
-  apiBase: import.meta.env.VITE_API_BASE_URL || '',
-  // Central editable pricing: update these values before launch.
+  whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || '919286034026',
+  email: import.meta.env.VITE_CONTACT_EMAIL || 'anantgoyal1001@gmail.com',
+  // Optional Google Form URL — paste full form link when ready
+  googleFormUrl: import.meta.env.VITE_GOOGLE_FORM_URL || '',
+  // Central editable pricing
   services: [
     { title: 'Professional Resume Creation', description: 'A sharp, story-led resume that makes your strengths easy to see.', price: 799, icon: 'file' },
     { title: 'ATS-Friendly Resume Design', description: 'A clean, readable format built to work well with common ATS parsers.', price: 999, icon: 'scan' },
