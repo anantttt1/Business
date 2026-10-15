@@ -70,7 +70,6 @@ function App() {
           <a href="#" className="logo">{config.brand}</a>
           <nav className={`nav ${menuOpen ? 'open' : ''}`}>
             <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-            <a href="#packages" onClick={() => setMenuOpen(false)}>Packages</a>
             <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
             <a href="#process" onClick={() => setMenuOpen(false)}>Process</a>
             <button className="btn btn-primary" onClick={() => { setMenuOpen(false); openOrder() }}>Get started</button>
@@ -124,27 +123,6 @@ function App() {
                 </article>
               )
             })}
-          </div>
-        </div>
-      </section>
-
-      <section id="packages" className="section section-alt">
-        <div className="container">
-          <div className="section-head">
-            <div className="eyebrow"><span className="eyebrow-line"></span> PACKAGES</div>
-            <h2>Simple bundles</h2>
-          </div>
-          <div className="package-grid">
-            {config.packages.map((p) => (
-              <article key={p.id} className={`package-card ${p.featured ? 'featured' : ''}`}>
-                {p.featured && <div className="badge">Most popular</div>}
-                <h3>{p.name}</h3>
-                <div className="package-price">{money(p.price)}</div>
-                <p>{p.description}</p>
-                <ul>{p.features.map((f) => <li key={f}><Check size={15} /> {f}</li>)}</ul>
-                <button className="btn btn-primary" onClick={() => openOrder(`${p.name} Package`)}>Choose {p.name}</button>
-              </article>
-            ))}
           </div>
         </div>
       </section>
