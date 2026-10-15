@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, ArrowUpRight, Check, CheckCircle2, FileText, GraduationCap, Layers3, Linkedin, Menu, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check, CheckCircle2, FileText, GraduationCap, Menu, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
-const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹799 – ₹2,000', deadline: '', requirements: '' }
+const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹599 – ₹999', deadline: '', requirements: '' }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
-const icons = [FileText, ScanText, Monitor, GraduationCap, Linkedin, Sparkles, Layers3]
+const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles]
 const portfolioItems = [
   { category: 'Student Portfolios', name: 'Aarav Mehta', role: 'Computer Science Student', type: 'STUDENT', color: 'blue', initials: 'AM', tags: ['Projects', 'Skills', 'Journey'] },
   { category: 'Developer Portfolios', name: 'Riya Kapoor', role: 'Frontend Developer', type: 'DEVELOPER', color: 'purple', initials: 'RK', tags: ['React', 'UI Engineering', 'Open source'] },
@@ -111,7 +111,7 @@ function App() {
             <ul className="hero-list">
               <li><Check size={16} /> ATS-friendly resume layouts</li>
               <li><Check size={16} /> Mobile-first portfolio sites</li>
-              <li><Check size={16} /> LinkedIn profile clarity</li>
+              <li><Check size={16} /> Clear, modern design</li>
               <li><Check size={16} /> Honest pricing, no fake claims</li>
             </ul>
           </div>
@@ -224,7 +224,7 @@ function App() {
         <div className="container footer-inner">
           <div>
             <strong>{config.brand}</strong>
-            <p>Resumes · Portfolios · LinkedIn · Personal branding</p>
+            <p>Resumes · Portfolios · Personal branding</p>
           </div>
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
@@ -274,9 +274,7 @@ function App() {
                   </label>
                   <label>Approx. budget
                     <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })}>
-                      <option>₹799 – ₹2,000</option>
-                      <option>₹2,000 – ₹5,000</option>
-                      <option>₹5,000 – ₹10,000</option>
+                      <option>₹599 – ₹999</option>
                       <option>Flexible / discuss</option>
                     </select>
                   </label>
