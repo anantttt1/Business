@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, ArrowUpRight, Check, CheckCircle2, FileText, GraduationCap, Menu, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check, FileText, GraduationCap, Menu, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
@@ -15,7 +15,7 @@ const portfolioItems = [
 ]
 const steps = [
   ['01', 'Choose your service', 'Pick the resume or portfolio support that fits your next move.'],
-  ['02', 'Share your details', 'Tell us about your goals, experience, projects and deadline on WhatsApp or the form.'],
+  ['02', 'Share your details', 'Tell us on WhatsApp or fill the Google Form with your goals and deadline.'],
   ['03', 'We design your story', 'We shape your information into a clear, polished and professional experience.'],
   ['04', 'Review & receive', 'Review the work, request included revisions, and receive your final files or website.']
 ]
@@ -89,7 +89,7 @@ function App() {
             <p className="hero-lead">We craft resumes and portfolio websites that make your skills easy to see — for students, freshers and professionals.</p>
             <div className="hero-actions">
               <button className="btn btn-primary" onClick={() => openOrder()}>Start on WhatsApp <ArrowUpRight size={16} /></button>
-              <a className="btn btn-ghost" href="#work">View demo work</a>
+              <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Fill Google Form</a>
             </div>
           </div>
           <div className="hero-card">
@@ -109,7 +109,7 @@ function App() {
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> SERVICES</div>
             <h2>What we help you ship</h2>
-            <p>Pick a service or package. Message us on WhatsApp to start — no payment required to enquire.</p>
+            <p>Pick a service or package. Message on WhatsApp or fill the Google Form — no payment required to enquire.</p>
           </div>
           <div className="service-grid">
             {config.services.map((s, i) => {
@@ -152,9 +152,9 @@ function App() {
       <section id="work" className="section">
         <div className="container">
           <div className="section-head">
-            <div className="eyebrow"><span className="eyebrow-line"></span> DEMO WORK</div>
-            <h2>Illustrative gallery</h2>
-            <p>These are demo examples, not client work. Want a portfolio like this? Connect on WhatsApp or share your details below.</p>
+            <div className="eyebrow"><span className="eyebrow-line"></span> SAMPLE STYLES</div>
+            <h2>Style examples</h2>
+            <p>Illustrative cards only — not client work. To get a resume or portfolio made, use WhatsApp or the Google Form.</p>
           </div>
           <div className="filters">
             {categories.map((c) => (
@@ -166,23 +166,16 @@ function App() {
               <button key={item.name} className={`work-card color-${item.color}`} onClick={() => setPreview(item)}>
                 <div className="work-avatar">{item.initials}</div>
                 <div className="work-meta">
-                  <span className="work-type">{item.type} · DEMO</span>
+                  <span className="work-type">{item.type}</span>
                   <strong>{item.name}</strong>
                   <span>{item.role}</span>
                 </div>
               </button>
             ))}
           </div>
-          <div className="demo-cta" style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-            <button className="btn btn-primary" onClick={() => openOrder('Personal Portfolio Website')}>
-              View demo portfolio / Get yours <ArrowUpRight size={16} />
-            </button>
-            <a className="btn btn-ghost" href={whatsappUrl(`Hi ${config.brand}, I saw the demo portfolios and want one made for me.`)} target="_blank" rel="noreferrer">
-              WhatsApp us
-            </a>
-            {config.googleFormUrl ? (
-              <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Fill Google Form</a>
-            ) : null}
+          <div style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+            <button className="btn btn-primary" onClick={() => openOrder()}>Enquire on WhatsApp <ArrowUpRight size={16} /></button>
+            <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Fill Google Form</a>
           </div>
         </div>
       </section>
@@ -209,10 +202,10 @@ function App() {
         <div className="cta-inner">
           <div className="eyebrow"><span className="eyebrow-line"></span> YOUR NEXT CHAPTER STARTS HERE</div>
           <h2>Your skills are real.<br /><span>Let’s make them visible.</span></h2>
-          <p>Message on WhatsApp with what you need — resume, portfolio, or both.</p>
+          <p>Message on WhatsApp or fill the form — resume, portfolio, or both.</p>
           <div className="cta-actions">
-            <button className="btn btn-light" onClick={() => openOrder()}>Enquire on WhatsApp <ArrowUpRight size={16} /></button>
-            <a className="btn btn-ghost-light" href={whatsappUrl(`Hi ${config.brand}, I want to discuss a project.`)} target="_blank" rel="noreferrer">Chat now</a>
+            <button className="btn btn-light" onClick={() => openOrder()}>WhatsApp enquiry <ArrowUpRight size={16} /></button>
+            <a className="btn btn-ghost-light" href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>
           </div>
         </div>
       </section>
@@ -228,6 +221,7 @@ function App() {
             <a href="/terms.html">Terms</a>
             <a href={`mailto:${config.email}`}>{config.email}</a>
             <a href={whatsappUrl('Hi')} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>
           </div>
         </div>
       </footer>
@@ -238,16 +232,12 @@ function App() {
             <button className="modal-close" onClick={() => setPreview(null)}><X size={18} /></button>
             <div className={`work-avatar large color-${preview.color}`}>{preview.initials}</div>
             <h3>{preview.name}</h3>
-            <p>{preview.role} · <strong>DEMO</strong></p>
+            <p>{preview.role}</p>
             <div className="tags">{preview.tags.map((t) => <span key={t}>{t}</span>)}</div>
-            <p className="muted">Illustrative demo — not a real client project. Want something similar?</p>
+            <p className="muted">Style example only. Want something similar made for you?</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
-              <button className="btn btn-primary" onClick={() => { setPreview(null); openOrder('Personal Portfolio Website') }}>
-                Get a portfolio like this
-              </button>
-              <a className="btn btn-ghost" href={whatsappUrl(`Hi ${config.brand}, I liked the ${preview.name} demo style and want a portfolio.`)} target="_blank" rel="noreferrer">
-                WhatsApp
-              </a>
+              <button className="btn btn-primary" onClick={() => { setPreview(null); openOrder() }}>WhatsApp enquiry</button>
+              <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>
             </div>
           </div>
         </div>
@@ -258,7 +248,7 @@ function App() {
           <div className="modal order-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setOrderOpen(false)}><X size={18} /></button>
             <h2>WhatsApp enquiry</h2>
-            <p className="muted">Fill the details — we’ll open WhatsApp with your message ready. No account or payment needed to enquire.</p>
+            <p className="muted">Fill details — WhatsApp opens with your message ready. Or use the Google Form instead.</p>
             <form className="order-form" onSubmit={submitToWhatsApp} noValidate>
               <div className="form-grid">
                 <label>Full name *<input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" autoComplete="name" /></label>
@@ -280,16 +270,9 @@ function App() {
                 <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} /></label>
               </div>
               <div className="form-submit-row">
-                <p>Opens WhatsApp with your enquiry. You can also email <a href={`mailto:${config.email}`}>{config.email}</a>.</p>
+                <p>Or <a href={config.googleFormUrl} target="_blank" rel="noreferrer">open Google Form ↗</a></p>
                 <button className="btn btn-primary" type="submit">Send on WhatsApp <ArrowUpRight size={16} /></button>
               </div>
-              {config.googleFormUrl ? (
-                <p className="form-hint" style={{ marginTop: '12px' }}>
-                  Prefer a form? <a href={config.googleFormUrl} target="_blank" rel="noreferrer">Open Google Form ↗</a>
-                </p>
-              ) : (
-                <small className="form-hint">Google Form link can be added later in config.</small>
-              )}
             </form>
           </div>
         </div>
