@@ -47,18 +47,13 @@ button,input,select,textarea{font:inherit}
 .section-head{max-width:640px;margin-bottom:36px}
 .section-head h2{font-family:Manrope,sans-serif;font-size:clamp(1.8rem,3vw,2.4rem);margin:0 0 10px;letter-spacing:-.02em}
 .section-head p{color:var(--muted);margin:0}
-.service-grid,.package-grid,.work-grid,.steps{display:grid;gap:18px}
+.service-grid,.work-grid,.steps{display:grid;gap:18px}
 .service-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.service-card,.package-card,.work-card,.step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.service-card,.work-card,.step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px}
 .service-icon{width:42px;height:42px;border-radius:12px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;margin-bottom:14px}
-.service-card h3,.package-card h3,.step h3{margin:0 0 8px;font-size:1.05rem}
-.service-card p,.package-card p,.step p{color:var(--muted);margin:0 0 14px;font-size:.95rem}
-.service-price,.package-price{font-weight:800;font-size:1.15rem;margin-bottom:12px}
-.package-grid{grid-template-columns:repeat(3,1fr)}
-.package-card.featured{border-color:var(--blue);box-shadow:0 16px 40px rgba(65,105,255,.12);position:relative}
-.badge{position:absolute;top:14px;right:14px;background:var(--blue);color:#fff;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:999px}
-.package-card ul{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:8px}
-.package-card li{display:flex;align-items:center;gap:8px;font-size:.92rem}
+.service-card h3,.step h3{margin:0 0 8px;font-size:1.05rem}
+.service-card p,.step p{color:var(--muted);margin:0 0 14px;font-size:.95rem}
+.service-price{font-weight:800;font-size:1.15rem;margin-bottom:12px}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--muted)}
 .filters button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
@@ -129,7 +124,7 @@ body{background:#fff}
 .float-chip svg{color:var(--blue)}
 .chip-a{top:-4px;left:-14px}
 .chip-b{bottom:-2px;right:-10px;animation-delay:-2.5s}
-.service-card,.package-card,.work-card,.step{box-shadow:0 1px 0 #fff inset,0 10px 24px rgba(23,34,59,.07);transition:transform .15s ease-out,box-shadow .2s ease,border-color .2s ease}
+.service-card,.work-card,.step{box-shadow:0 1px 0 #fff inset,0 10px 24px rgba(23,34,59,.07);transition:transform .15s ease-out,box-shadow .2s ease,border-color .2s ease}
 [data-tilt]{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d;will-change:transform}
 .hero-card[data-tilt]{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,-6deg))}
 .service-card:hover,.step:hover,.work-card:hover{border-color:#c9d6ff;box-shadow:0 22px 44px rgba(65,105,255,.18)}
@@ -154,7 +149,7 @@ body{background:#fff}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,24px)}}
 @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes pulse-ring{0%{outline:0 solid var(--ring)}80%,100%{outline:14px solid transparent}}
-.notice-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 16px;background:linear-gradient(90deg,#fff4d6,#ffe9b0);color:#5c4200;font-size:.88rem;text-align:center;border-bottom:1px solid #f3d98a;position:relative;z-index:41}
+.notice-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 16px;background:linear-gradient(90deg,#fff4d6,#ffe9b0);color:#5c4200;font-size:.88rem;text-align:center;border-bottom:1px solid #f3d98a}
 .notice-bar p{margin:0}
 .notice-bar a{font-weight:700;text-decoration:underline;text-underline-offset:2px}
 .notice-dot{width:8px;height:8px;border-radius:50%;background:#e8a400;flex-shrink:0;box-shadow:0 0 0 0 rgba(232,164,0,.6);animation:notice-pulse 1.8s infinite}
@@ -209,7 +204,7 @@ body{background:#fff}
 .terms-modal{width:min(440px,100%)}
 @keyframes terms-pulse{0%,100%{box-shadow:0 0 0 0 rgba(65,105,255,.45)}50%{box-shadow:0 0 0 12px rgba(65,105,255,0)}}
 @media (max-width:900px){
-  .hero-grid,.package-grid,.steps{grid-template-columns:1fr}
+  .hero-grid,.steps{grid-template-columns:1fr}
   .nav{display:none;position:absolute;top:72px;left:0;right:0;background:#fff;flex-direction:column;padding:16px;border-bottom:1px solid var(--line)}
   .nav.open{display:flex}
   .menu-btn{display:block}

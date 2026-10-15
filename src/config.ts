@@ -9,10 +9,5 @@ export const config = {
     { title: 'Personal Portfolio Website', description: 'A responsive home for your projects, skills, story and contact details.', price: 999, icon: 'monitor' },
     { title: 'Student & Fresher Portfolio', description: 'Turn coursework, projects and potential into a confident first impression.', price: 899, icon: 'graduation' },
     { title: 'Resume Redesign & Improvement', description: 'Improve hierarchy, clarity and impact while keeping your story authentic.', price: 599, icon: 'sparkles' }
-  ],
-  packages: [
-    { id: 'starter', name: 'Starter', price: 699, description: 'A confident first impression.', features: ['Professional resume', 'Clean, modern layout', 'PDF delivery', 'One review round'], featured: false },
-    { id: 'professional', name: 'Professional', price: 899, description: 'A complete personal brand foundation.', features: ['ATS-friendly resume', 'Customized personal portfolio', 'Mobile-responsive design', 'Two review rounds'], featured: true },
-    { id: 'premium', name: 'Premium', price: 999, description: 'A polished presence across platforms.', features: ['Custom portfolio website', 'Professional resume', 'Profile improvement tips', 'Personalized branding', 'Three review rounds'], featured: false }
   ]
 }

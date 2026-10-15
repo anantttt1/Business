@@ -4,6 +4,7 @@ import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
 const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹599 – ₹999', deadline: '', requirements: '' }
+const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles]
 const portfolioItems = [
@@ -114,6 +115,18 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!orderOpen && !preview && !termsPrompt) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setOrderOpen(false)
+      setPreview(null)
+      setTermsPrompt(false)
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [orderOpen, preview, termsPrompt])
+
   const filtered = useMemo(
     () => (activeCategory === 'All work' ? portfolioItems : portfolioItems.filter((i) => i.category === activeCategory)),
     [activeCategory]
@@ -178,7 +191,7 @@ function App() {
             <a href="#process" onClick={() => setMenuOpen(false)}>Process</a>
             <button className="btn btn-primary" onClick={() => { setMenuOpen(false); openOrder() }}>Get started</button>
           </nav>
-          <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+          <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu" aria-expanded={menuOpen}>
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
@@ -203,7 +216,7 @@ function App() {
             <ul className="hero-list">
               <li><Check size={16} /> ATS-friendly resume layouts</li>
               <li><Check size={16} /> Mobile-first portfolio sites</li>
-              <li><Check size={16} /> All packages under ₹1,000</li>
+              <li><Check size={16} /> All services under ₹1,000</li>
               <li><Check size={16} /> No fake claims or guarantees</li>
             </ul>
             </div>
@@ -216,7 +229,7 @@ function App() {
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> SERVICES</div>
             <h2>What we help you ship</h2>
-            <p>Pick a service or package. Message on WhatsApp or fill the Google Form — no payment required to enquire.</p>
+            <p>Pick a service. Message on WhatsApp or fill the Google Form — no payment required to enquire.</p>
           </div>
           <div className="service-grid">
             {config.services.map((s, i) => {
@@ -351,7 +364,7 @@ function App() {
 
       {preview && (
         <div className="modal-backdrop" onClick={() => setPreview(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setPreview(null)}><X size={18} /></button>
             <div className={`work-avatar large color-${preview.color}`}>{preview.initials}</div>
             <h3>{preview.name}</h3>
@@ -368,19 +381,18 @@ function App() {
 
       {orderOpen && (
         <div className="modal-backdrop" onClick={() => setOrderOpen(false)}>
-          <div className="modal order-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal order-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setOrderOpen(false)}><X size={18} /></button>
             <h2>WhatsApp enquiry</h2>
             <p className="muted">Fill details — WhatsApp opens with your message ready. Or use the Google Form instead.</p>
-            <form className="order-form" onSubmit={submitToWhatsApp} noValidate>
+            <form className="order-form" onSubmit={submitToWhatsApp}>
               <div className="form-grid">
-                <label>Full name *<input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" autoComplete="name" /></label>
-                <label>Email address *<input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" autoComplete="email" /></label>
-                <label>WhatsApp number *<input required value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} placeholder="+91 98XXXXXXXX" autoComplete="tel" /></label>
+                <label>Full name *<input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" autoComplete="name" maxLength={80} /></label>
+                <label>Email address *<input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" autoComplete="email" maxLength={120} /></label>
+                <label>WhatsApp number *<input required value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} placeholder="+91 98XXXXXXXX" autoComplete="tel" inputMode="tel" pattern="[0-9+\s\-]{8,18}" title="Enter a valid phone number" maxLength={18} /></label>
                 <label>Service required *
                   <select required value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })}>
                     {config.services.map((s) => <option key={s.title}>{s.title}</option>)}
-                    {config.packages.map((p) => <option key={p.id} value={`${p.name} Package`}>{p.name} Package</option>)}
                   </select>
                 </label>
                 <label>Approx. budget
@@ -389,8 +401,8 @@ function App() {
                     <option>Flexible / discuss</option>
                   </select>
                 </label>
-                <label>Preferred deadline<input type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} min={new Date().toISOString().slice(0, 10)} /></label>
-                <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} /></label>
+                <label>Preferred deadline<input type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} min={localToday()} /></label>
+                <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} maxLength={1000} /></label>
               </div>
               <div className="form-submit-row">
                 <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Open Google Form</a>
