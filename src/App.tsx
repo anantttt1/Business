@@ -33,14 +33,53 @@ function App() {
   }, [orderOpen, preview])
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(hover: none)').matches) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const root = document.documentElement
+    const glow = document.querySelector<HTMLElement>('.cursor-glow')
+    let io: IntersectionObserver | undefined
+    if (!reduce && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add('in'); observer.unobserve(en.target) }
+      }), { threshold: 0.12 })
+      io = observer
+      document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner').forEach((el, i) => {
+        el.classList.add('reveal')
+        el.style.animationDelay = `${(i % 4) * 70}ms`
+        observer.observe(el)
+      })
+    }
+    if (reduce || !canHover) return () => io?.disconnect()
+
     const find = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLElement>('[data-tilt]') : null)
+    let raf = 0
+    let lx = 0
+    let ly = 0
     const onMove = (e: MouseEvent) => {
+      lx = e.clientX
+      ly = e.clientY
+      if (!raf) {
+        raf = requestAnimationFrame(() => {
+          raf = 0
+          root.style.setProperty('--cx', `${lx}px`)
+          root.style.setProperty('--cy', `${ly}px`)
+          glow?.classList.add('on')
+        })
+      }
       const el = find(e.target)
-      if (!el) return
-      const r = el.getBoundingClientRect()
-      el.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 12}deg`)
-      el.style.setProperty('--rx', `${-((e.clientY - r.top) / r.height - 0.5) * 12}deg`)
+      if (el) {
+        const r = el.getBoundingClientRect()
+        el.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 12}deg`)
+        el.style.setProperty('--rx', `${-((e.clientY - r.top) / r.height - 0.5) * 12}deg`)
+        el.style.setProperty('--mx', `${e.clientX - r.left}px`)
+        el.style.setProperty('--my', `${e.clientY - r.top}px`)
+      }
+      const hero = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero') : null
+      if (hero) {
+        const r = hero.getBoundingClientRect()
+        hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
+        hero.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
+      }
     }
     const onOut = (e: MouseEvent) => {
       const el = find(e.target)
@@ -48,9 +87,17 @@ function App() {
       el.style.setProperty('--rx', '0deg')
       el.style.setProperty('--ry', '0deg')
     }
+    const onLeaveDoc = () => glow?.classList.remove('on')
     document.addEventListener('mousemove', onMove)
     document.addEventListener('mouseout', onOut)
-    return () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseout', onOut) }
+    root.addEventListener('mouseleave', onLeaveDoc)
+    return () => {
+      io?.disconnect()
+      if (raf) cancelAnimationFrame(raf)
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseout', onOut)
+      root.removeEventListener('mouseleave', onLeaveDoc)
+    }
   }, [])
 
   const filtered = useMemo(
@@ -86,6 +133,7 @@ function App() {
 
   return (
     <div className="app">
+      <div className="cursor-glow" aria-hidden="true" />
       <header className="site-header">
         <div className="container header-inner">
           <a href="#" className="logo">{config.brand}</a>
