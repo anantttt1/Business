@@ -134,6 +134,11 @@ function App() {
   return (
     <div className="app">
       <div className="cursor-glow" aria-hidden="true" />
+      <div className="notice-bar" role="status">
+        <span className="notice-dot" aria-hidden="true" />
+        <p><strong>🚧 Website under construction</strong> — we're building a smoother online experience. Till then, you can order or enquire anytime on <a href={whatsappUrl('Hi')} target="_blank" rel="noreferrer">WhatsApp</a> or the <a href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>.</p>
+      </div>
+
       <header className="site-header">
         <div className="container header-inner">
           <a href="#" className="logo">{config.brand}</a>
