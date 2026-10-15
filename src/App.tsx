@@ -13,6 +13,17 @@ const portfolioItems = [
   { category: 'Professional Resumes', name: 'Neha Verma', role: 'Business Analyst', type: 'RESUME', color: 'sand', initials: 'NV', tags: ['Experience', 'Impact', 'Education'] },
   { category: 'Creative Portfolios', name: 'Ishaan Rao', role: 'Brand & Visual Designer', type: 'CREATIVE', color: 'pink', initials: 'IR', tags: ['Identity', 'Art direction', 'Selected work'] }
 ]
+const terms: [string, string][] = [
+  ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope, price and timeline are confirmed with you on WhatsApp.'],
+  ['Payment', 'The price and any advance are confirmed before work starts. Final files are delivered after full payment.'],
+  ['Revisions', 'Each service includes a limited number of free revision rounds, confirmed in your quote. Extra changes may be charged separately.'],
+  ['Timeline', 'Delivery time depends on the service and on how quickly you share your details and feedback. Delays from your side move the deadline.'],
+  ['Your information', 'The details you share must be accurate and yours to share. We use them only to complete your work and never sell or publish them.'],
+  ['Refunds & cancellation', 'Once work has started, the advance paid is non-refundable. If we are unable to deliver your work, you get a refund of the amount paid.'],
+  ['Ownership', 'After full payment, the final resume or portfolio is yours to use. We may show the work in our samples only with your permission.'],
+  ['No guarantees', 'We do not guarantee interviews, job offers or ATS results. Sample styles on this site are illustrative and are not client work.'],
+  ['Contact', `Questions about these terms: ${config.email} or WhatsApp.`]
+]
 const steps = [
   ['01', 'Choose your service', 'Pick the resume or portfolio support that fits your next move.'],
   ['02', 'Share your details', 'Tell us on WhatsApp or fill the Google Form with your goals and deadline.'],
@@ -26,11 +37,14 @@ function App() {
   const [preview, setPreview] = useState<typeof portfolioItems[number] | null>(null)
   const [orderOpen, setOrderOpen] = useState(false)
   const [form, setForm] = useState<OrderForm>(initialForm)
+  const [agreed, setAgreed] = useState(false)
+  const [termsPrompt, setTermsPrompt] = useState(false)
+  const [termsHighlight, setTermsHighlight] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = orderOpen || preview ? 'hidden' : ''
+    document.body.style.overflow = orderOpen || preview || termsPrompt ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [orderOpen, preview])
+  }, [orderOpen, preview, termsPrompt])
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -109,13 +123,29 @@ function App() {
   const whatsappUrl = (message: string) =>
     `https://wa.me/${config.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
 
+  const gate = (e?: React.SyntheticEvent): boolean => {
+    if (agreed) return true
+    e?.preventDefault()
+    setTermsPrompt(true)
+    return false
+  }
+
+  const goToTerms = () => {
+    setTermsPrompt(false)
+    setTermsHighlight(true)
+    setTimeout(() => document.getElementById('terms')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60)
+    setTimeout(() => setTermsHighlight(false), 3000)
+  }
+
   const openOrder = (serviceHint?: string) => {
+    if (!gate()) return
     if (serviceHint) setForm((f) => ({ ...f, service: serviceHint }))
     setOrderOpen(true)
   }
 
   const submitToWhatsApp = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!gate()) return
     const lines = [
       `Hi ${config.brand},`,
       `I want to enquire about: ${form.service}`,
@@ -136,7 +166,7 @@ function App() {
       <div className="cursor-glow" aria-hidden="true" />
       <div className="notice-bar" role="status">
         <span className="notice-dot" aria-hidden="true" />
-        <p><strong>🚧 Website under construction</strong> — we're building a smoother online experience. Till then, you can order or enquire anytime on <a href={whatsappUrl('Hi')} target="_blank" rel="noreferrer">WhatsApp</a> or the <a href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>.</p>
+        <p><strong>🚧 Website under construction</strong> — we're building a smoother online experience. Till then, you can order or enquire anytime on <a href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer">WhatsApp</a> or the <a href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer">Google Form</a>.</p>
       </div>
 
       <header className="site-header">
@@ -162,7 +192,7 @@ function App() {
             <p className="hero-lead">We craft resumes and portfolio websites that make your skills easy to see — for students, freshers and professionals.</p>
             <div className="hero-actions">
               <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
-              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
+              <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
             </div>
           </div>
           <div className="hero-visual">
@@ -231,7 +261,7 @@ function App() {
           </div>
           <div style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
             <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Enquire on WhatsApp</button>
-            <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
+            <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
           </div>
         </div>
       </section>
@@ -261,8 +291,26 @@ function App() {
           <p>Message on WhatsApp or fill the form — resume, portfolio, or both.</p>
           <div className="cta-actions">
             <button className="btn btn-whatsapp btn-lg" onClick={() => openOrder()}><MessageCircle size={20} /> WhatsApp enquiry</button>
-            <a className="btn btn-form btn-lg" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={20} /> Google Form</a>
+            <a className="btn btn-form btn-lg" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={20} /> Google Form</a>
           </div>
+        </div>
+      </section>
+
+      <section id="terms" className="section section-alt">
+        <div className="container">
+          <div className="section-head">
+            <div className="eyebrow"><span className="eyebrow-line"></span> TERMS</div>
+            <h2>Terms &amp; Conditions</h2>
+            <p>Please read these before you contact us on WhatsApp or the Google Form.</p>
+          </div>
+          <ol className="terms-list">
+            {terms.map(([t, d]) => <li key={t}><strong>{t}</strong><span>{d}</span></li>)}
+          </ol>
+          <label className={`terms-check ${termsHighlight ? 'highlight' : ''}`}>
+            <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+            <span>I have read and agree to the Terms &amp; Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
+          </label>
+          {agreed && <p className="terms-ok"><Check size={16} /> Thank you! You can now use WhatsApp and the Google Form.</p>}
         </div>
       </section>
 
@@ -276,16 +324,30 @@ function App() {
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
             <a href={`mailto:${config.email}`}>{config.email}</a>
-            <a href={whatsappUrl('Hi')} target="_blank" rel="noreferrer">WhatsApp</a>
-            <a href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>
+            <a href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer">Google Form</a>
           </div>
         </div>
       </footer>
 
       <div className="contact-dock" aria-label="Quick contact">
-        <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> <span>Google Form</span></a>
-        <a className="btn btn-whatsapp" href={whatsappUrl('Hi')} target="_blank" rel="noreferrer"><MessageCircle size={18} /> <span>WhatsApp</span></a>
+        <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> <span>Google Form</span></a>
+        <a className="btn btn-whatsapp" href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer"><MessageCircle size={18} /> <span>WhatsApp</span></a>
       </div>
+
+      {termsPrompt && (
+        <div className="modal-backdrop" onClick={() => setTermsPrompt(false)}>
+          <div className="modal terms-modal" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setTermsPrompt(false)} aria-label="Close"><X size={18} /></button>
+            <h3>Please read the T&amp;C first</h3>
+            <p className="muted">To contact us on WhatsApp or the Google Form, please read the Terms &amp; Conditions and tick the checkbox.</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
+              <button className="btn btn-primary" onClick={goToTerms}>Read T&amp;C</button>
+              <button className="btn btn-ghost" onClick={() => setTermsPrompt(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {preview && (
         <div className="modal-backdrop" onClick={() => setPreview(null)}>
@@ -298,7 +360,7 @@ function App() {
             <p className="muted">Style example only. Want something similar made for you?</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
               <button className="btn btn-whatsapp" onClick={() => { setPreview(null); openOrder() }}><MessageCircle size={18} /> WhatsApp enquiry</button>
-              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Google Form</a>
+              <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Google Form</a>
             </div>
           </div>
         </div>
@@ -331,7 +393,7 @@ function App() {
                 <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} /></label>
               </div>
               <div className="form-submit-row">
-                <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Open Google Form</a>
+                <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Open Google Form</a>
                 <button className="btn btn-whatsapp" type="submit"><MessageCircle size={18} /> Send on WhatsApp</button>
               </div>
             </form>
