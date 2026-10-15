@@ -190,6 +190,7 @@ body{background:#fff}
   .hero-actions .btn{flex:1 1 100%;justify-content:center}
   .site-footer{padding-bottom:84px}
 }
+.price-note{margin:22px 0 0;display:inline-block;background:linear-gradient(135deg,#e8efff,#efe6ff);color:var(--ink);font-weight:700;padding:10px 18px;border-radius:999px;box-shadow:0 8px 18px rgba(65,105,255,.14)}
 /* ===== Terms & Conditions ===== */
 .terms-list{list-style:none;counter-reset:t;margin:0 0 22px;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .terms-list li{counter-increment:t;position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 16px 58px;display:grid;gap:4px;box-shadow:0 8px 20px rgba(23,34,59,.06)}
