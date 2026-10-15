@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, ArrowUpRight, Check, FileText, GraduationCap, Menu, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, Check, ClipboardList, FileText, GraduationCap, Menu, MessageCircle, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
@@ -31,6 +31,27 @@ function App() {
     document.body.style.overflow = orderOpen || preview ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [orderOpen, preview])
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(hover: none)').matches) return
+    const find = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLElement>('[data-tilt]') : null)
+    const onMove = (e: MouseEvent) => {
+      const el = find(e.target)
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      el.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 12}deg`)
+      el.style.setProperty('--rx', `${-((e.clientY - r.top) / r.height - 0.5) * 12}deg`)
+    }
+    const onOut = (e: MouseEvent) => {
+      const el = find(e.target)
+      if (!el || (e.relatedTarget instanceof Node && el.contains(e.relatedTarget))) return
+      el.style.setProperty('--rx', '0deg')
+      el.style.setProperty('--ry', '0deg')
+    }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseout', onOut)
+    return () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseout', onOut) }
+  }, [])
 
   const filtered = useMemo(
     () => (activeCategory === 'All work' ? portfolioItems : portfolioItems.filter((i) => i.category === activeCategory)),
@@ -87,11 +108,14 @@ function App() {
             <h1>Stand out.<br /><span>Get noticed.</span><br />Get hired.</h1>
             <p className="hero-lead">We craft resumes and portfolio websites that make your skills easy to see — for students, freshers and professionals.</p>
             <div className="hero-actions">
-              <button className="btn btn-primary" onClick={() => openOrder()}>Start on WhatsApp <ArrowUpRight size={16} /></button>
-              <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Fill Google Form</a>
+              <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
+              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
             </div>
           </div>
-          <div className="hero-card">
+          <div className="hero-visual">
+            <span className="float-chip chip-a"><FileText size={15} /> ATS Resume</span>
+            <span className="float-chip chip-b"><Monitor size={15} /> Portfolio Site</span>
+            <div className="hero-card" data-tilt>
             <div className="hero-card-top"><ShieldCheck size={18} /> Clear scope · WhatsApp support · Honest pricing</div>
             <ul className="hero-list">
               <li><Check size={16} /> ATS-friendly resume layouts</li>
@@ -99,6 +123,7 @@ function App() {
               <li><Check size={16} /> All packages under ₹1,000</li>
               <li><Check size={16} /> No fake claims or guarantees</li>
             </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -114,7 +139,7 @@ function App() {
             {config.services.map((s, i) => {
               const Icon = icons[i] || FileText
               return (
-                <article key={s.title} className="service-card">
+                <article key={s.title} className="service-card" data-tilt>
                   <div className="service-icon"><Icon size={22} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
@@ -141,7 +166,7 @@ function App() {
           </div>
           <div className="work-grid">
             {filtered.map((item) => (
-              <button key={item.name} className={`work-card color-${item.color}`} onClick={() => setPreview(item)}>
+              <button key={item.name} data-tilt className={`work-card color-${item.color}`} onClick={() => setPreview(item)}>
                 <div className="work-avatar">{item.initials}</div>
                 <div className="work-meta">
                   <span className="work-type">{item.type}</span>
@@ -152,8 +177,8 @@ function App() {
             ))}
           </div>
           <div style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-            <button className="btn btn-primary" onClick={() => openOrder()}>Enquire on WhatsApp <ArrowUpRight size={16} /></button>
-            <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Fill Google Form</a>
+            <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Enquire on WhatsApp</button>
+            <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
           </div>
         </div>
       </section>
@@ -166,7 +191,7 @@ function App() {
           </div>
           <div className="steps">
             {steps.map(([n, t, d]) => (
-              <div key={n} className="step">
+              <div key={n} className="step" data-tilt>
                 <div className="step-num">{n}</div>
                 <h3>{t}</h3>
                 <p>{d}</p>
@@ -182,8 +207,8 @@ function App() {
           <h2>Your skills are real.<br /><span>Let’s make them visible.</span></h2>
           <p>Message on WhatsApp or fill the form — resume, portfolio, or both.</p>
           <div className="cta-actions">
-            <button className="btn btn-light" onClick={() => openOrder()}>WhatsApp enquiry <ArrowUpRight size={16} /></button>
-            <a className="btn btn-ghost-light" href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>
+            <button className="btn btn-whatsapp btn-lg" onClick={() => openOrder()}><MessageCircle size={20} /> WhatsApp enquiry</button>
+            <a className="btn btn-form btn-lg" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={20} /> Google Form</a>
           </div>
         </div>
       </section>
@@ -204,6 +229,11 @@ function App() {
         </div>
       </footer>
 
+      <div className="contact-dock" aria-label="Quick contact">
+        <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> <span>Google Form</span></a>
+        <a className="btn btn-whatsapp" href={whatsappUrl('Hi')} target="_blank" rel="noreferrer"><MessageCircle size={18} /> <span>WhatsApp</span></a>
+      </div>
+
       {preview && (
         <div className="modal-backdrop" onClick={() => setPreview(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -214,8 +244,8 @@ function App() {
             <div className="tags">{preview.tags.map((t) => <span key={t}>{t}</span>)}</div>
             <p className="muted">Style example only. Want something similar made for you?</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
-              <button className="btn btn-primary" onClick={() => { setPreview(null); openOrder() }}>WhatsApp enquiry</button>
-              <a className="btn btn-ghost" href={config.googleFormUrl} target="_blank" rel="noreferrer">Google Form</a>
+              <button className="btn btn-whatsapp" onClick={() => { setPreview(null); openOrder() }}><MessageCircle size={18} /> WhatsApp enquiry</button>
+              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Google Form</a>
             </div>
           </div>
         </div>
@@ -248,8 +278,8 @@ function App() {
                 <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} /></label>
               </div>
               <div className="form-submit-row">
-                <p>Or <a href={config.googleFormUrl} target="_blank" rel="noreferrer">open Google Form ↗</a></p>
-                <button className="btn btn-primary" type="submit">Send on WhatsApp <ArrowUpRight size={16} /></button>
+                <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Open Google Form</a>
+                <button className="btn btn-whatsapp" type="submit"><MessageCircle size={18} /> Send on WhatsApp</button>
               </div>
             </form>
           </div>
