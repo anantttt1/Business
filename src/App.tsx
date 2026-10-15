@@ -3,7 +3,7 @@ import { ArrowRight, Check, ClipboardList, FileText, GraduationCap, Menu, Messag
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
-const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹500', deadline: '', requirements: '' }
+const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹99 – ₹499', deadline: '', requirements: '' }
 const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles]
@@ -17,7 +17,7 @@ const portfolioItems = [
 const terms: [string, string][] = [
   ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope, price and timeline are confirmed with you on WhatsApp.'],
   ['Payment', 'The price and any advance are confirmed before work starts. Final files are delivered after full payment.'],
-  ['Corrections', `Corrections or changes after delivery are charged at ${money(config.correctionPrice)} per correction round.`],
+  ['Changes after delivery', `Any further changes to a portfolio website after delivery cost ${money(config.correctionPrice)}. Changes to resumes are agreed with you on WhatsApp.`],
   ['Timeline', 'Delivery time depends on the service and on how quickly you share your details and feedback. Delays from your side move the deadline.'],
   ['Your information', 'The details you share must be accurate and yours to share. We use them only to complete your work and never sell or publish them.'],
   ['Refunds & cancellation', 'Once work has started, the advance paid is non-refundable. If we are unable to deliver your work, you get a refund of the amount paid.'],
@@ -216,7 +216,7 @@ function App() {
             <ul className="hero-list">
               <li><Check size={16} /> ATS-friendly resume layouts</li>
               <li><Check size={16} /> Mobile-first portfolio sites</li>
-              <li><Check size={16} /> All services at a flat ₹500</li>
+              <li><Check size={16} /> Services from just ₹99</li>
               <li><Check size={16} /> No fake claims or guarantees</li>
             </ul>
             </div>
@@ -240,12 +240,13 @@ function App() {
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
                   <div className="service-price">{money(s.price)}</div>
+                  {s.note && <p className="service-note">{s.note}</p>}
                   <button className="text-link" onClick={() => openOrder(s.title)}>Enquire on WhatsApp <ArrowRight size={14} /></button>
                 </article>
               )
             })}
           </div>
-          <p className="price-note">Every service is a flat {money(500)}. Corrections after delivery: {money(config.correctionPrice)} per round.</p>
+          <p className="price-note">Resumes {money(config.services[0].price)} · Resume redesign {money(config.services[4].price)} · Portfolio websites {money(config.services[2].price)}. Any further changes to a portfolio website after delivery: {money(config.correctionPrice)}.</p>
         </div>
       </section>
 
@@ -398,7 +399,7 @@ function App() {
                 </label>
                 <label>Approx. budget
                   <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })}>
-                    <option>₹500</option>
+                    <option>₹99 – ₹499</option>
                     <option>Flexible / discuss</option>
                   </select>
                 </label>
