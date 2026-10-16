@@ -308,6 +308,10 @@ function App() {
 
       <section className="cta-section">
         <div className="cta-inner">
+          <div className="cta-cubes" aria-hidden="true">
+            <span className="mini-cube mc-1"><i/><i/><i/><i/><i/><i/></span>
+            <span className="mini-cube mc-2"><i/><i/><i/><i/><i/><i/></span>
+          </div>
           <div className="eyebrow"><span className="eyebrow-line"></span> YOUR NEXT CHAPTER STARTS HERE</div>
           <h2>Your skills are real.<br /><span>Let’s make them visible.</span></h2>
           <p>Message on WhatsApp or fill the form — resume, portfolio, or both.</p>
