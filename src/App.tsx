@@ -209,13 +209,6 @@ function App() {
             </div>
           </div>
           <div className="hero-visual">
-            <div className="scene" aria-hidden="true">
-              <span className="sheet sheet-a" />
-              <span className="sheet sheet-b" />
-              <span className="orbit orbit-a" />
-              <span className="orbit orbit-b" />
-              <div className="cube"><i className="f1">AP</i><i className="f2">CV</i><i className="f3">AP</i><i className="f4">UI</i><i className="f5">AP</i><i className="f6">CV</i></div>
-            </div>
             <span className="float-chip chip-a"><FileText size={15} /> ATS Resume</span>
             <span className="float-chip chip-b"><Monitor size={15} /> Portfolio Site</span>
             <div className="hero-card" data-tilt>
@@ -308,10 +301,6 @@ function App() {
 
       <section className="cta-section">
         <div className="cta-inner">
-          <div className="cta-cubes" aria-hidden="true">
-            <span className="mini-cube mc-1"><i/><i/><i/><i/><i/><i/></span>
-            <span className="mini-cube mc-2"><i/><i/><i/><i/><i/><i/></span>
-          </div>
           <div className="eyebrow"><span className="eyebrow-line"></span> YOUR NEXT CHAPTER STARTS HERE</div>
           <h2>Your skills are real.<br /><span>Let’s make them visible.</span></h2>
           <p>Message on WhatsApp or fill the form — resume, portfolio, or both.</p>
