@@ -116,13 +116,18 @@ button,input,select,textarea{font:inherit}
 .filters button:hover{border-color:#0a0a0a;color:#0a0a0a}
 .filters button.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a;font-weight:800}
 .work-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
-.work-card{display:flex;gap:14px;align-items:center;text-align:left;cursor:pointer}
+.work-card{display:flex;gap:14px;align-items:center;text-align:left;cursor:pointer;background:#fff;color:#0a0a0a}
 .work-avatar{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:800;color:#fff;flex-shrink:0;background:#0a0a0a;transform:translateZ(24px)}
 .work-avatar.large{width:72px;height:72px;font-size:1.2rem;margin-bottom:12px}
-.color-blue,.color-purple,.color-green,.color-sand,.color-pink{background:#0a0a0a}
-.work-meta{display:grid;gap:2px}
-.work-type{font-size:.72rem;font-weight:800;letter-spacing:.04em;color:var(--muted)}
-.work-meta strong{font-weight:800}
+.work-card.color-blue .work-avatar,
+.work-card.color-purple .work-avatar,
+.work-card.color-green .work-avatar,
+.work-card.color-sand .work-avatar,
+.work-card.color-pink .work-avatar{background:#0a0a0a;color:#fff}
+.work-meta{display:grid;gap:2px;color:#0a0a0a}
+.work-type{font-size:.72rem;font-weight:800;letter-spacing:.04em;color:#555}
+.work-meta strong{font-weight:800;font-size:1.05rem;color:#0a0a0a}
+.work-meta span{color:#555}
 .steps{grid-template-columns:repeat(4,1fr);position:relative}
 .steps::before{content:'';position:absolute;top:28px;left:8%;right:8%;height:2px;background:#e5e5e5;z-index:0;pointer-events:none}
 .step{position:relative;z-index:1;transition:border-color .3s,box-shadow .3s,transform .3s}
