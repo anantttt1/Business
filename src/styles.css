@@ -91,6 +91,25 @@ button,input,select,textarea{font:inherit}
 .float-chip svg{color:#0a0a0a}
 .chip-a{top:0;left:-8px}
 .chip-b{bottom:20px;right:-4px;animation-delay:-2.5s}
+.hero-trust{display:flex;align-items:center;gap:8px;margin:18px 0 0;font-size:.9rem;font-weight:600;color:rgba(255,255,255,.7)}
+.hero-trust svg{flex-shrink:0;opacity:.9}
+.trust-strip{padding:28px 0;border-bottom:1px solid var(--line);background:#fff}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.trust-item{display:flex;gap:12px;align-items:flex-start}
+.trust-icon{width:36px;height:36px;border-radius:10px;background:#0a0a0a;color:#fff;display:grid;place-items:center;flex-shrink:0}
+.trust-item strong{display:block;font-size:.95rem;font-weight:800;margin-bottom:2px;color:#0a0a0a}
+.trust-item p{margin:0;font-size:.85rem;color:var(--muted);line-height:1.4}
+.testimonial{margin:32px 0 0;padding:22px 24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--soft);max-width:560px}
+.testimonial p{margin:0 0 12px;font-size:1.05rem;font-weight:600;color:#0a0a0a;line-height:1.45}
+.testimonial footer{display:flex;flex-direction:column;gap:2px;font-size:.9rem}
+.testimonial footer strong{font-weight:800;color:#0a0a0a}
+.testimonial footer span{color:var(--muted)}
+.testimonial footer a{color:#0a0a0a;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.footer-brand .footer-trust{margin:8px 0 0;font-size:.88rem;color:var(--muted);max-width:280px}
+.footer-contact{display:grid;gap:6px}
+.footer-contact p{margin:0 0 4px}
+.footer-contact a{font-weight:600;color:var(--muted)}
+.footer-contact a:hover{color:#0a0a0a}
 .section{padding:72px 0;scroll-margin-top:80px}
 .section-alt{background:var(--soft)}
 .section-head{max-width:640px;margin-bottom:36px}
@@ -211,6 +230,7 @@ button,input,select,textarea{font:inherit}
   .hero-grid,.steps{grid-template-columns:1fr}
   .steps::before{display:none}
   .hero .container.hero-grid{padding:32px 20px}
+  .trust-grid{grid-template-columns:1fr 1fr}
   .nav{display:none;position:absolute;top:72px;left:0;right:0;background:#fff;flex-direction:column;padding:16px;border-bottom:1px solid var(--line)}
   .nav.open{display:flex}
   .menu-btn{display:block}
@@ -222,6 +242,7 @@ button,input,select,textarea{font:inherit}
   .contact-dock .btn{flex:1;justify-content:center;padding:13px 10px;font-weight:800}
   .chip-a{left:0}.chip-b{right:0}
   .hero-actions .btn{flex:1 1 100%;justify-content:center;font-weight:800}
+  .trust-grid{grid-template-columns:1fr}
   .site-footer{padding-bottom:84px}
   .hero-illu{height:260px}
 }
