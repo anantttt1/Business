@@ -296,14 +296,17 @@ function App() {
                   <div className="service-icon"><Icon size={22} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
-                  <div className="service-price">{money(s.price)}</div>
+                  <div className="service-price">
+                    <span className="old-price">{money(s.originalPrice)}</span>
+                    <span className="new-price">{money(s.price)}</span>
+                  </div>
                   {s.note && <p className="service-note">{s.note}</p>}
                   <button className="text-link" onClick={() => openOrder(s.title)}>Enquire on WhatsApp <ArrowRight size={14} /></button>
                 </article>
               )
             })}
           </div>
-          <p className="price-note">Resumes {money(config.services[0].price)} · Resume redesign {money(config.services[4].price)} · Portfolio websites {money(config.services[2].price)}. Any further changes to a portfolio website after delivery: {money(config.correctionPrice)}.</p>
+          <p className="price-note">Limited offer: Resumes from {money(config.services[0].price)} · Resume redesign {money(config.services[4].price)} · Portfolio websites from {money(config.services[2].price)}. Any further changes to a portfolio website after delivery: {money(config.correctionPrice)}.</p>
         </div>
       </section>
 
