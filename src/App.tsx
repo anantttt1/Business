@@ -418,7 +418,7 @@ function App() {
           <ol className="terms-list">
             {terms.map(([t, d]) => <li key={t}><strong>{t}</strong><span>{d}</span></li>)}
           </ol>
-          <label className={`terms-check ${termsHighlight ? 'highlight' : ''`}>
+          <label className={`terms-check ${termsHighlight ? 'highlight' : ''}`}>
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
             <span>I have read and agree to the Terms & Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
           </label>
