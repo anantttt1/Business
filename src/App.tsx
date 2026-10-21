@@ -7,12 +7,8 @@ const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Pr
 const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles]
-const portfolioItems = [
-  { category: 'Student Portfolios', name: 'Aarav Mehta', role: 'Computer Science Student', type: 'STUDENT', color: 'blue', initials: 'AM', tags: ['Projects', 'Skills', 'Journey'] },
-  { category: 'Developer Portfolios', name: 'Riya Kapoor', role: 'Frontend Developer', type: 'DEVELOPER', color: 'purple', initials: 'RK', tags: ['React', 'UI Engineering', 'Open source'] },
-  { category: 'Data Analyst Portfolios', name: 'Kabir Singh', role: 'Aspiring Data Analyst', type: 'DATA', color: 'green', initials: 'KS', tags: ['SQL', 'Python', 'Dashboards'] },
-  { category: 'Professional Resumes', name: 'Neha Verma', role: 'Business Analyst', type: 'RESUME', color: 'sand', initials: 'NV', tags: ['Experience', 'Impact', 'Education'] },
-  { category: 'Creative Portfolios', name: 'Ishaan Rao', role: 'Brand & Visual Designer', type: 'CREATIVE', color: 'pink', initials: 'IR', tags: ['Identity', 'Art direction', 'Selected work'] }
+const portfolioItems: { category: string; name: string; role: string; type: string; color: string; initials: string; tags: string[]; url?: string }[] = [
+  { category: 'Developer Portfolios', name: 'Ujjwal Pratap', role: 'Personal Portfolio Website', type: 'LIVE', color: 'blue', initials: 'UP', tags: ['Live portfolio', 'Projects', 'Skills'], url: 'https://ujjwalpratap001.github.io/ujjwal-portfolio/' }
 ]
 const terms: [string, string][] = [
   ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope, price and timeline are confirmed with you on WhatsApp.'],
@@ -135,7 +131,7 @@ function App() {
       const hero = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero') : null
       if (hero) {
         const r = hero.getBoundingClientRect()
-        hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
+        hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0. conf).toFixed(3))
         hero.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
       }
     }
@@ -313,9 +309,9 @@ function App() {
       <section id="work" className="section">
         <div className="container">
           <div className="section-head">
-            <div className="eyebrow"><span className="eyebrow-line"></span> SAMPLE STYLES</div>
-            <h2>Style examples</h2>
-            <p>Illustrative cards only — not client work. To get a resume or portfolio made, use WhatsApp or the Google Form.</p>
+            <div className="eyebrow"><span className="eyebrow-line"></span> OUR WORK</div>
+            <h2>Live portfolios</h2>
+            <p>Real work we have shipped. Click a card to open the live site. More coming soon.</p>
           </div>
           <div className="filters">
             {categories.map((c) => (
@@ -324,7 +320,15 @@ function App() {
           </div>
           <div className="work-grid reveal-group">
             {filtered.map((item) => (
-              <button key={item.name} data-tilt className={`work-card color-${item.color}`} onClick={() => setPreview(item)}>
+              <button
+                key={item.name}
+                data-tilt
+                className={`work-card color-${item.color}`}
+                onClick={() => {
+                  if (item.url) window.open(item.url, '_blank', 'noopener,noreferrer')
+                  else setPreview(item)
+                }}
+              >
                 <div className="work-avatar">{item.initials}</div>
                 <div className="work-meta">
                   <span className="work-type">{item.type}</span>
@@ -432,7 +436,7 @@ function App() {
             <h3>{preview.name}</h3>
             <p>{preview.role}</p>
             <div className="tags">{preview.tags.map((t) => <span key={t}>{t}</span>)}</div>
-            <p className="muted">Style example only. Want something similar made for you?</p>
+            <p className="muted">Want a portfolio like this made for you?</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
               <button className="btn btn-whatsapp" onClick={() => { setPreview(null); openOrder() }}><MessageCircle size={18} /> WhatsApp enquiry</button>
               <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Google Form</a>
