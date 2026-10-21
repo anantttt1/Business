@@ -22,6 +22,12 @@ const terms: [string, string][] = [
   ['No guarantees', 'We do not guarantee interviews, job offers or ATS results. Sample styles on this site are illustrative and are not client work.'],
   ['Contact', `Questions about these terms: ${config.email} or WhatsApp.`]
 ]
+const trustPoints = [
+  ['Free to enquire', 'WhatsApp or Google Form — no payment needed to start the conversation.'],
+  ['Clear scope first', 'Price and timeline are confirmed with you before any work begins.'],
+  ['Honest pricing', 'What you see is what you pay. Changes after delivery are stated upfront.'],
+  ['Real deliveries', 'Live portfolios from satisfied customers — not stock mockups.']
+]
 const steps = [
   ['01', 'Choose your service', 'Pick the resume or portfolio support that fits your next move.'],
   ['02', 'Share your details', 'Tell us on WhatsApp or fill the Google Form with your goals and deadline.'],
@@ -248,6 +254,7 @@ function App() {
               <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
               <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
             </div>
+            <p className="hero-trust"><ShieldCheck size={16} /> Enquire free · Pay only after scope is clear on WhatsApp</p>
           </div>
           <div className="hero-visual">
             <div className="hero-illu" aria-hidden="true">
@@ -281,6 +288,20 @@ function App() {
         </div>
       </section>
 
+      <section className="trust-strip" aria-label="Why people trust us">
+        <div className="container trust-grid">
+          {trustPoints.map(([t, d]) => (
+            <div key={t} className="trust-item">
+              <div className="trust-icon"><ShieldCheck size={18} /></div>
+              <div>
+                <strong>{t}</strong>
+                <p>{d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="services" className="section">
         <div className="container">
           <div className="section-head">
@@ -297,7 +318,7 @@ function App() {
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
                   <div className="service-price">
-                    <span className="old-price">{money(s.originalPrice)}</span>
+                    <span className="old-price">{money((s as { originalPrice?: number }).originalPrice ?? s.price)}</span>
                     <span className="new-price">{money(s.price)}</span>
                   </div>
                   {s.note && <p className="service-note">{s.note}</p>}
@@ -346,6 +367,14 @@ function App() {
             <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Enquire on WhatsApp</button>
             <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
           </div>
+
+          <blockquote className="testimonial">
+            <p>“Clean portfolio, delivered on time. Easy to share with recruiters.”</p>
+            <footer>
+              <strong>Ujjwal Pratap</strong>
+              <span>Satisfied customer · <a href="https://ujjwalpratap001.github.io/ujjwal-portfolio/" target="_blank" rel="noreferrer">View live site</a></span>
+            </footer>
+          </blockquote>
         </div>
       </section>
 
@@ -389,7 +418,7 @@ function App() {
           <ol className="terms-list">
             {terms.map(([t, d]) => <li key={t}><strong>{t}</strong><span>{d}</span></li>)}
           </ol>
-          <label className={`terms-check ${termsHighlight ? 'highlight' : ''}`}>
+          <label className={`terms-check ${termsHighlight ? 'highlight' : ''`}>
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
             <span>I have read and agree to the Terms & Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
           </label>
@@ -399,16 +428,21 @@ function App() {
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <div>
+          <div className="footer-brand">
             <strong>{config.brand}</strong>
             <p>Resumes · Portfolios · Personal branding</p>
+            <p className="footer-trust">Enquire free on WhatsApp. Scope & price confirmed before work starts.</p>
+          </div>
+          <div className="footer-contact">
+            <p><strong>Contact</strong></p>
+            <a href={`mailto:${config.email}`}>{config.email}</a>
+            <a href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer">WhatsApp: +91 92860 34026</a>
+            <a href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer">Google Form</a>
           </div>
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
-            <a href={`mailto:${config.email}`}>{config.email}</a>
-            <a href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer">WhatsApp</a>
-            <a href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer">Google Form</a>
+            <a href="#terms">T&C on this page</a>
           </div>
         </div>
       </footer>
