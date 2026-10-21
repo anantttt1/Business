@@ -7,6 +7,7 @@ const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Pr
 const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles]
+/* live work list — demos removed */
 const portfolioItems: { category: string; name: string; role: string; type: string; color: string; initials: string; tags: string[]; url?: string }[] = [
   { category: 'Developer Portfolios', name: 'Ujjwal Pratap', role: 'Personal Portfolio Website', type: 'LIVE', color: 'blue', initials: 'UP', tags: ['Live portfolio', 'Projects', 'Skills'], url: 'https://ujjwalpratap001.github.io/ujjwal-portfolio/' }
 ]
@@ -131,7 +132,7 @@ function App() {
       const hero = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero') : null
       if (hero) {
         const r = hero.getBoundingClientRect()
-        hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0. conf).toFixed(3))
+        hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
         hero.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
       }
     }
