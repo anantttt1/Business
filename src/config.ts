@@ -7,10 +7,10 @@ export const config = {
   googleFormUrl: import.meta.env.VITE_GOOGLE_FORM_URL || 'https://forms.gle/giqJYaECf3upcc6Y7',
   correctionPrice,
   services: [
-    { title: 'Professional Resume Creation', description: 'A sharp, story-led resume that makes your strengths easy to see.', price: 299, icon: 'file' },
-    { title: 'ATS-Friendly Resume Design', description: 'A clean, readable format built to work well with common ATS parsers.', price: 299, icon: 'scan' },
-    { title: 'Personal Portfolio Website', description: 'A responsive home for your projects, skills, story and contact details.', price: 499, note: `Any further changes after delivery will cost ₹${correctionPrice}.`, icon: 'monitor' },
-    { title: 'Student & Fresher Portfolio', description: 'Turn coursework, projects and potential into a confident first impression.', price: 499, note: `Any further changes after delivery will cost ₹${correctionPrice}.`, icon: 'graduation' },
-    { title: 'Resume Redesign & Improvement', description: 'Improve hierarchy, clarity and impact while keeping your story authentic.', price: 99, icon: 'sparkles' }
+    { title: 'Professional Resume Creation', description: 'A sharp, story-led resume that makes your strengths easy to see.', originalPrice: 499, price: 299, icon: 'file' },
+    { title: 'ATS-Friendly Resume Design', description: 'A clean, readable format built to work well with common ATS parsers.', originalPrice: 349, price: 299, icon: 'scan' },
+    { title: 'Personal Portfolio Website', description: 'A responsive home for your projects, skills, story and contact details.', originalPrice: 799, price: 499, note: `Any further changes after delivery will cost ₹${correctionPrice}.`, icon: 'monitor' },
+    { title: 'Student & Fresher Portfolio', description: 'Turn coursework, projects and potential into a confident first impression.', originalPrice: 699, price: 499, note: `Any further changes after delivery will cost ₹${correctionPrice}.`, icon: 'graduation' },
+    { title: 'Resume Redesign & Improvement', description: 'Improve hierarchy, clarity and impact while keeping your story authentic.', originalPrice: 179, price: 99, icon: 'sparkles' }
   ]
 }
