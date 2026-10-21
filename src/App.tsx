@@ -242,12 +242,6 @@ function App() {
       </header>
 
       <section className="hero">
-        <div className="hero-mesh" aria-hidden="true">
-          <span className="orb orb-1"></span>
-          <span className="orb orb-2"></span>
-          <span className="orb orb-3"></span>
-          <span className="grid-floor"></span>
-        </div>
         <div className="container hero-grid">
           <div>
             <div className="eyebrow"><span className="eyebrow-line"></span> PERSONAL BRANDING STUDIO</div>
@@ -259,17 +253,33 @@ function App() {
             </div>
           </div>
           <div className="hero-visual">
+            <div className="hero-illu" aria-hidden="true">
+              <div className="illu-blob"></div>
+              <div className="illu-spiral"></div>
+              <div className="illu-card float-a">
+                <div className="illu-card-lines"><span></span><span></span><span></span></div>
+                <strong>Resume</strong>
+              </div>
+              <div className="illu-card float-b">
+                <div className="illu-card-dot"></div>
+                <strong>Portfolio</strong>
+              </div>
+              <div className="illu-person">
+                <div className="illu-hair"></div>
+                <div className="illu-face">
+                  <span className="illu-eye"></span>
+                  <span className="illu-eye"></span>
+                  <span className="illu-smile"></span>
+                </div>
+                <div className="illu-body"></div>
+                <div className="illu-arm"></div>
+                <div className="illu-leg l"></div>
+                <div className="illu-leg r"></div>
+                <div className="illu-chair"></div>
+              </div>
+            </div>
             <span className="float-chip chip-a"><FileText size={15} /> ATS Resume</span>
             <span className="float-chip chip-b"><Monitor size={15} /> Portfolio Site</span>
-            <div className="hero-card" data-tilt>
-              <div className="hero-card-top"><ShieldCheck size={18} /> Clear scope · WhatsApp support · Honest pricing</div>
-              <ul className="hero-list">
-                <li><Check size={16} /> ATS-friendly resume layouts</li>
-                <li><Check size={16} /> Mobile-first portfolio sites</li>
-                <li><Check size={16} /> Services from just ₹99</li>
-                <li><Check size={16} /> No fake claims or guarantees</li>
-              </ul>
-            </div>
           </div>
         </div>
       </section>
