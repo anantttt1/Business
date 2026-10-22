@@ -1,4 +1,4 @@
-const correctionPrice = 199
+const correctionPrice = 59
 
 export const config = {
   brand: import.meta.env.VITE_BRAND_NAME || 'AP Creative Studio',
