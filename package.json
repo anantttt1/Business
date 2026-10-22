@@ -1,13 +1,13 @@
 {
   "name": "ap-creative-studio",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "postinstall": "node node_modules/esbuild/install.js"
+    "postinstall": "node node_modules/esbuild/install.js || true"
   },
   "engines": {
     "node": "20.x"
