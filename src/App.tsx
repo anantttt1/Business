@@ -15,7 +15,7 @@ const portfolioItems: { category: string; name: string; role: string; type: stri
 const terms: [string, string][] = [
   ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope, price and timeline are confirmed with you on WhatsApp.'],
   ['Payment', 'The price and any advance are confirmed before work starts. Final files are delivered after full payment.'],
-  ['Changes after delivery', `Any further changes to a portfolio website after delivery cost ${money(config.correctionPrice)}. Changes to resumes are agreed with you on WhatsApp.`],
+  ['Changes after delivery', `For portfolio websites, changes are free for ${config.freeChangeDays} days after delivery. After that, any further changes cost ${money(config.correctionPrice)}. Changes to resumes are agreed with you on WhatsApp.`],
   ['Timeline', 'Delivery time depends on the service and on how quickly you share your details and feedback. Delays from your side move the deadline.'],
   ['Your information', 'The details you share must be accurate and yours to share. We use them only to complete your work and never sell or publish them.'],
   ['Refunds & cancellation', 'Once work has started, the advance paid is non-refundable. If we are unable to deliver your work, you get a refund of the amount paid.'],
@@ -334,7 +334,7 @@ function App() {
               )
             })}
           </div>
-          <p className="price-note">Limited offer: Resumes from {money(config.services[0].price)} · Resume redesign {money(config.services[4].price)} · Portfolio websites from {money(config.services[2].price)}. Any further changes to a portfolio website after delivery: {money(config.correctionPrice)}.</p>
+          <p className="price-note">Limited offer: Resumes from {money(config.services[0].price)} · Resume redesign {money(config.services[4].price)} · Portfolio websites from {money(config.services[2].price)}. Portfolio websites: changes are free for {config.freeChangeDays} days after delivery, then {money(config.correctionPrice)} for any further changes.</p>
         </div>
       </section>
 
