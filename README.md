@@ -10,10 +10,13 @@ npm run dev
 Production build: `npm run build` (output in `dist/`).
 
 ## Configuration
-Services and prices live in `src/config.ts`. Optional environment variables (public, never put secrets here): `VITE_BRAND_NAME`, `VITE_WHATSAPP_NUMBER` (country code + number, digits only), `VITE_CONTACT_EMAIL`, `VITE_GOOGLE_FORM_URL`. See `.env.example`.
+Services and prices live in `src/config.ts`. Optional environment variables (public, never put secrets here): `VITE_BRAND_NAME`, `VITE_WHATSAPP_NUMBER` (country code + number, digits only), `VITE_CONTACT_EMAIL`, `VITE_GOOGLE_FORM_URL`. Values are validated in `src/config.ts` (https-only Form URL, digits-only phone, well-formed email) and fall back to the defaults there if invalid.
 
 ## Deploy (Vercel)
-Framework preset Vite, build `npm run build`, output `dist`. Security headers (CSP, frame blocking, nosniff, HSTS, referrer and permissions policies) are set in `vercel.json`.
+Framework preset Vite, build `npm run build`, output `dist`. Security headers (strict CSP with no inline scripts or styles, frame blocking, nosniff, HSTS, referrer, permissions and cross-origin policies) are set in `vercel.json`.
+
+## Icons
+The favicon set (`favicon.ico`, `icon-192.png`, `apple-touch-icon.png`) lives in `public/` and is generated from the AP logo.
 
 ## Security notes
 - No secrets, database or admin panel in this repo. Do not commit `.env`.

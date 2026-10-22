@@ -1,10 +1,26 @@
 const correctionPrice = 59
 
+// Values can come from public VITE_* env vars, so validate them before they reach a link.
+const httpsUrl = (value: string | undefined, fallback: string): string => {
+  try {
+    const u = new URL(value ?? '')
+    return u.protocol === 'https:' ? u.toString() : fallback
+  } catch {
+    return fallback
+  }
+}
+const phoneDigits = (value: string | undefined, fallback: string): string => {
+  const d = (value ?? '').replace(/\D/g, '')
+  return d.length >= 10 && d.length <= 15 ? d : fallback
+}
+const emailOr = (value: string | undefined, fallback: string): string =>
+  /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(value ?? '') ? (value as string) : fallback
+
 export const config = {
   brand: import.meta.env.VITE_BRAND_NAME || 'AP Creative Studio',
-  whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || '919286034026',
-  email: import.meta.env.VITE_CONTACT_EMAIL || 'apcreativestudio0@gmail.com',
-  googleFormUrl: import.meta.env.VITE_GOOGLE_FORM_URL || 'https://forms.gle/giqJYaECf3upcc6Y7',
+  whatsapp: phoneDigits(import.meta.env.VITE_WHATSAPP_NUMBER, '919286034026'),
+  email: emailOr(import.meta.env.VITE_CONTACT_EMAIL, 'apcreativestudio0@gmail.com'),
+  googleFormUrl: httpsUrl(import.meta.env.VITE_GOOGLE_FORM_URL, 'https://forms.gle/giqJYaECf3upcc6Y7'),
   correctionPrice,
   services: [
     { title: 'Professional Resume Creation', description: 'A sharp, story-led resume that makes your strengths easy to see.', originalPrice: 249, price: 99, icon: 'file' },
