@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, Check, ClipboardList, FileText, GraduationCap, Image, Menu, MessageCircle, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, Check, ClipboardList, FileText, GraduationCap, Image as ImageIcon, Menu, MessageCircle, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
 const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹49 – ₹149', deadline: '', requirements: '' }
 const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
-const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles, Image]
-/* live work list — demos removed */
+const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles, ImageIcon]
 const portfolioItems: { category: string; name: string; role: string; type: string; color: string; initials: string; tags: string[]; url?: string }[] = [
   { category: 'Developer Portfolios', name: 'Ujjwal Pratap', role: 'Personal Portfolio Website', type: 'SATISFIED CUSTOMER', color: 'blue', initials: 'UP', tags: ['Live portfolio', 'Projects', 'Skills'], url: 'https://ujjwalpratap001.github.io/ujjwal-portfolio/' }
 ]
@@ -220,13 +219,6 @@ function App() {
     setForm(initialForm)
   }
 
-  const FormReminder = ({ light = false }: { light?: boolean }) => (
-    <div className={`form-reminder ${light ? 'on-light' : ''}`.trim()}>
-      <ClipboardList size={16} />
-      <span><strong>Prefer a form?</strong> You can also use the Google Form — same enquiry, no payment needed.</span>
-    </div>
-  )
-
   return (
     <div className="app">
       <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} aria-hidden="true" />
@@ -319,16 +311,18 @@ function App() {
           <div className="service-grid reveal-group">
             {config.services.map((s, i) => {
               const Icon = icons[i] || FileText
+              const note = 'note' in s ? (s as { note?: string }).note : undefined
+              const originalPrice = 'originalPrice' in s ? (s as { originalPrice?: number }).originalPrice : undefined
               return (
                 <article key={s.title} className="service-card" data-tilt>
                   <div className="service-icon"><Icon size={22} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
                   <div className="service-price">
-                    <span className="old-price">{money((s as { originalPrice?: number }).originalPrice ?? s.price)}</span>
+                    <span className="old-price">{money(originalPrice ?? s.price)}</span>
                     <span className="new-price">{money(s.price)}</span>
                   </div>
-                  {s.note && <p className="service-note">{s.note}</p>}
+                  {note && <p className="service-note">{note}</p>}
                   <button className="text-link" onClick={() => openOrder(s.title)}>Enquire on WhatsApp <ArrowRight size={14} /></button>
                 </article>
               )
@@ -516,7 +510,10 @@ function App() {
                 <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} maxLength={1000} /></label>
               </div>
               <div className="form-submit-row">
-                <FormReminder light />
+                <div className="form-reminder on-light">
+                  <ClipboardList size={16} />
+                  <span><strong>Prefer a form?</strong> You can also use the Google Form — same enquiry, no payment needed.</span>
+                </div>
                 <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Open Google Form</a>
                 <button className="btn btn-whatsapp" type="submit"><MessageCircle size={18} /> Send on WhatsApp</button>
               </div>
