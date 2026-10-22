@@ -413,7 +413,7 @@ function App() {
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> TERMS</div>
-            <h2>Terms &amp; Conditions</h2>
+            <h2>Terms & Conditions</h2>
             <p>Please read these before you contact us on WhatsApp or the Google Form.</p>
           </div>
           <ol className="terms-list">
@@ -421,7 +421,7 @@ function App() {
           </ol>
           <label className={`terms-check ${termsHighlight ? 'highlight' : ''`}>
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-            <span>I have read and agree to the Terms &amp; Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
+            <span>I have read and agree to the Terms & Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
           </label>
           {agreed && <p className="terms-ok"><Check size={16} /> Thank you! You can now use WhatsApp and the Google Form.</p>}
         </div>
@@ -432,18 +432,18 @@ function App() {
           <div className="footer-brand">
             <strong>{config.brand}</strong>
             <p>Resumes · Portfolios · Posters · Personal branding</p>
-            <p className="footer-trust">Enquire free on WhatsApp. Scope &amp; price confirmed before work starts.</p>
+            <p className="footer-trust">Enquire free on WhatsApp. Scope & price confirmed before work starts.</p>
           </div>
           <div className="footer-contact">
             <p><strong>Contact</strong></p>
-            <a href={`mailto:${config.email}`}>{config.email}</a>
+            <a href={"mailto:" + config.email}>{config.email}</a>
             <a href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer">WhatsApp: +91 92860 34026</a>
             <a href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer">Google Form</a>
           </div>
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
-            <a href="#terms">T&amp;C on this page</a>
+            <a href="#terms">T&C on this page</a>
           </div>
         </div>
       </footer>
@@ -457,10 +457,10 @@ function App() {
         <div className="modal-backdrop" onClick={() => setTermsPrompt(false)}>
           <div className="modal terms-modal" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setTermsPrompt(false)} aria-label="Close"><X size={18} /></button>
-            <h3>Please read the T&amp;C first</h3>
-            <p className="muted">To contact us on WhatsApp or the Google Form, please read the Terms &amp; Conditions and tick the checkbox.</p>
+            <h3>Please read the T&C first</h3>
+            <p className="muted">To contact us on WhatsApp or the Google Form, please read the Terms & Conditions and tick the checkbox.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
-              <button className="btn btn-primary" onClick={goToTerms}>Read T&amp;C</button>
+              <button className="btn btn-primary" onClick={goToTerms}>Read T&C</button>
               <button className="btn btn-ghost" onClick={() => setTermsPrompt(false)}>Close</button>
             </div>
           </div>
