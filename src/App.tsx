@@ -45,11 +45,22 @@ function App() {
   const [termsHighlight, setTermsHighlight] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeStep, setActiveStep] = useState(0)
+  const [showSplash, setShowSplash] = useState(true)
+  const [splashOut, setSplashOut] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = orderOpen || preview || termsPrompt ? 'hidden' : ''
+    document.body.style.overflow = orderOpen || preview || termsPrompt || showSplash ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [orderOpen, preview, termsPrompt])
+  }, [orderOpen, preview, termsPrompt, showSplash])
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const outMs = reduce ? 0 : 1600
+    const hideMs = reduce ? 0 : 2400
+    const t1 = window.setTimeout(() => setSplashOut(true), outMs)
+    const t2 = window.setTimeout(() => setShowSplash(false), hideMs)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [])
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -63,14 +74,6 @@ function App() {
         const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
         setScrollProgress(p)
         doc.style.setProperty('--scroll', p.toFixed(4))
-        const hero = document.querySelector<HTMLElement>('.hero')
-        if (hero && !reduce) {
-          const r = hero.getBoundingClientRect()
-          const mid = (r.top + r.bottom) / 2
-          const vh = window.innerHeight
-          const t = Math.max(-1, Math.min(1, (vh / 2 - mid) / vh))
-          hero.style.setProperty('--parallax', t.toFixed(3))
-        }
         const stepEls = document.querySelectorAll<HTMLElement>('.step[data-step]')
         let best = 0
         stepEls.forEach((el, i) => {
@@ -91,74 +94,20 @@ function App() {
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    const root = document.documentElement
-    const glow = document.querySelector<HTMLElement>('.cursor-glow')
-    let io: IntersectionObserver | undefined
-    if (!reduce && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => entries.forEach((en) => {
-        if (en.isIntersecting) {
-          en.target.classList.add('in')
-          observer.unobserve(en.target)
-        }
-      }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
-      io = observer
-      document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner, .work-card, .price-note, .terms-list li').forEach((el, i) => {
-        el.classList.add('reveal')
-        el.style.setProperty('--reveal-delay', `${(i % 6) * 60}ms`)
-        observer.observe(el)
-      })
-    }
-    if (reduce || !canHover) return () => io?.disconnect()
-
-    const find = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLElement>('[data-tilt]') : null)
-    let raf = 0
-    let lx = 0
-    let ly = 0
-    const onMove = (e: MouseEvent) => {
-      lx = e.clientX
-      ly = e.clientY
-      if (!raf) {
-        raf = requestAnimationFrame(() => {
-          raf = 0
-          root.style.setProperty('--cx', `${lx}px`)
-          root.style.setProperty('--cy', `${ly}px`)
-          glow?.classList.add('on')
-        })
+    if (reduce || !('IntersectionObserver' in window)) return
+    const observer = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) {
+        en.target.classList.add('in')
+        observer.unobserve(en.target)
       }
-      const el = find(e.target)
-      if (el) {
-        const r = el.getBoundingClientRect()
-        el.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 12}deg`)
-        el.style.setProperty('--rx', `${-((e.clientY - r.top) / r.height - 0.5) * 12}deg`)
-        el.style.setProperty('--mx', `${e.clientX - r.left}px`)
-        el.style.setProperty('--my', `${e.clientY - r.top}px`)
-      }
-      const hero = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero') : null
-      if (hero) {
-        const r = hero.getBoundingClientRect()
-        hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
-        hero.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
-      }
-    }
-    const onOut = (e: MouseEvent) => {
-      const el = find(e.target)
-      if (!el || (e.relatedTarget instanceof Node && el.contains(e.relatedTarget))) return
-      el.style.setProperty('--rx', '0deg')
-      el.style.setProperty('--ry', '0deg')
-    }
-    const onLeaveDoc = () => glow?.classList.remove('on')
-    document.addEventListener('mousemove', onMove)
-    document.addEventListener('mouseout', onOut)
-    root.addEventListener('mouseleave', onLeaveDoc)
-    return () => {
-      io?.disconnect()
-      if (raf) cancelAnimationFrame(raf)
-      document.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseout', onOut)
-      root.removeEventListener('mouseleave', onLeaveDoc)
-    }
-  }, [])
+    }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
+    document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner, .work-card, .price-note, .terms-list li, .trust-item').forEach((el, i) => {
+      el.classList.add('reveal')
+      el.style.setProperty('--reveal-delay', `${(i % 6) * 60}ms`)
+      observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [showSplash])
 
   useEffect(() => {
     if (!orderOpen && !preview && !termsPrompt) return
@@ -221,8 +170,18 @@ function App() {
 
   return (
     <div className="app">
+      {showSplash && (
+        <div className={`splash ${splashOut ? 'splash-out' : ''}`} aria-hidden={splashOut}>
+          <div className="splash-inner">
+            <p className="splash-eyebrow">AP CREATIVE STUDIO</p>
+            <h1 className="splash-title">Welcome</h1>
+            <p className="splash-sub">Resumes · Portfolios · Posters</p>
+          </div>
+        </div>
+      )}
+
       <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} aria-hidden="true" />
-      <div className="cursor-glow" aria-hidden="true" />
+
       <div className="notice-bar" role="status">
         <span className="notice-dot" aria-hidden="true" />
         <p><strong>Website under construction</strong> — enquire anytime on <a href={whatsappUrl('Hi')} onClick={gate} target="_blank" rel="noreferrer">WhatsApp</a> or the <a href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer">Google Form</a>.</p>
@@ -244,45 +203,22 @@ function App() {
       </header>
 
       <section className="hero">
+        <div className="hero-bg" aria-hidden="true">
+          <div className="hero-mist"></div>
+          <div className="hero-doc hero-doc-a"></div>
+          <div className="hero-doc hero-doc-b"></div>
+          <div className="hero-doc hero-doc-c"></div>
+        </div>
         <div className="container hero-grid">
-          <div>
+          <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line"></span> PERSONAL BRANDING STUDIO</div>
-            <h1>Stand out.<br /><span>Get noticed.</span><br />Get hired.</h1>
+            <h1>Stand out.<br />Get noticed.<br /><span>Get hired.</span></h1>
             <p className="hero-lead">We craft resumes, portfolio websites and posters that make your skills easy to see — for students, freshers and professionals.</p>
             <div className="hero-actions">
               <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
               <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
             </div>
             <p className="hero-trust"><ShieldCheck size={16} /> Enquire free · Pay only after scope is clear on WhatsApp</p>
-          </div>
-          <div className="hero-visual">
-            <div className="hero-illu" aria-hidden="true">
-              <div className="illu-blob"></div>
-              <div className="illu-spiral"></div>
-              <div className="illu-card float-a">
-                <div className="illu-card-lines"><span></span><span></span><span></span></div>
-                <strong>Resume</strong>
-              </div>
-              <div className="illu-card float-b">
-                <div className="illu-card-dot"></div>
-                <strong>Portfolio</strong>
-              </div>
-              <div className="illu-person">
-                <div className="illu-hair"></div>
-                <div className="illu-face">
-                  <span className="illu-eye"></span>
-                  <span className="illu-eye"></span>
-                  <span className="illu-smile"></span>
-                </div>
-                <div className="illu-body"></div>
-                <div className="illu-arm"></div>
-                <div className="illu-leg l"></div>
-                <div className="illu-leg r"></div>
-                <div className="illu-chair"></div>
-              </div>
-            </div>
-            <span className="float-chip chip-a"><FileText size={15} /> ATS Resume</span>
-            <span className="float-chip chip-b"><Monitor size={15} /> Portfolio Site</span>
           </div>
         </div>
       </section>
@@ -308,13 +244,13 @@ function App() {
             <h2>What we help you ship</h2>
             <p>Pick a service. Message on WhatsApp or fill the Google Form — no payment required to enquire.</p>
           </div>
-          <div className="service-grid reveal-group">
+          <div className="service-grid">
             {config.services.map((s, i) => {
               const Icon = icons[i] || FileText
               const note = 'note' in s ? (s as { note?: string }).note : undefined
               const originalPrice = 'originalPrice' in s ? (s as { originalPrice?: number }).originalPrice : undefined
               return (
-                <article key={s.title} className="service-card" data-tilt>
+                <article key={s.title} className="service-card">
                   <div className="service-icon"><Icon size={22} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
@@ -332,7 +268,7 @@ function App() {
         </div>
       </section>
 
-      <section id="work" className="section">
+      <section id="work" className="section section-alt">
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> OUR WORK</div>
@@ -344,11 +280,10 @@ function App() {
               <button key={c} className={activeCategory === c ? 'active' : ''} onClick={() => setActiveCategory(c)}>{c}</button>
             ))}
           </div>
-          <div className="work-grid reveal-group">
+          <div className="work-grid">
             {filtered.map((item) => (
               <button
                 key={item.name}
-                data-tilt
                 className={`work-card color-${item.color}`}
                 onClick={() => {
                   if (item.url) window.open(item.url, '_blank', 'noopener,noreferrer')
@@ -364,7 +299,7 @@ function App() {
               </button>
             ))}
           </div>
-          <div style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+          <div className="work-cta-row">
             <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Enquire on WhatsApp</button>
             <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
           </div>
@@ -379,15 +314,15 @@ function App() {
         </div>
       </section>
 
-      <section id="process" className="section section-alt">
+      <section id="process" className="section">
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> PROCESS</div>
             <h2>How it works</h2>
           </div>
-          <div className="steps reveal-group">
+          <div className="steps">
             {steps.map(([n, t, d], i) => (
-              <div key={n} className={`step ${activeStep === i ? 'step-active' : ''}`} data-tilt data-step={i}>
+              <div key={n} className={`step ${activeStep === i ? 'step-active' : ''}`} data-step={i}>
                 <div className="step-num">{n}</div>
                 <h3>{t}</h3>
                 <p>{d}</p>
@@ -413,7 +348,7 @@ function App() {
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> TERMS</div>
-            <h2>Terms & Conditions</h2>
+            <h2>Terms &amp; Conditions</h2>
             <p>Please read these before you contact us on WhatsApp or the Google Form.</p>
           </div>
           <ol className="terms-list">
@@ -421,7 +356,7 @@ function App() {
           </ol>
           <label className={`terms-check ${termsHighlight ? 'highlight' : ''`}>
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-            <span>I have read and agree to the Terms & Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
+            <span>I have read and agree to the Terms &amp; Conditions. <em>Required to contact us on WhatsApp or the Google Form.</em></span>
           </label>
           {agreed && <p className="terms-ok"><Check size={16} /> Thank you! You can now use WhatsApp and the Google Form.</p>}
         </div>
@@ -432,7 +367,7 @@ function App() {
           <div className="footer-brand">
             <strong>{config.brand}</strong>
             <p>Resumes · Portfolios · Posters · Personal branding</p>
-            <p className="footer-trust">Enquire free on WhatsApp. Scope & price confirmed before work starts.</p>
+            <p className="footer-trust">Enquire free on WhatsApp. Scope &amp; price confirmed before work starts.</p>
           </div>
           <div className="footer-contact">
             <p><strong>Contact</strong></p>
@@ -443,7 +378,7 @@ function App() {
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
-            <a href="#terms">T&C on this page</a>
+            <a href="#terms">T&amp;C on this page</a>
           </div>
         </div>
       </footer>
@@ -457,10 +392,10 @@ function App() {
         <div className="modal-backdrop" onClick={() => setTermsPrompt(false)}>
           <div className="modal terms-modal" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setTermsPrompt(false)} aria-label="Close"><X size={18} /></button>
-            <h3>Please read the T&C first</h3>
-            <p className="muted">To contact us on WhatsApp or the Google Form, please read the Terms & Conditions and tick the checkbox.</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
-              <button className="btn btn-primary" onClick={goToTerms}>Read T&C</button>
+            <h3>Please read the T&amp;C first</h3>
+            <p className="muted">To contact us on WhatsApp or the Google Form, please read the Terms &amp; Conditions and tick the checkbox.</p>
+            <div className="modal-actions">
+              <button className="btn btn-primary" onClick={goToTerms}>Read T&amp;C</button>
               <button className="btn btn-ghost" onClick={() => setTermsPrompt(false)}>Close</button>
             </div>
           </div>
@@ -476,7 +411,7 @@ function App() {
             <p>{preview.role}</p>
             <div className="tags">{preview.tags.map((t) => <span key={t}>{t}</span>)}</div>
             <p className="muted">Want a portfolio like this made for you?</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
+            <div className="modal-actions">
               <button className="btn btn-whatsapp" onClick={() => { setPreview(null); openOrder() }}><MessageCircle size={18} /> WhatsApp enquiry</button>
               <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Google Form</a>
             </div>
