@@ -29,6 +29,7 @@ export const config = {
     { title: 'ATS-Friendly Resume Design', description: 'A clean, readable format built to work well with common ATS parsers.', originalPrice: 249, price: 99, icon: 'scan' },
     { title: 'Personal Portfolio Website', description: 'A responsive home for your projects, skills, story and contact details.', originalPrice: 359, price: 149, note: `Changes are free for ${freeChangeDays} days after delivery. After that, any further changes cost ₹${correctionPrice}.`, icon: 'monitor' },
     { title: 'Student & Fresher Portfolio', description: 'Turn coursework, projects and potential into a confident first impression.', originalPrice: 359, price: 149, note: `Changes are free for ${freeChangeDays} days after delivery. After that, any further changes cost ₹${correctionPrice}.`, icon: 'graduation' },
-    { title: 'Resume Redesign & Improvement', description: 'Improve hierarchy, clarity and impact while keeping your story authentic.', originalPrice: 119, price: 49, icon: 'sparkles' }
+    { title: 'Resume Redesign & Improvement', description: 'Improve hierarchy, clarity and impact while keeping your story authentic.', originalPrice: 119, price: 49, icon: 'sparkles' },
+    { title: 'Poster Design', description: 'Event, college or social posters that look sharp and get attention.', originalPrice: 99, price: 49, icon: 'image' }
   ]
 }
