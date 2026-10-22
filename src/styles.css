@@ -246,3 +246,11 @@ button,input,select,textarea{font:inherit}
   .site-footer{padding-bottom:84px}
   .hero-illu{height:260px}
 }
+
+/* Google Form -> WhatsApp reminder */
+.form-reminder{display:flex;align-items:flex-start;gap:10px;margin:16px 0 0;padding:10px 14px;max-width:31rem;border:1px dashed rgba(255,255,255,.4);border-radius:14px;background:rgba(255,255,255,.08);color:#fff;font-size:.92rem;font-weight:600;line-height:1.4}
+.form-reminder svg{flex-shrink:0;margin-top:2px}
+.form-reminder a{color:inherit;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+.form-reminder a:hover{text-decoration-thickness:2px}
+.form-reminder.center{margin:18px auto 0;text-align:left}
+.form-reminder.on-light{max-width:none;margin-top:14px;border:1px solid var(--line);background:var(--soft);color:var(--ink)}

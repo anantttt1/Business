@@ -3,7 +3,7 @@ import { ArrowRight, Check, ClipboardList, FileText, GraduationCap, Menu, Messag
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
-const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹99 – ₹499', deadline: '', requirements: '' }
+const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Professional Resume Creation', budget: '₹49 – ₹149', deadline: '', requirements: '' }
 const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles]
@@ -220,6 +220,13 @@ function App() {
     setForm(initialForm)
   }
 
+  const formReminder = (cls = '') => (
+    <div className={`form-reminder ${cls}`.trim()}>
+      <MessageCircle size={16} />
+      <span>Filled the Google Form? Please also <a href={whatsappUrl('Hi, I have filled the Google Form.')} onClick={gate} target="_blank" rel="noreferrer">send a quick message on WhatsApp</a> so we can spot it.</span>
+    </div>
+  )
+
   return (
     <div className="app">
       <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} aria-hidden="true" />
@@ -254,6 +261,7 @@ function App() {
               <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
               <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
             </div>
+            {formReminder()}
             <p className="hero-trust"><ShieldCheck size={16} /> Enquire free · Pay only after scope is clear on WhatsApp</p>
           </div>
           <div className="hero-visual">
@@ -405,6 +413,7 @@ function App() {
             <button className="btn btn-whatsapp btn-lg" onClick={() => openOrder()}><MessageCircle size={20} /> WhatsApp enquiry</button>
             <a className="btn btn-form btn-lg" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={20} /> Google Form</a>
           </div>
+          {formReminder('center')}
         </div>
       </section>
 
@@ -501,7 +510,7 @@ function App() {
                 </label>
                 <label>Approx. budget
                   <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })}>
-                    <option>₹99 – ₹499</option>
+                    <option>₹49 – ₹149</option>
                     <option>Flexible / discuss</option>
                   </select>
                 </label>
@@ -512,6 +521,7 @@ function App() {
                 <a className="btn btn-form" href={config.googleFormUrl} onClick={gate} target="_blank" rel="noreferrer"><ClipboardList size={18} /> Open Google Form</a>
                 <button className="btn btn-whatsapp" type="submit"><MessageCircle size={18} /> Send on WhatsApp</button>
               </div>
+              {formReminder('on-light')}
             </form>
           </div>
         </div>
