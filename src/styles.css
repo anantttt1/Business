@@ -295,7 +295,6 @@ button,input,select,textarea{font:inherit}
 .cta-actions .btn-form{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.7);box-shadow:none}
 .cta-actions .btn-form:hover{background:#fff;color:var(--navy);border-color:#fff}
 
-/* Our Team */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
 .team-card{
   background:#fff;border:1px solid var(--line);border-radius:var(--radius);
@@ -405,22 +404,29 @@ button,input,select,textarea{font:inherit}
   .splash-enter{animation:none!important}
 }
 @media (max-width:900px){
-  .hero{padding:52px 0 64px}
-  .hero-art{width:100%;opacity:.28;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 35%,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 35%,#000 70%,transparent 100%)}
+  .hero{padding:48px 0 56px}
+  .hero-art{display:none}
+  .hero-copy{max-width:100%;position:relative;z-index:2}
+  .hero-lead{max-width:100%;color:#374151}
+  .hero h1{font-size:clamp(2.1rem,9vw,3rem)}
   .steps{grid-template-columns:1fr}
   .steps::before{display:none}
   .trust-grid{grid-template-columns:1fr 1fr}
-  .nav{display:none;position:absolute;top:68px;left:0;right:0;background:#fff;flex-direction:column;align-items:flex-start;padding:16px 20px;border-bottom:1px solid var(--line);gap:14px}
+  .nav{display:none;position:absolute;top:68px;left:0;right:0;background:#fff;flex-direction:column;align-items:flex-start;padding:16px 20px;border-bottom:1px solid var(--line);gap:14px;z-index:50}
   .nav.open{display:flex}
   .menu-btn{display:block}
   .order-form .form-grid{grid-template-columns:1fr}
 }
 @media (max-width:600px){
   .notice-bar{font-size:.8rem;padding:8px 12px;text-align:left}
-  .contact-dock{left:12px;right:12px;bottom:12px}
-  .contact-dock .btn{flex:1;justify-content:center;padding:12px 10px}
-  .hero-actions .btn{flex:1 1 100%;justify-content:center}
+  .contact-dock{left:10px;right:10px;bottom:10px;gap:8px}
+  .contact-dock .btn{flex:1;justify-content:center;padding:12px 8px;font-size:.78rem;letter-spacing:0}
+  .hero{padding:40px 0 48px}
+  .hero-actions{flex-direction:column;gap:10px}
+  .hero-actions .btn{flex:1 1 100%;justify-content:center;width:100%}
+  .hero-lead{font-size:1rem}
   .trust-grid{grid-template-columns:1fr}
-  .site-footer{padding-bottom:88px}
+  .site-footer{padding-bottom:92px}
   .splash-enter{font-size:.78rem;padding:9px 18px}
+  .btn-form{white-space:normal;line-height:1.25;text-align:center}
 }
