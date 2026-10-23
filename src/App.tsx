@@ -34,22 +34,40 @@ const steps = [
   ['03', 'We design your story', 'We shape your information into a clear, polished and professional experience.'],
   ['04', 'Review & receive', 'Review the work, request included revisions, and receive your final files or website.']
 ]
+const LinkedinIcon = ({ size = 16 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+)
 const teamMembers: { name: string; role: string; bio: string; photo?: string; linkedin: string; portfolio: string }[] = [
+  {
+    name: 'Prince Tyagi',
+    role: 'Co-Founder',
+    photo: '/team/prince-tyagi.jpg',
+    linkedin: 'https://www.linkedin.com/in/prince-tyagi-2147482',
+    portfolio: 'https://prince-tyagi-portfolio.pages.dev/',
+    bio: 'Works with the founder to plan projects and keep timelines on track. Focused on clear communication, so you always know what happens next.'
+  },
   {
     name: 'Anant Goyal',
     role: 'Founder',
-    bio: 'Building AP Creative Studio — resumes, portfolios and personal branding for students and professionals.',
-    linkedin: '',
-    portfolio: ''
+    photo: '/team/anant-goyal.jpg',
+    linkedin: 'https://www.linkedin.com/in/anant-goyal-417b8137',
+    portfolio: 'https://anantgoyalportfolio.vercel.app/',
+    bio: "Started AP Creative Studio to help students and freshers show their skills with confidence. Sets the studio's direction and keeps the quality of every delivery high."
   },
   {
     name: 'Ujjwal Pratap Singh',
-    role: 'Team',
-    bio: 'Helping craft portfolios and personal brand experiences.',
-    linkedin: '',
-    portfolio: 'https://ujjwalpratap001.github.io/ujjwal-portfolio/'
+    role: 'Chief Executive Officer',
+    photo: '/team/ujjwal-pratap-singh.jpg',
+    linkedin: 'https://www.linkedin.com/in/ujjwalpratap624604',
+    portfolio: 'https://ujjwalpratap001.github.io/ujjwal-portfolio/',
+    bio: "Leads the studio's day-to-day operations and growth. Keeps the focus on honest communication, on-time delivery and a smooth experience for every client."
   }
 ]
+const initialsOf = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -335,7 +353,7 @@ function App() {
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> TERMS</div>
-            <h2>Terms & Conditions</h2>
+            <h2>Terms &amp; Conditions</h2>
             <p>These terms apply when you work with us.</p>
           </div>
           <ol className="terms-list">
@@ -347,35 +365,28 @@ function App() {
       <section id="team" className="section">
         <div className="container">
           <div className="section-head">
-            <div className="eyebrow"><span className="eyebrow-line"></span> OUR TEAM</div>
+            <div className="eyebrow"><span className="eyebrow-line"></span> TEAM</div>
             <h2>Meet Our Team</h2>
             <p>The people behind the work.</p>
           </div>
-          {teamMembers.length > 0 ? (
-            <div className="team-grid">
-              {teamMembers.map((m) => (
-                <article key={m.name} className="team-card">
-                  <div className="team-avatar" aria-hidden="true">{m.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}</div>
-                  <h3>{m.name}</h3>
-                  <p>{m.role}</p>
-                  {m.bio && <p className="muted" style={{ marginTop: 8 }}>{m.bio}</p>}
-                  {m.portfolio && (
-                    <a className="text-link" href={m.portfolio} target="_blank" rel="noopener noreferrer" style={{ marginTop: 12 }}>
-                      View portfolio <ArrowRight size={14} />
-                    </a>
-                  )}
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="team-grid">
-              <article className="team-card team-card-placeholder">
-                <div className="team-avatar" aria-hidden="true">+</div>
-                <h3>Coming soon</h3>
-                <p>Team profiles will appear here.</p>
+          <div className="team-grid">
+            {teamMembers.map((m) => (
+              <article key={m.name} className="team-card team-card-member">
+                {m.photo ? (
+                  <img className="team-photo" src={m.photo} alt={m.name} width={400} height={400} loading="lazy" decoding="async" />
+                ) : (
+                  <div className="team-avatar" aria-hidden="true">{initialsOf(m.name)}</div>
+                )}
+                <h3>{m.name}</h3>
+                <span className="team-role">{m.role}</span>
+                <p className="team-bio">{m.bio}</p>
+                <div className="team-links">
+                  <a className="team-link" href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${m.name} on LinkedIn`}><LinkedinIcon size={16} /> LinkedIn</a>
+                  <a className="team-link" href={m.portfolio} target="_blank" rel="noopener noreferrer" aria-label={`${m.name}'s portfolio website`}><Globe size={16} /> Portfolio</a>
+                </div>
               </article>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -395,7 +406,7 @@ function App() {
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
-            <a href="#terms">T&C on this page</a>
+            <a href="#terms">T&amp;C on this page</a>
           </div>
         </div>
       </footer>
