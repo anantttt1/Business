@@ -10,15 +10,15 @@ createRoot(document.getElementById('root')!).render(
 )
 
 /*
- * Welcome splash (markup lives in index.html so it paints before any JS runs).
- * It stays for a short minimum time, waits for the app + fonts, fades out and is
- * removed. If anything here fails, a CSS fail-safe animation hides it anyway.
+ * Welcome splash — stays longer, user can tap anytime to enter.
+ * Auto-enters after a few seconds if they do not tap.
  */
 const splash = document.getElementById('splash')
 if (splash) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const MIN_MS = reduce ? 700 : 1800
-  const MAX_MS = 3500
+  // Longer welcome so it is not rushed; tap still skips anytime after ready
+  const AUTO_MS = reduce ? 1200 : 5500
+  const MAX_MS = reduce ? 2500 : 9000
   const root = document.documentElement
   let finished = false
 
@@ -27,15 +27,34 @@ if (splash) {
     finished = true
     root.classList.add('ready')
     splash.classList.add('hide')
-    window.setTimeout(() => splash.remove(), reduce ? 50 : 900)
+    splash.removeAttribute('role')
+    splash.removeAttribute('tabindex')
+    window.setTimeout(() => splash.remove(), reduce ? 50 : 800)
   }
 
-  const appReady = () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-  const fontsReady = () => (document.fonts?.ready ? document.fonts.ready.then(() => undefined) : Promise.resolve())
-  const cap = new Promise<void>((resolve) => window.setTimeout(resolve, MAX_MS))
+  const onEnter = (e?: Event) => {
+    e?.preventDefault()
+    finish()
+  }
 
-  Promise.race([appReady().then(fontsReady), cap])
+  splash.addEventListener('click', onEnter)
+  splash.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') onEnter(e)
+  })
+
+  const appReady = () =>
+    new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+  const fontsReady = () =>
+    document.fonts?.ready ? document.fonts.ready.then(() => undefined) : Promise.resolve()
+
+  // Wait for app/fonts, then keep splash until AUTO_MS (or user taps)
+  Promise.all([appReady(), fontsReady()])
     .catch(() => undefined)
-    .then(() => window.setTimeout(finish, Math.max(0, MIN_MS - performance.now())))
-  window.setTimeout(finish, MAX_MS + 1000)
+    .then(() => {
+      const wait = Math.max(0, AUTO_MS - performance.now())
+      window.setTimeout(finish, wait)
+    })
+
+  // Hard fallback so splash never sticks forever
+  window.setTimeout(finish, MAX_MS)
 }

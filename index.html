@@ -18,12 +18,13 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div id="splash" aria-hidden="true">
+    <div id="splash" role="button" tabindex="0" aria-label="Welcome. Tap to enter the site.">
       <div class="splash-inner">
         <img class="splash-logo" src="/icon-192.png" alt="" width="96" height="96" decoding="async" />
         <p class="splash-kicker">Welcome to</p>
         <p class="splash-title">AP Creative <span>Studio</span></p>
-        <span class="splash-bar"><i></i></span>
+        <span class="splash-bar" aria-hidden="true"><i></i></span>
+        <p class="splash-enter" id="splash-enter">Tap to enter</p>
       </div>
     </div>
     <noscript>Please enable JavaScript to view this site, or message us on WhatsApp.</noscript>
