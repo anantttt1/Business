@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, ClipboardList, FileText, GraduationCap, Globe, Image as ImageIcon, Menu, MessageCircle, Monitor, ScanText, School, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, ClipboardList, FileText, GraduationCap, Globe, Image as ImageIcon, ListChecks, Menu, MessageCircle, Monitor, ScanText, School, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
@@ -26,6 +26,13 @@ const trustPoints = [
   ['Honest communication', 'We tell you upfront what to expect and keep you updated.'],
   ['Real deliveries', 'Work shaped around your goals — not generic templates.']
 ]
+const whyPoints: { title: string; text: string; Icon: typeof Sparkles }[] = [
+  { title: 'Personalized Designs', text: 'Tailored to your skills, goals, and personal style.', Icon: Sparkles },
+  { title: 'Modern & Professional', text: 'Clean resumes and attractive portfolio websites.', Icon: Monitor },
+  { title: 'Student-Friendly', text: 'Designed with students and freshers in mind.', Icon: GraduationCap },
+  { title: 'Simple Process', text: 'Share your details and let us help present your best self.', Icon: ListChecks }
+]
+
 const steps = [
   ['01', 'Choose your service', 'Pick the resume or portfolio support that fits your next move.'],
   ['02', 'Share your details', 'Tell us on WhatsApp or fill the Google Form with your goals and deadline.'],
@@ -118,7 +125,7 @@ function App() {
         observer.unobserve(en.target)
       }
     }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
-    document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner, .work-card, .price-note, .terms-list li, .team-card').forEach((el, i) => {
+    document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner, .work-card, .price-note, .terms-list li, .team-card, .why-card, .why-close').forEach((el, i) => {
       el.classList.add('reveal')
       el.style.setProperty('--reveal-delay', `${(i % 6) * 55}ms`)
       observer.observe(el)
@@ -397,6 +404,32 @@ function App() {
               {termsOpen ? 'Show less' : 'View more'}
             </button>
           )}
+        </div>
+      </section>
+
+      <section id="why" className="section section-alt">
+        <div className="container">
+          <div className="section-head">
+            <div className="eyebrow"><span className="eyebrow-line"></span> WHY US</div>
+            <h2>Why Choose AP Creative Studio?</h2>
+            <p className="why-subtitle">Your Skills. Your Story. Your Next Opportunity.</p>
+            <p>We create professional resumes and modern portfolio websites that help students and freshers showcase their skills with confidence.</p>
+          </div>
+          <div className="why-grid">
+            {whyPoints.map(({ title, text, Icon }) => (
+              <article key={title} className="why-card">
+                <div className="why-icon"><Icon size={22} /></div>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="why-close">
+            <p>Ready to stand out? Let's build your professional identity.</p>
+            <a className="btn btn-primary" href="#services">Get Started <ArrowRight size={18} /></a>
+          </div>
         </div>
       </section>
 
