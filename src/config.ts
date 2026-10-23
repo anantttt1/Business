@@ -35,6 +35,8 @@ export const config = {
     { title: 'Personal Portfolio Website', description: 'A responsive home for your projects, skills, story and contact details.', originalPrice: 359, price: 149, note: `Changes are free for ${freeChangeDays} days after delivery. After that, any further changes cost ₹${correctionPrice}.`, icon: 'monitor' },
     { title: 'Student & Fresher Portfolio', description: 'Turn coursework, projects and potential into a confident first impression.', originalPrice: 359, price: 149, note: `Changes are free for ${freeChangeDays} days after delivery. After that, any further changes cost ₹${correctionPrice}.`, icon: 'graduation' },
     { title: 'Resume Redesign & Improvement', description: 'Improve hierarchy, clarity and impact while keeping your story authentic.', originalPrice: 119, price: 49, icon: 'sparkles' },
-    { title: 'Poster Design', description: 'Event, college or social posters that look sharp and get attention.', originalPrice: 99, price: 49, icon: 'image' }
+    { title: 'Poster Design', description: 'Event, college or social posters that look sharp and get attention.', originalPrice: 99, price: 49, icon: 'image' },
+    { title: 'Business Enquiry Website', description: 'A simple website so customers can reach your business — enquiry form, contact and key details.', originalPrice: 0, price: 0, note: 'Free for a limited time.', icon: 'globe' },
+    { title: 'College & School Ad Posters', description: 'Advertisement posters for colleges and schools — events, admissions and campus promotions.', originalPrice: 99, price: 49, icon: 'school' }
   ]
 }
