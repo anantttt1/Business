@@ -34,7 +34,6 @@ const steps = [
   ['03', 'We design your story', 'We shape your information into a clear, polished and professional experience.'],
   ['04', 'Review & receive', 'Review the work, request included revisions, and receive your final files or website.']
 ]
-/* Add team members here — name, role, initials (optional photo later) */
 const teamMembers: { name: string; role: string; initials: string }[] = []
 
 function App() {
