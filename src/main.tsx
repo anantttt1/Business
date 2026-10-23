@@ -10,15 +10,13 @@ createRoot(document.getElementById('root')!).render(
 )
 
 /*
- * Welcome splash — stays longer, user can tap anytime to enter.
- * Auto-enters after a few seconds if they do not tap.
+ * Welcome splash — tap to enter, or auto after a short pause.
  */
 const splash = document.getElementById('splash')
 if (splash) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  // Longer welcome so it is not rushed; tap still skips anytime after ready
-  const AUTO_MS = reduce ? 1200 : 5500
-  const MAX_MS = reduce ? 2500 : 9000
+  const AUTO_MS = reduce ? 800 : 3200
+  const MAX_MS = reduce ? 1800 : 5500
   const root = document.documentElement
   let finished = false
 
@@ -29,7 +27,7 @@ if (splash) {
     splash.classList.add('hide')
     splash.removeAttribute('role')
     splash.removeAttribute('tabindex')
-    window.setTimeout(() => splash.remove(), reduce ? 50 : 800)
+    window.setTimeout(() => splash.remove(), reduce ? 50 : 700)
   }
 
   const onEnter = (e?: Event) => {
@@ -47,7 +45,6 @@ if (splash) {
   const fontsReady = () =>
     document.fonts?.ready ? document.fonts.ready.then(() => undefined) : Promise.resolve()
 
-  // Wait for app/fonts, then keep splash until AUTO_MS (or user taps)
   Promise.all([appReady(), fontsReady()])
     .catch(() => undefined)
     .then(() => {
@@ -55,6 +52,5 @@ if (splash) {
       window.setTimeout(finish, wait)
     })
 
-  // Hard fallback so splash never sticks forever
   window.setTimeout(finish, MAX_MS)
 }
