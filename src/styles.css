@@ -312,6 +312,19 @@ button,input,select,textarea{font:inherit}
 }
 .team-card h3{margin:0 0 6px;font-size:1.2rem;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .team-card p{margin:0;font-size:.9rem;color:var(--muted)}
+.team-grid:has(.team-card-member){grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.team-card-member{padding:14px 14px 26px;display:flex;flex-direction:column;align-items:center}
+.team-photo{
+  width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center 22%;
+  border-radius:calc(var(--radius) - 2px);margin-bottom:18px;background:var(--soft);
+}
+.team-card-member h3{margin:0 0 8px;padding:0 8px}
+.team-role{
+  display:inline-block;margin-bottom:12px;padding:5px 12px;border-radius:999px;
+  background:var(--accent-soft);color:var(--blue-700);font-size:.74rem;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.team-card .team-bio{padding:0 10px;font-size:.93rem;line-height:1.65;color:var(--muted)}
 .team-card-placeholder .team-avatar{background:var(--soft);color:var(--muted);border:1px dashed var(--line)}
 .team-card-placeholder{border-style:dashed}
 

@@ -34,7 +34,27 @@ const steps = [
   ['03', 'We design your story', 'We shape your information into a clear, polished and professional experience.'],
   ['04', 'Review & receive', 'Review the work, request included revisions, and receive your final files or website.']
 ]
-const teamMembers: { name: string; role: string; initials: string }[] = []
+const teamMembers: { name: string; role: string; bio: string; photo?: string }[] = [
+  {
+    name: 'Prince Tyagi',
+    role: 'Co-Founder',
+    photo: '/team/prince-tyagi.jpg',
+    bio: 'Works with the founder to plan projects and keep timelines on track. Focused on clear communication, so you always know what happens next.'
+  },
+  {
+    name: 'Anant Goyal',
+    role: 'Founder',
+    photo: '/team/anant-goyal.jpg',
+    bio: 'Started AP Creative Studio to help students and freshers show their skills with confidence. Sets the studio’s direction and keeps the quality of every delivery high.'
+  },
+  {
+    name: 'Ujjwal Pratap Singh',
+    role: 'Chief Executive Officer',
+    photo: '/team/ujjwal-pratap-singh.jpg',
+    bio: 'Leads the studio’s day-to-day operations and growth. Keeps the focus on honest pricing, on-time delivery and a smooth experience for every client.'
+  }
+]
+const initialsOf = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -337,10 +357,15 @@ function App() {
           {teamMembers.length > 0 ? (
             <div className="team-grid">
               {teamMembers.map((m) => (
-                <article key={m.name} className="team-card">
-                  <div className="team-avatar" aria-hidden="true">{m.initials}</div>
+                <article key={m.name} className="team-card team-card-member">
+                  {m.photo ? (
+                    <img className="team-photo" src={m.photo} alt={`${m.name}, ${m.role}`} width={320} height={320} loading="lazy" decoding="async" />
+                  ) : (
+                    <div className="team-avatar" aria-hidden="true">{initialsOf(m.name)}</div>
+                  )}
                   <h3>{m.name}</h3>
-                  <p>{m.role}</p>
+                  <span className="team-role">{m.role}</span>
+                  <p className="team-bio">{m.bio}</p>
                 </article>
               ))}
             </div>
