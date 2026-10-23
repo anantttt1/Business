@@ -204,7 +204,7 @@ function App() {
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> SERVICES</div>
             <h2>What we help you ship</h2>
-            <p>Pick a service. Message on WhatsApp or fill the Google Form — no payment required to enquire.</p>
+            <p>Tap any service to chat with us on WhatsApp — the message is ready, nothing to fill. No payment required to enquire.</p>
           </div>
           <div className="service-grid">
             {config.services.map((s, i) => {
@@ -212,7 +212,14 @@ function App() {
               const note = 'note' in s ? (s as { note?: string }).note : undefined
               const originalPrice = 'originalPrice' in s ? (s as { originalPrice?: number }).originalPrice : undefined
               return (
-                <article key={s.title} className="service-card">
+                <a
+                  key={s.title}
+                  className="service-card"
+                  href={whatsappUrl(`Hi ${config.brand}, I want to enquire about "${s.title}" (${money(s.price)}). Please share the next steps.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${s.title}, ${money(s.price)} — enquire on WhatsApp`}
+                >
                   <div className="service-icon"><Icon size={22} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
@@ -221,8 +228,8 @@ function App() {
                     <span className="new-price">{money(s.price)}</span>
                   </div>
                   {note && <p className="service-note">{note}</p>}
-                  <button className="text-link" onClick={() => openOrder(s.title)}>Enquire on WhatsApp <ArrowRight size={14} /></button>
-                </article>
+                  <span className="service-cta"><MessageCircle size={15} /> Enquire on WhatsApp <ArrowRight size={14} /></span>
+                </a>
               )
             })}
           </div>
