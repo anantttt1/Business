@@ -10,17 +10,15 @@ const formatPhone = (n: string) => (n.length === 12 && n.startsWith('91') ? `+91
 const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles, ImageIcon]
 const portfolioItems: { category: string; name: string; role: string; type: string; color: string; initials: string; tags: string[]; url?: string }[] = []
 const terms: [string, string][] = [
-  ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope and timeline are confirmed with you on WhatsApp.'],
-  ['Payment', 'Any pricing or advance is confirmed with you on WhatsApp before work starts. If a service is paid, final files are delivered after full payment.'],
-  ['Changes after delivery', config.showPrices
-    ? `Portfolio websites: changes are free for ${config.freeChangeDays} days after delivery. After that, any further changes cost ${money(config.correctionPrice)}. Resume changes are agreed with you on WhatsApp.`
-    : 'Changes to your resume or portfolio after delivery are agreed with you on WhatsApp.'],
-  ['Timeline', 'Delivery time depends on the service and on how quickly you share your details and feedback. Delays from your side move the deadline.'],
-  ['Your information', 'The details you share must be accurate and yours to share. We use them only to complete your work and never sell or publish them.'],
-  ['Refunds & cancellation', 'If an advance has been paid and work has started, it is non-refundable. If we are unable to deliver your work, any amount you paid is refunded.'],
-  ['Ownership', 'Once your work is delivered (and paid for, if the service is paid), the final resume or portfolio is yours to use. We may show the work in our samples only with your permission.'],
-  ['No guarantees', 'We do not guarantee interviews, job offers or ATS results. Sample styles on this site are illustrative and are not client work.'],
-  ['Contact', `Questions about these terms: ${config.email} or WhatsApp.`]
+  ['Enquiry', 'Work starts after scope and timeline are confirmed on WhatsApp.'],
+  ['Payment', 'Pricing is confirmed on WhatsApp. Final files are delivered after full payment.'],
+  ['Revisions', 'Extra changes after delivery may involve additional charges.'],
+  ['Timeline', 'Delays in sharing details or feedback may delay delivery.'],
+  ['Privacy', 'Your information is kept private and never sold or shared without permission.'],
+  ['Refunds', 'Advance payments are non-refundable once work starts. If we fail to deliver, you get a refund.'],
+  ['Ownership', 'Final work belongs to you after payment. We showcase it only with your permission.'],
+  ['Disclaimer', 'We do not guarantee jobs, interviews, or ATS results.'],
+  ['Contact', 'EMAIL_OR_WHATSAPP']
 ]
 const trustPoints = [
   ['Quick to start', 'Tap a service and chat with us on WhatsApp. Nothing to fill in.'],
@@ -76,6 +74,7 @@ function App() {
   const [orderOpen, setOrderOpen] = useState(false)
   const [form, setForm] = useState<OrderForm>(initialForm)
   const [activeStep, setActiveStep] = useState(0)
+  const [termsOpen, setTermsOpen] = useState(false)
 
   useEffect(() => {
     document.body.style.overflow = orderOpen || preview ? 'hidden' : ''
@@ -125,7 +124,7 @@ function App() {
       observer.observe(el)
     })
     return () => observer.disconnect()
-  }, [])
+  }, [termsOpen])
 
   useEffect(() => {
     if (!orderOpen && !preview) return
@@ -357,8 +356,31 @@ function App() {
             <p>These terms apply when you work with us.</p>
           </div>
           <ol className="terms-list">
-            {terms.map(([t, d]) => <li key={t}><strong>{t}</strong><span>{d}</span></li>)}
+            {(termsOpen ? terms : terms.slice(0, 2)).map(([t, d]) => (
+              <li key={t}>
+                <strong>{t}</strong>
+                <span>
+                  {d === 'EMAIL_OR_WHATSAPP' ? (
+                    <>
+                      <a href={'mailto:' + config.email}>{config.email}</a>
+                      {' or '}
+                      <a href={whatsappUrl('Hi')} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    </>
+                  ) : d}
+                </span>
+              </li>
+            ))}
           </ol>
+          {terms.length > 2 && (
+            <button
+              type="button"
+              className="terms-more"
+              onClick={() => setTermsOpen((v) => !v)}
+              aria-expanded={termsOpen}
+            >
+              {termsOpen ? 'Show less' : `View more (${terms.length - 2} more)`}
+            </button>
+          )}
         </div>
       </section>
 
