@@ -91,7 +91,7 @@ button,input,select,textarea{font:inherit}
   border-bottom:1px solid var(--line);
 }
 .header-inner{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:16px}
-.logo{font-family:Manrope,sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.02em;color:var(--navy)}
+.logo{font-family:Manrope,sans-serif;font-weight:800;font-size:1.2rem;letter-spacing:-.02em;color:var(--navy)}
 .nav{display:flex;align-items:center;gap:28px}
 .nav a{font-size:.9rem;color:var(--muted);font-weight:600;letter-spacing:.01em;transition:color .15s}
 .nav a:hover{color:var(--blue-600)}
@@ -159,11 +159,11 @@ button,input,select,textarea{font:inherit}
 }
 .eyebrow-line{width:24px;height:2px;background:var(--blue);border-radius:2px}
 .hero h1{
-  font-family:Manrope,sans-serif;font-size:clamp(2.5rem,5.6vw,3.8rem);
-  line-height:1.07;letter-spacing:-.04em;margin:0 0 18px;color:var(--navy);font-weight:800;
+  font-family:Manrope,sans-serif;font-size:clamp(2.75rem,6.8vw,4.25rem);
+  line-height:1.06;letter-spacing:-.04em;margin:0 0 18px;color:var(--navy);font-weight:800;
 }
 .hero h1 span{color:var(--blue)}
-.hero-lead{font-size:1.08rem;color:var(--muted);max-width:29rem;line-height:1.7;margin:0}
+.hero-lead{font-size:1.15rem;color:var(--muted);max-width:32rem;line-height:1.7;margin:0}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .hero-trust{
   display:flex;align-items:center;gap:8px;margin:18px 0 0;
@@ -188,12 +188,12 @@ button,input,select,textarea{font:inherit}
 }
 .section>.container{position:relative;z-index:1}
 .section-alt{background:var(--soft)}
-.section-head{max-width:540px;margin-bottom:40px}
+.section-head{max-width:640px;margin-bottom:40px}
 .section-head h2{
-  font-family:Manrope,sans-serif;font-size:clamp(1.7rem,2.9vw,2.2rem);
-  margin:0 0 10px;letter-spacing:-.03em;color:var(--navy);font-weight:800;line-height:1.2;
+  font-family:Manrope,sans-serif;font-size:clamp(2rem,3.8vw,2.85rem);
+  margin:0 0 12px;letter-spacing:-.03em;color:var(--navy);font-weight:800;line-height:1.15;
 }
-.section-head p{color:var(--muted);margin:0;font-size:1rem}
+.section-head p{color:var(--muted);margin:0;font-size:1.08rem;line-height:1.6}
 
 .service-grid,.work-grid,.steps{display:grid;gap:18px}
 .service-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
@@ -208,7 +208,7 @@ button,input,select,textarea{font:inherit}
   display:grid;place-items:center;margin-bottom:16px;transition:background .2s,color .2s;
 }
 .service-card:hover .service-icon{background:var(--blue);color:#fff}
-.service-card h3,.step h3{margin:0 0 8px;font-size:1.04rem;font-weight:700;letter-spacing:-.02em;color:var(--navy)}
+.service-card h3,.step h3{margin:0 0 8px;font-size:1.22rem;font-weight:700;letter-spacing:-.02em;color:var(--navy)}
 .service-card p,.step p{color:var(--muted);margin:0 0 14px;font-size:.93rem;line-height:1.55}
 .service-price{font-weight:700;margin-bottom:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .service-price .old-price{font-size:.92rem;font-weight:500;color:#9CA3AF;text-decoration:line-through;text-decoration-thickness:1px}
@@ -240,7 +240,7 @@ button,input,select,textarea{font:inherit}
 .work-avatar.large{width:64px;height:64px;font-size:1.1rem;margin-bottom:12px}
 .work-meta{display:grid;gap:2px}
 .work-type{font-size:.68rem;font-weight:800;letter-spacing:.07em;color:var(--blue-600);text-transform:uppercase}
-.work-meta strong{font-weight:700;font-size:1.02rem;letter-spacing:-.02em;color:var(--navy)}
+.work-meta strong{font-weight:700;font-size:1.15rem;letter-spacing:-.02em;color:var(--navy)}
 .work-meta span{color:var(--muted);font-size:.88rem}
 .work-cta-row{margin-top:2rem;display:flex;flex-wrap:wrap;gap:12px}
 
@@ -286,8 +286,8 @@ button,input,select,textarea{font:inherit}
 .cta-inner .eyebrow{color:#93C5FD;justify-content:center}
 .cta-inner .eyebrow-line{background:#93C5FD}
 .cta-inner h2{
-  font-family:Manrope,sans-serif;font-size:clamp(1.7rem,2.9vw,2.4rem);
-  margin:0 0 14px;font-weight:800;letter-spacing:-.03em;line-height:1.15;
+  font-family:Manrope,sans-serif;font-size:clamp(2rem,3.8vw,2.9rem);
+  margin:0 0 14px;font-weight:800;letter-spacing:-.03em;line-height:1.12;
 }
 .cta-inner h2 span{color:#60A5FA}
 .cta-inner p{color:rgba(255,255,255,.78);max-width:32rem;margin:0 auto 28px;font-size:1rem}
@@ -307,7 +307,7 @@ button,input,select,textarea{font:inherit}
   display:grid;place-items:center;font-weight:800;font-size:1.1rem;
   color:#fff;background:var(--blue);letter-spacing:.02em;
 }
-.team-card h3{margin:0 0 6px;font-size:1.05rem;font-weight:700;color:var(--navy);letter-spacing:-.02em}
+.team-card h3{margin:0 0 6px;font-size:1.2rem;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .team-card p{margin:0;font-size:.9rem;color:var(--muted)}
 .team-card-placeholder .team-avatar{background:var(--soft);color:var(--muted);border:1px dashed var(--line)}
 .team-card-placeholder{border-style:dashed}
@@ -339,7 +339,8 @@ button,input,select,textarea{font:inherit}
   border-radius:9px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink);
 }
 .modal-close:hover{background:var(--line)}
-.modal h2,.modal h3{color:var(--navy);margin-top:0}
+.modal h2{color:var(--navy);margin-top:0;font-size:1.55rem;font-weight:800;letter-spacing:-.02em}
+.modal h3{color:var(--navy);margin-top:0;font-size:1.25rem;font-weight:700}
 .modal-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
 .tags span{background:var(--accent-soft);color:var(--blue-700);font-size:.76rem;font-weight:700;padding:4px 10px;border-radius:999px}
@@ -408,7 +409,9 @@ button,input,select,textarea{font:inherit}
   .hero-art{display:none}
   .hero-copy{max-width:100%;position:relative;z-index:2}
   .hero-lead{max-width:100%;color:#374151}
-  .hero h1{font-size:clamp(2.1rem,9vw,3rem)}
+  .hero h1{font-size:clamp(2.45rem,10vw,3.4rem)}
+  .section-head h2{font-size:clamp(1.9rem,6.5vw,2.5rem)}
+  .cta-inner h2{font-size:clamp(1.9rem,6.5vw,2.6rem)}
   .steps{grid-template-columns:1fr}
   .steps::before{display:none}
   .trust-grid{grid-template-columns:1fr 1fr}
