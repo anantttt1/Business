@@ -374,9 +374,19 @@ function App() {
           {terms.length > 2 && (
             <button
               type="button"
-              className="terms-more"
               onClick={() => setTermsOpen((v) => !v)}
               aria-expanded={termsOpen}
+              style={{
+                marginTop: 10,
+                padding: 0,
+                background: 'none',
+                border: 0,
+                cursor: 'pointer',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                color: '#9CA3AF',
+                letterSpacing: '0.01em'
+              }}
             >
               {termsOpen ? 'Show less' : 'View more'}
             </button>
