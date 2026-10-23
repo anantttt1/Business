@@ -202,6 +202,7 @@ function App() {
             <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
             <a href="#work" onClick={() => setMenuOpen(false)}>Showcase</a>
             <a href="#process" onClick={() => setMenuOpen(false)}>Process</a>
+            <a href="#why" onClick={() => setMenuOpen(false)}>Why us</a>
             <a href="#team" onClick={() => setMenuOpen(false)}>Team</a>
             <button className="btn btn-primary" onClick={() => { setMenuOpen(false); window.open(whatsappUrl('Hi'), '_blank', 'noopener,noreferrer') }}>Get started</button>
           </nav>
@@ -365,7 +366,7 @@ function App() {
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> TERMS</div>
-            <h2>Terms & Conditions</h2>
+            <h2>Terms &amp; Conditions</h2>
             <p>These terms apply when you work with us.</p>
           </div>
           <ol className="terms-list">
@@ -477,7 +478,7 @@ function App() {
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
-            <a href="#terms">T&C on this page</a>
+            <a href="#terms">T&amp;C on this page</a>
           </div>
         </div>
       </footer>
