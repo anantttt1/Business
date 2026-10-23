@@ -17,7 +17,12 @@ const phoneDigits = (value: string | undefined, fallback: string): string => {
 const emailOr = (value: string | undefined, fallback: string): string =>
   /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(value ?? '') ? (value as string) : fallback
 
+// Services are free for now, so prices are hidden everywhere on the site.
+// To bring prices back later: set showPrices to true (and update public/terms.html).
+const showPrices = false
+
 export const config = {
+  showPrices,
   brand: import.meta.env.VITE_BRAND_NAME || 'AP Creative Studio',
   whatsapp: phoneDigits(import.meta.env.VITE_WHATSAPP_NUMBER, '919286034026'),
   email: emailOr(import.meta.env.VITE_CONTACT_EMAIL, 'apcreativestudio0@gmail.com'),

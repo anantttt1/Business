@@ -12,20 +12,22 @@ const portfolioItems: { category: string; name: string; role: string; type: stri
   { category: 'Developer Portfolios', name: 'Ujjwal Pratap', role: 'Personal Portfolio Website', type: 'SATISFIED CUSTOMER', color: 'blue', initials: 'UP', tags: ['Live portfolio', 'Projects', 'Skills'], url: 'https://ujjwalpratap001.github.io/ujjwal-portfolio/' }
 ]
 const terms: [string, string][] = [
-  ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope, price and timeline are confirmed with you on WhatsApp.'],
-  ['Payment', 'The price and any advance are confirmed before work starts. Final files are delivered after full payment.'],
-  ['Changes after delivery', `Portfolio websites: changes are free for ${config.freeChangeDays} days after delivery. After that, any further changes cost ${money(config.correctionPrice)}. Resume changes are agreed with you on WhatsApp.`],
+  ['Enquiry is not an order', 'Messaging us on WhatsApp or filling the Google Form is only an enquiry. Work begins after scope and timeline are confirmed with you on WhatsApp.'],
+  ['Payment', 'Any pricing or advance is confirmed with you on WhatsApp before work starts. If a service is paid, final files are delivered after full payment.'],
+  ['Changes after delivery', config.showPrices
+    ? `Portfolio websites: changes are free for ${config.freeChangeDays} days after delivery. After that, any further changes cost ${money(config.correctionPrice)}. Resume changes are agreed with you on WhatsApp.`
+    : 'Changes to your resume or portfolio after delivery are agreed with you on WhatsApp.'],
   ['Timeline', 'Delivery time depends on the service and on how quickly you share your details and feedback. Delays from your side move the deadline.'],
   ['Your information', 'The details you share must be accurate and yours to share. We use them only to complete your work and never sell or publish them.'],
-  ['Refunds & cancellation', 'Once work has started, the advance paid is non-refundable. If we are unable to deliver your work, you get a refund of the amount paid.'],
-  ['Ownership', 'After full payment, the final resume or portfolio is yours to use. We may show the work in our samples only with your permission.'],
+  ['Refunds & cancellation', 'If an advance has been paid and work has started, it is non-refundable. If we are unable to deliver your work, any amount you paid is refunded.'],
+  ['Ownership', 'Once your work is delivered (and paid for, if the service is paid), the final resume or portfolio is yours to use. We may show the work in our samples only with your permission.'],
   ['No guarantees', 'We do not guarantee interviews, job offers or ATS results. Sample styles on this site are illustrative and are not client work.'],
   ['Contact', `Questions about these terms: ${config.email} or WhatsApp.`]
 ]
 const trustPoints = [
-  ['Free to enquire', 'WhatsApp or Google Form — no payment needed to start the conversation.'],
-  ['Clear scope first', 'Price and timeline are confirmed with you before any work begins.'],
-  ['Honest pricing', 'What you see is what you pay. Changes after delivery are stated upfront.'],
+  ['Quick to start', 'Tap a service and chat with us on WhatsApp. Nothing to fill in.'],
+  ['Clear scope first', 'Scope and timeline are confirmed with you before any work begins.'],
+  ['Honest communication', 'We tell you upfront what to expect and keep you updated.'],
   ['Real deliveries', 'Live portfolios from satisfied customers — not stock mockups.']
 ]
 const steps = [
@@ -51,7 +53,7 @@ const teamMembers: { name: string; role: string; bio: string; photo?: string }[]
     name: 'Ujjwal Pratap Singh',
     role: 'Chief Executive Officer',
     photo: '/team/ujjwal-pratap-singh.jpg',
-    bio: 'Leads the studio’s day-to-day operations and growth. Keeps the focus on honest pricing, on-time delivery and a smooth experience for every client.'
+    bio: 'Leads the studio’s day-to-day operations and growth. Keeps the focus on honest communication, on-time delivery and a smooth experience for every client.'
   }
 ]
 const initialsOf = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase()
@@ -147,7 +149,7 @@ function App() {
       `Name: ${form.name}`,
       `Email: ${form.email}`,
       `WhatsApp: ${form.whatsapp}`,
-      `Budget: ${form.budget}`,
+      config.showPrices ? `Budget: ${form.budget}` : '',
       form.deadline ? `Deadline: ${form.deadline}` : '',
       form.requirements ? `Requirements: ${form.requirements}` : ''
     ].filter(Boolean)
@@ -200,7 +202,7 @@ function App() {
               <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
               <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Let's build your future</a>
             </div>
-            <p className="hero-trust"><ShieldCheck size={16} /> Enquire free · Pay only after scope is clear on WhatsApp</p>
+            <p className="hero-trust"><ShieldCheck size={16} /> Chat on WhatsApp · Scope is confirmed with you before work starts</p>
           </div>
         </div>
       </section>
@@ -224,7 +226,7 @@ function App() {
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> SERVICES</div>
             <h2>What we help you ship</h2>
-            <p>Tap any service to chat with us on WhatsApp — the message is ready, nothing to fill. No payment required to enquire.</p>
+            <p>Tap any service to chat with us on WhatsApp — the message is ready, nothing to fill.</p>
           </div>
           <div className="service-grid">
             {config.services.map((s, i) => {
@@ -235,25 +237,29 @@ function App() {
                 <a
                   key={s.title}
                   className="service-card"
-                  href={whatsappUrl(`Hi ${config.brand}, I want to enquire about "${s.title}" (${money(s.price)}). Please share the next steps.`)}
+                  href={whatsappUrl(`Hi ${config.brand}, I want to enquire about "${s.title}"${config.showPrices ? ` (${money(s.price)})` : ''}. Please share the next steps.`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${s.title}, ${money(s.price)} — enquire on WhatsApp`}
+                  aria-label={`${s.title}${config.showPrices ? `, ${money(s.price)}` : ''} — enquire on WhatsApp`}
                 >
                   <div className="service-icon"><Icon size={22} /></div>
                   <h3>{s.title}</h3>
                   <p>{s.description}</p>
-                  <div className="service-price">
-                    <span className="old-price">{money(originalPrice ?? s.price)}</span>
-                    <span className="new-price">{money(s.price)}</span>
-                  </div>
-                  {note && <p className="service-note">{note}</p>}
+                  {config.showPrices && (
+                    <div className="service-price">
+                      <span className="old-price">{money(originalPrice ?? s.price)}</span>
+                      <span className="new-price">{money(s.price)}</span>
+                    </div>
+                  )}
+                  {config.showPrices && note && <p className="service-note">{note}</p>}
                   <span className="service-cta"><MessageCircle size={15} /> Enquire on WhatsApp <ArrowRight size={14} /></span>
                 </a>
               )
             })}
           </div>
-          <p className="price-note">Limited offer: Resumes from {money(config.services[0].price)} · Posters from {money(49)} · Portfolio websites from {money(config.services[2].price)}. Portfolio changes free for {config.freeChangeDays} days after delivery.</p>
+          {config.showPrices && (
+            <p className="price-note">Limited offer: Resumes from {money(config.services[0].price)} · Posters from {money(49)} · Portfolio websites from {money(config.services[2].price)}. Portfolio changes free for {config.freeChangeDays} days after delivery.</p>
+          )}
         </div>
       </section>
 
@@ -386,7 +392,7 @@ function App() {
           <div className="footer-brand">
             <strong>{config.brand}</strong>
             <p>Resumes · Portfolios · Posters · Personal branding</p>
-            <p className="footer-trust">Enquire free on WhatsApp. Scope &amp; price confirmed before work starts.</p>
+            <p className="footer-trust">Chat on WhatsApp. Scope and details confirmed before work starts.</p>
           </div>
           <div className="footer-contact">
             <p><strong>Contact</strong></p>
@@ -440,12 +446,14 @@ function App() {
                     {config.services.map((s) => <option key={s.title}>{s.title}</option>)}
                   </select>
                 </label>
-                <label>Approx. budget
-                  <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })}>
-                    <option>₹49 – ₹149</option>
-                    <option>Flexible / discuss</option>
-                  </select>
-                </label>
+                {config.showPrices && (
+                  <label>Approx. budget
+                    <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })}>
+                      <option>₹49 – ₹149</option>
+                      <option>Flexible / discuss</option>
+                    </select>
+                  </label>
+                )}
                 <label>Preferred deadline<input type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} min={localToday()} /></label>
                 <label className="full-field">Additional requirements<textarea value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} placeholder="Goals, current resume, preferred style, links..." rows={4} maxLength={1000} /></label>
               </div>

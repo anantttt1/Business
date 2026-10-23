@@ -10,7 +10,7 @@ npm run dev
 Production build: `npm run build` (output in `dist/`).
 
 ## Configuration
-Services and prices live in `src/config.ts`. Optional environment variables (public, never put secrets here): `VITE_BRAND_NAME`, `VITE_WHATSAPP_NUMBER` (country code + number, digits only), `VITE_CONTACT_EMAIL`, `VITE_GOOGLE_FORM_URL`. Values are validated in `src/config.ts` (https-only Form URL, digits-only phone, well-formed email) and fall back to the defaults there if invalid.
+Services and prices live in `src/config.ts`. Prices are hidden everywhere while `showPrices` there is `false` (services are free for now); flip it to `true` to show prices, strike-through offers and change fees again (also update the policy lines in `public/terms.html`). Optional environment variables (public, never put secrets here): `VITE_BRAND_NAME`, `VITE_WHATSAPP_NUMBER` (country code + number, digits only), `VITE_CONTACT_EMAIL`, `VITE_GOOGLE_FORM_URL`. Values are validated in `src/config.ts` (https-only Form URL, digits-only phone, well-formed email) and fall back to the defaults there if invalid.
 
 ## Deploy (Vercel)
 Framework preset Vite, build `npm run build`, output `dist`. Security headers (strict CSP with no inline scripts or styles, frame blocking, nosniff, HSTS, referrer, permissions and cross-origin policies) are set in `vercel.json`.

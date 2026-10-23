@@ -15,5 +15,5 @@ but nothing new gets published either. These rules keep builds green.
    A missing one broke every deploy once.
 5. **Commit `package-lock.json`** together with any dependency change. Do not delete it.
 6. **One source of truth.** Prices, services, WhatsApp number, Google Form and email live in
-   `src/config.ts`. `public/terms.html` is static text, so update it by hand if policies change.
+   `src/config.ts`. Prices are hidden while `showPrices` is `false` (services are free for now); set it to `true` to bring them back. `public/terms.html` is static text, so update it by hand if policies change.
 7. **Do not undo other people's changes.** `git fetch` and rebase/merge before pushing.
