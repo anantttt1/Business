@@ -267,9 +267,6 @@ function App() {
                     </div>
                   )}
                   {note && <p className="service-note">{note}</p>}
-                  {!config.showPrices && s.price === 0 && (
-                    <p className="service-note">Free for a limited time.</p>
-                  )}
                   <button type="button" className="btn btn-whatsapp" style={{ marginTop: 'auto', width: '100%' }} onClick={() => openWhatsAppService(s.title)}>
                     <MessageCircle size={18} /> Chat on WhatsApp
                   </button>
