@@ -1,0 +1,17 @@
+{
+  "name": "ap-creative-studio",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve public -l 5173",
+    "build": "node scripts/build-static.mjs",
+    "preview": "npx serve dist -l 4173"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
