@@ -15,6 +15,9 @@ Services and prices live in `src/config.ts`. Optional environment variables (pub
 ## Deploy (Vercel)
 Framework preset Vite, build `npm run build`, output `dist`. Security headers (strict CSP with no inline scripts or styles, frame blocking, nosniff, HSTS, referrer, permissions and cross-origin policies) are set in `vercel.json`.
 
+## Look & feel
+Palette: navy `#111827`, white, electric blue `#3B82F6`, light gray `#F3F4F6` (CSS variables at the top of `src/styles.css`). On load a black "Welcome to AP Creative Studio" splash (markup in `index.html`, timing in `src/main.tsx`) shows for about 2 seconds and then fades into the site. If JavaScript fails, a CSS fail-safe hides it anyway. Background artwork is local SVG in `public/bg/` (no external images, so the CSP stays `img-src 'self'`).
+
 ## Icons
 The favicon set (`favicon.ico`, `icon-192.png`, `apple-touch-icon.png`) lives in `public/` and is generated from the AP logo.
 
