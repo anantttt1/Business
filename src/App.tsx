@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, ClipboardList, FileText, GraduationCap, Globe, Image as ImageIcon, Menu, MessageCircle, Monitor, ScanText, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, ClipboardList, FileText, GraduationCap, Globe, Image as ImageIcon, Menu, MessageCircle, Monitor, ScanText, School, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
@@ -7,7 +7,7 @@ const initialForm: OrderForm = { name: '', email: '', whatsapp: '', service: 'Pr
 const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` }
 const money = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 const formatPhone = (n: string) => (n.length === 12 && n.startsWith('91') ? `+91 ${n.slice(2, 7)} ${n.slice(7)}` : `+${n}`)
-const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles, ImageIcon]
+const icons = [FileText, ScanText, Monitor, GraduationCap, Sparkles, ImageIcon, Globe, School]
 const portfolioItems: { category: string; name: string; role: string; type: string; color: string; initials: string; tags: string[]; url?: string }[] = []
 const terms: [string, string][] = [
   ['Enquiry', 'Work starts after scope and timeline are confirmed on WhatsApp.'],
@@ -256,11 +256,20 @@ function App() {
                   <p>{s.description}</p>
                   {config.showPrices && (
                     <div className="service-price">
-                      <span className="old-price">{money(originalPrice ?? s.price)}</span>
-                      <span className="new-price">{money(s.price)}</span>
+                      {s.price === 0 ? (
+                        <span className="new-price">Free</span>
+                      ) : (
+                        <>
+                          <span className="old-price">{money(originalPrice ?? s.price)}</span>
+                          <span className="new-price">{money(s.price)}</span>
+                        </>
+                      )}
                     </div>
                   )}
                   {note && <p className="service-note">{note}</p>}
+                  {!config.showPrices && s.price === 0 && (
+                    <p className="service-note">Free for a limited time.</p>
+                  )}
                   <button type="button" className="btn btn-whatsapp" style={{ marginTop: 'auto', width: '100%' }} onClick={() => openWhatsAppService(s.title)}>
                     <MessageCircle size={18} /> Chat on WhatsApp
                   </button>
