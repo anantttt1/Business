@@ -26,3 +26,14 @@ if(!rm&&hv){
   c.addEventListener('pointerleave',()=>{c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')});
  });
 }
+(function(){
+ const sp=$('#splash');if(!sp)return;
+ document.body.classList.add('splash-on');
+ let done=false;
+ const hide=()=>{if(done)return;done=true;sp.classList.add('out');document.body.classList.remove('splash-on');setTimeout(()=>sp.remove(),750)};
+ const btn=$('#spEnter');
+ if(btn)btn.addEventListener('click',e=>{e.stopPropagation();hide()});
+ sp.addEventListener('click',hide);
+ addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hide()}});
+ setTimeout(hide,rm?400:2200);
+})();
