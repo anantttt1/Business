@@ -362,9 +362,9 @@ function App() {
                 <span>
                   {d === 'EMAIL_OR_WHATSAPP' ? (
                     <>
-                      <a href={'mailto:' + config.email}>{config.email}</a>
+                      <a href={'mailto:' + config.email} style={{ color: 'var(--blue-600)', fontWeight: 700 }}>{config.email}</a>
                       {' or '}
-                      <a href={whatsappUrl('Hi')} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                      <a href={whatsappUrl('Hi')} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue-600)', fontWeight: 700 }}>WhatsApp</a>
                     </>
                   ) : d}
                 </span>
@@ -374,7 +374,8 @@ function App() {
           {terms.length > 2 && (
             <button
               type="button"
-              className="terms-more"
+              className="text-link"
+              style={{ marginTop: 12 }}
               onClick={() => setTermsOpen((v) => !v)}
               aria-expanded={termsOpen}
             >
