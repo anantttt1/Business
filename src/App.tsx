@@ -34,6 +34,8 @@ const steps = [
   ['03', 'We design your story', 'We shape your information into a clear, polished and professional experience.'],
   ['04', 'Review & receive', 'Review the work, request included revisions, and receive your final files or website.']
 ]
+/* Add team members here — name, role, initials (optional photo later) */
+const teamMembers: { name: string; role: string; initials: string }[] = []
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -85,7 +87,7 @@ function App() {
         observer.unobserve(en.target)
       }
     }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
-    document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner, .work-card, .price-note, .terms-list li').forEach((el, i) => {
+    document.querySelectorAll<HTMLElement>('.section-head, .service-card, .step, .filters, .cta-inner, .work-card, .price-note, .terms-list li, .team-card').forEach((el, i) => {
       el.classList.add('reveal')
       el.style.setProperty('--reveal-delay', `${(i % 6) * 55}ms`)
       observer.observe(el)
@@ -310,7 +312,7 @@ function App() {
         <div className="container">
           <div className="section-head">
             <div className="eyebrow"><span className="eyebrow-line"></span> TERMS</div>
-            <h2>Terms & Conditions</h2>
+            <h2>Terms &amp; Conditions</h2>
             <p>These terms apply when you work with us.</p>
           </div>
           <ol className="terms-list">
@@ -319,12 +321,41 @@ function App() {
         </div>
       </section>
 
+      <section id="team" className="section">
+        <div className="container">
+          <div className="section-head">
+            <div className="eyebrow"><span className="eyebrow-line"></span> OUR TEAM</div>
+            <h2>Our Team</h2>
+            <p>The people behind the work.</p>
+          </div>
+          {teamMembers.length > 0 ? (
+            <div className="team-grid">
+              {teamMembers.map((m) => (
+                <article key={m.name} className="team-card">
+                  <div className="team-avatar" aria-hidden="true">{m.initials}</div>
+                  <h3>{m.name}</h3>
+                  <p>{m.role}</p>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="team-grid">
+              <article className="team-card team-card-placeholder">
+                <div className="team-avatar" aria-hidden="true">+</div>
+                <h3>Coming soon</h3>
+                <p>Team profiles will appear here.</p>
+              </article>
+            </div>
+          )}
+        </div>
+      </section>
+
       <footer className="site-footer">
         <div className="container footer-inner">
           <div className="footer-brand">
             <strong>{config.brand}</strong>
             <p>Resumes · Portfolios · Posters · Personal branding</p>
-            <p className="footer-trust">Enquire free on WhatsApp. Scope & price confirmed before work starts.</p>
+            <p className="footer-trust">Enquire free on WhatsApp. Scope &amp; price confirmed before work starts.</p>
           </div>
           <div className="footer-contact">
             <p><strong>Contact</strong></p>
@@ -335,7 +366,7 @@ function App() {
           <div className="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
-            <a href="#terms">T&C on this page</a>
+            <a href="#terms">T&amp;C on this page</a>
           </div>
         </div>
       </footer>
