@@ -179,7 +179,7 @@ function App() {
             <p className="hero-lead">We craft resumes, portfolio websites and posters that make your skills easy to see — for students, freshers and professionals.</p>
             <div className="hero-actions">
               <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Start on WhatsApp</button>
-              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
+              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Let's build your future</a>
             </div>
             <p className="hero-trust"><ShieldCheck size={16} /> Enquire free · Pay only after scope is clear on WhatsApp</p>
           </div>
@@ -264,7 +264,7 @@ function App() {
           </div>
           <div className="work-cta-row">
             <button className="btn btn-whatsapp" onClick={() => openOrder()}><MessageCircle size={18} /> Enquire on WhatsApp</button>
-            <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Fill Google Form</a>
+            <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Let's build your future</a>
           </div>
 
           <blockquote className="testimonial">
@@ -302,7 +302,7 @@ function App() {
           <p>Message on WhatsApp or fill the form — resume, portfolio, poster, or both.</p>
           <div className="cta-actions">
             <button className="btn btn-whatsapp btn-lg" onClick={() => openOrder()}><MessageCircle size={20} /> WhatsApp enquiry</button>
-            <a className="btn btn-form btn-lg" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={20} /> Google Form</a>
+            <a className="btn btn-form btn-lg" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={20} /> Let's build your future</a>
           </div>
           {formReminder('center')}
         </div>
@@ -372,7 +372,7 @@ function App() {
       </footer>
 
       <div className="contact-dock" aria-label="Quick contact">
-        <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> <span>Google Form</span></a>
+        <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> <span>Let's build your future</span></a>
         <a className="btn btn-whatsapp" href={whatsappUrl('Hi')} target="_blank" rel="noopener noreferrer"><MessageCircle size={18} /> <span>WhatsApp</span></a>
       </div>
 
@@ -387,7 +387,7 @@ function App() {
             <p className="muted">Want a portfolio like this made for you?</p>
             <div className="modal-actions">
               <button className="btn btn-whatsapp" onClick={() => { setPreview(null); openOrder() }}><MessageCircle size={18} /> WhatsApp enquiry</button>
-              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Google Form</a>
+              <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Let's build your future</a>
             </div>
           </div>
         </div>
@@ -420,7 +420,7 @@ function App() {
               </div>
               <div className="form-submit-row">
                 {formReminder()}
-                <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Open Google Form</a>
+                <a className="btn btn-form" href={config.googleFormUrl} target="_blank" rel="noopener noreferrer"><ClipboardList size={18} /> Let's build your future</a>
                 <button className="btn btn-whatsapp" type="submit"><MessageCircle size={18} /> Send on WhatsApp</button>
               </div>
             </form>
