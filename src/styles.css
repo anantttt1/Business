@@ -325,6 +325,15 @@ button,input,select,textarea{font:inherit}
   letter-spacing:.08em;text-transform:uppercase;
 }
 .team-card .team-bio{padding:0 10px;font-size:.93rem;line-height:1.65;color:var(--muted)}
+.team-card-member .team-bio{margin-bottom:18px}
+.team-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:auto}
+.team-link{
+  display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;
+  background:var(--accent-soft);color:var(--blue-700);font-weight:700;font-size:.86rem;
+  transition:background .2s,color .2s,transform .15s;
+}
+.team-link:active{background:var(--blue);color:#fff}
+@media (hover:hover){.team-link:hover{background:var(--blue);color:#fff;transform:translateY(-1px)}}
 .team-card-placeholder .team-avatar{background:var(--soft);color:var(--muted);border:1px dashed var(--line)}
 .team-card-placeholder{border-style:dashed}
 
