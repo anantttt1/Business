@@ -53,23 +53,18 @@
 
 <main>
 <section class="hero" id="home">
-  <div class="orb o1" data-sp=".12"></div><div class="orb o2" data-sp=".08"></div>
+  <div class="orb o1" data-sp=".12"></div><div class="orb o2" data-sp="-.08"></div>
   <div class="wrap hg">
     <div class="in1">
-      <h1><span>Stand Out.</span> <span class="gr">Get Noticed.</span> <span>Get Hired.</span></h1>
-      <p class="lead">We craft professional resumes, portfolio websites and posters that help students, freshers and professionals present their skills with confidence.</p>
+      <h1><span>Stand Out.</span><span>Get Noticed.</span><span class="gr">Get Hired.</span></h1>
+      <p class="lead">We create professional resumes, personal portfolio websites, and creative designs that help students, freshers, professionals, and businesses present themselves with confidence.</p>
       <div class="cta">
-        <a class="btn p xl" href="#services">Explore Services</a>
-        <a class="btn wb xl" href="https://wa.me/919286034026?text=Hi" target="_blank" rel="noopener noreferrer"><svg class="wi2"><use href="#i-wa"/></svg> WhatsApp</a>
+        <a class="btn wb xl" href="https://wa.me/919286034026?text=Hi" target="_blank" rel="noopener noreferrer"><svg class="wi2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-wa"/></svg>Start on WhatsApp</a>
+        <a class="btn o xl" href="https://forms.gle/giqJYaECf3upcc6Y7" target="_blank" rel="noopener noreferrer">Let's Build Your Future</a>
       </div>
     </div>
-    <div class="stage in2" aria-hidden="true">
-      <div class="rg"></div><div class="rg b"></div>
-      <div class="l fl br" data-d="18" style="--dl:-1s;--rt:-2deg"><div><div class="bar"><i></i><i></i><i></i></div><div class="bb"><div class="sk h"></div><div class="sk"></div><div class="sk"></div><div class="tl"><i></i><i></i><i></i></div></div></div></div>
-      <div class="l fl rs" data-d="28" style="--dl:-2.5s;--rt:3deg"><div><div class="sk h"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
-      <div class="l fl ps" data-d="22" style="--dl:-.8s;--rt:-4deg"><div><b>Design</b></div></div>
-      <div class="l fl sp" data-d="35" style="--dl:-3.2s"><div></div></div>
-      <i class="pt"></i><i class="pt"></i><i class="pt"></i><i class="pt"></i>
+    <div class="hero-visual in2">
+      <img src="/hero-visual.jpg" alt="Students celebrating job offer — Your next chapter starts here" width="720" height="686" loading="eager" decoding="async">
     </div>
   </div>
 </section>
@@ -125,7 +120,7 @@
   <div class="wrap tt">
     <div class="hd c rv"><h2>Terms & Conditions</h2></div>
     <div class="term glass"><b>Enquiry</b><p>Work begins after the scope and timeline are confirmed on WhatsApp.</p></div>
-    <div class="term glass"><b>Payment</b><p>Pricing is confirmed before work begins work begins; final files are delivered after full payment.</p></div>
+    <div class="term glass"><b>Payment</b><p>Pricing is confirmed before work begins; final files are delivered after full payment.</p></div>
     <div id="tx" hidden>
       <div class="term glass"><b>Portfolio changes</b><p>Portfolio services currently include one day of free changes after delivery. Further changes after that period cost ₹119, according to the existing service terms.</p></div>
       <div class="term glass"><b>Timeline</b><p>Delivery time depends on the service, agreed scope, and how quickly the customer provides the required information.</p></div>
@@ -156,16 +151,28 @@
         <div class="ph"><img src="/team/anant-goyal.jpg" alt="Anant Goyal" width="600" height="600" loading="lazy"></div>
         <h3>Anant Goyal</h3><div class="role">Founder</div>
         <p>Started AP Creative Studio to help students and freshers present their skills with confidence.</p>
+        <div class="lk">
+          <a href="https://www.linkedin.com/in/anant-goyal-417b8137" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://anantgoyalportfolio.vercel.app/" target="_blank" rel="noopener noreferrer">Portfolio</a>
+        </div>
       </article>
       <article class="tm glass">
         <div class="ph"><img src="/team/ujjwal-pratap-singh.jpg" alt="Ujjwal Pratap Singh" width="600" height="600" loading="lazy"></div>
         <h3>Ujjwal Pratap Singh</h3><div class="role">CEO</div>
         <p>Focuses on the studio vision, website experience, and technology-led creative solutions.</p>
+        <div class="lk">
+          <a href="https://www.linkedin.com/in/ujjwalpratap624604" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://ujjwalpratap001.github.io/ujjwal-portfolio/" target="_blank" rel="noopener noreferrer">Portfolio</a>
+        </div>
       </article>
       <article class="tm glass">
         <div class="ph"><img src="/team/prince-tyagi.jpg" alt="Prince Tyagi" width="600" height="600" loading="lazy"></div>
         <h3>Prince Tyagi</h3><div class="role">Co-Founder</div>
         <p>Works with the team to coordinate projects, communicate requirements, and keep the process organised.</p>
+        <div class="lk">
+          <a href="https://www.linkedin.com/in/prince-tyagi-2147482" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://prince-tyagi-portfolio.pages.dev/" target="_blank" rel="noopener noreferrer">Portfolio</a>
+        </div>
       </article>
     </div>
   </div>
@@ -183,9 +190,15 @@
       </div>
       <div class="cb glass rv">
         <h3>Enquire about a service</h3>
-        <p class="mu" style="margin:8px 0 18px">Pick a service and we will open WhatsApp with it already in your message.</p>
+        <p class="mu cb-note">Pick a service and we will open WhatsApp with it already in your message.</p>
         <label for="svc">I am interested in</label>
-        <select id="svc"><option>Resume</option><option>Portfolio Website</option><option>Poster Design</option><option>Business Website</option><option>Other</option></select>
+        <select id="svc">
+          <option>Resume</option>
+          <option>Portfolio Website</option>
+          <option>Poster Design</option>
+          <option>Business Website</option>
+          <option>Other</option>
+        </select>
         <a class="btn wb" id="sw" href="https://wa.me/919286034026?text=Hi" target="_blank" rel="noopener noreferrer">Send Enquiry on WhatsApp</a>
       </div>
     </div>
