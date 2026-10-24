@@ -34,3 +34,19 @@
 }
 .vm svg{width:14px;height:14px;flex:none}
 .vm[aria-expanded=true] svg{transform:rotate(180deg)}
+
+/* Laptop / desktop: reduce space between sections (mobile unchanged) */
+@media (min-width:881px){
+  section{padding:52px 0!important}
+  .hero{padding:96px 0 48px!important;min-height:auto!important}
+  .hd{margin-bottom:28px!important}
+  .sg,.tg,.g.steps,.g.why{gap:14px!important}
+  .mf{margin-bottom:22px!important}
+  .fin{padding:48px 28px!important}
+  footer{padding:40px 0 28px!important}
+  .cp{margin-top:24px!important;padding-top:16px!important}
+}
+@media (min-width:1100px){
+  section{padding:56px 0!important}
+  .hero{padding:100px 0 52px!important}
+}
