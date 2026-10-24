@@ -34,3 +34,5 @@
 html:not(.js) .splash{display:none}
 .js .splash{animation:spOff .6s 9s forwards}
 @keyframes spOff{to{opacity:0;visibility:hidden;pointer-events:none}}
+/* Service photos: keep one consistent 16:10 frame on every screen size instead of a fixed 140px strip that crops them hard */
+.pv{height:auto;aspect-ratio:16/10}
