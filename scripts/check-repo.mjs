@@ -42,6 +42,7 @@ for (const file of pages) {
   if (/<img[^>]*\ssrc\s*=\s*["']?(https?:)?\/\//i.test(html)) problems.push(`${file}: <img> points to an external host. The CSP only allows images from this site, and temporary hosts (e.g. litter.catbox.moe) expire. Save the image in public/ and use src="/name.jpg".`)
   if (/<(?:script|img|iframe|source|embed|object|video|audio)\b[^>]*\s(?:src|data)\s*=\s*["']?(?:https?:)?\/\//i.test(html) || /<link\b[^>]*\shref\s*=\s*["']?(?:https?:)?\/\//i.test(html)) problems.push(`${file}: loads a script, style, font or image from another website. The CSP blocks it and it leaks visitors to a third party. Host it in public/.`)
   for (const a of html.match(/<a\b[^>]*target\s*=\s*["']?_blank[^>]*>/gi) ?? []) if (!/rel\s*=\s*["'][^"']*noopener/i.test(a)) problems.push(`${file}: a target="_blank" link is missing rel="noopener noreferrer": ${a.slice(0, 80)}`)
+  if (/wa\.me\/\d+(?:\?text=Hi)?["'#]/i.test(html)) problems.push(`${file}: a WhatsApp link only sends "Hi" (or nothing). Use the full prefilled enquiry message, the same as the other WhatsApp links.`)
   if (/\son[a-z]+\s*=/i.test(html)) problems.push(`${file}: inline event handlers (onclick=, onerror=, ...) are blocked by the CSP. Use addEventListener in public/ap-app.js.`)
 }
 
