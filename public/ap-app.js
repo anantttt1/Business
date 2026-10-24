@@ -6,6 +6,8 @@ const P={zap:'M13 2L4 14h7l-1 8 9-12h-7z',check:'M6 3h9l4 4v14H6zM9 14l2 2 4-4',
 const WAI='<svg class="wi2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-wa"/></svg>';
 const ic=d=>`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg></span>`;
 $$('[data-i]').forEach(e=>e.insertAdjacentHTML('afterbegin',ic(P[e.dataset.i])));
+// Missing photo -> drop the <img> so the placeholder icon stays (inline onerror is blocked by the CSP).
+$$('.ph img').forEach(i=>{const bad=()=>i.remove();if(i.complete&&!i.naturalWidth)bad();else i.addEventListener('error',bad,{once:true})});
 $$('.sg .card').forEach(e=>{const a=document.createElement('a');a.className='btn wb';a.innerHTML=WAI+'Chat on WhatsApp';a.href=msg(e.querySelector('h4').textContent);a.target='_blank';a.rel='noopener noreferrer';e.appendChild(a)});
 const vm=$('#vm'),tx=$('#tx');if(vm&&tx)vm.onclick=()=>{const o=tx.hidden;tx.hidden=!o;vm.setAttribute('aria-expanded',o);vm.querySelector('b').textContent=o?'View Less':'View More'};
 const mb=$('#mb'),nv=$('#nv'),tg=o=>{if(!nv||!mb)return;nv.classList.toggle('open',o);mb.setAttribute('aria-expanded',o);mb.setAttribute('aria-label',o?'Close menu':'Open menu')};
@@ -30,10 +32,12 @@ if(!rm&&hv){
  const sp=$('#splash');if(!sp)return;
  document.body.classList.add('splash-on');
  let done=false;
- const hide=()=>{if(done)return;done=true;sp.classList.add('out');document.body.classList.remove('splash-on');setTimeout(()=>sp.remove(),750)};
+ const hide=()=>{if(done)return;done=true;removeEventListener('keydown',key);sp.classList.add('out');document.body.classList.remove('splash-on');setTimeout(()=>sp.remove(),750)};
  const btn=$('#spEnter');
  if(btn)btn.addEventListener('click',e=>{e.stopPropagation();hide()});
  sp.addEventListener('click',hide);
- addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hide()}});
+ // Only while the splash is showing: a permanent listener would block Enter/Space on every link, button and scroll.
+ const key=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hide()}};
+ addEventListener('keydown',key);
  setTimeout(hide,rm?400:2200);
 })();

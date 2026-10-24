@@ -11,6 +11,9 @@ but nothing new gets published either. These rules keep builds green.
 3. **Keep the security headers in `vercel.json` strict**: no `unsafe-inline` / `unsafe-eval`
    in `script-src`, keep `frame-ancestors`, `img-src 'self'`, `form-action 'none'`. Put images in
    `public/` and reference them as `/path`; do not add external image hosts or inline scripts/styles.
+   The site is static now (`index.html` + `public/ap-app.js` + `public/ap-styles.css`). The CSP silently ignores
+   inline `<script>`, `<style>`, `style=""` and `onclick=`/`onerror=`, so the page still builds but looks broken
+   live. Use CSS classes and `addEventListener` in the files above; `scripts/check-repo.mjs` fails the build on any inline code.
 4. **JSX template literals must be closed.** `className={`a ${b ? 'x' : ''}`}` needs both `}`.
    A missing one broke every deploy once.
 5. **Commit `package-lock.json`** together with any dependency change. Do not delete it.
