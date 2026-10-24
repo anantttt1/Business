@@ -27,7 +27,15 @@ $$('.sg .card').forEach(e=>{
   a.addEventListener('click',ev=>ev.stopPropagation());
   e.appendChild(a);
 });
-const vm=$('#vm'),tx=$('#tx');if(vm&&tx)vm.onclick=()=>{const o=tx.hidden;tx.hidden=!o;vm.setAttribute('aria-expanded',o);vm.querySelector('b').textContent=o?'View Less':'View More'};
+const vm=$('#vm'),tx=$('#tx');
+if(vm&&tx)vm.onclick=()=>{
+  const o=tx.hidden;
+  tx.hidden=!o;
+  vm.setAttribute('aria-expanded',String(o));
+  const svg=vm.querySelector('svg');
+  vm.textContent=o?'View less ':'View more ';
+  if(svg)vm.appendChild(svg);
+};
 const mb=$('#mb'),nv=$('#nv'),tg=o=>{if(!nv||!mb)return;nv.classList.toggle('open',o);mb.setAttribute('aria-expanded',o);mb.setAttribute('aria-label',o?'Close menu':'Open menu')};
 if(mb)mb.onclick=()=>tg(!nv.classList.contains('open'));
 if(nv)nv.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>tg(false)));
