@@ -6,9 +6,27 @@ const P={zap:'M13 2L4 14h7l-1 8 9-12h-7z',check:'M6 3h9l4 4v14H6zM9 14l2 2 4-4',
 const WAI='<svg class="wi2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-wa"/></svg>';
 const ic=d=>`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg></span>`;
 $$('[data-i]').forEach(e=>e.insertAdjacentHTML('afterbegin',ic(P[e.dataset.i])));
-// Missing photo -> drop the <img> so the placeholder icon stays (inline onerror is blocked by the CSP).
 $$('.ph img').forEach(i=>{const bad=()=>i.remove();if(i.complete&&!i.naturalWidth)bad();else i.addEventListener('error',bad,{once:true})});
-$$('.sg .card').forEach(e=>{const a=document.createElement('a');a.className='btn wb';a.innerHTML=WAI+'Chat on WhatsApp';a.href=msg(e.querySelector('h4').textContent);a.target='_blank';a.rel='noopener noreferrer';e.appendChild(a)});
+/* Whole service card = WhatsApp button */
+$$('.sg .card').forEach(e=>{
+  const title=(e.querySelector('h4')||{}).textContent||'';
+  const href=msg(title);
+  e.classList.add('card-link');
+  e.setAttribute('role','link');
+  e.setAttribute('tabindex','0');
+  e.setAttribute('aria-label',title+' — Chat on WhatsApp');
+  const go=()=>window.open(href,'_blank','noopener,noreferrer');
+  e.addEventListener('click',go);
+  e.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();go()}});
+  const a=document.createElement('a');
+  a.className='btn wb';
+  a.innerHTML=WAI+'Chat on WhatsApp';
+  a.href=href;
+  a.target='_blank';
+  a.rel='noopener noreferrer';
+  a.addEventListener('click',ev=>ev.stopPropagation());
+  e.appendChild(a);
+});
 const vm=$('#vm'),tx=$('#tx');if(vm&&tx)vm.onclick=()=>{const o=tx.hidden;tx.hidden=!o;vm.setAttribute('aria-expanded',o);vm.querySelector('b').textContent=o?'View Less':'View More'};
 const mb=$('#mb'),nv=$('#nv'),tg=o=>{if(!nv||!mb)return;nv.classList.toggle('open',o);mb.setAttribute('aria-expanded',o);mb.setAttribute('aria-label',o?'Close menu':'Open menu')};
 if(mb)mb.onclick=()=>tg(!nv.classList.contains('open'));
@@ -18,13 +36,11 @@ const yr=$('#yr');if(yr)yr.textContent=new Date().getFullYear();
 $$('.g.steps,.g.why,.tg').forEach(g=>[...g.children].forEach((c,i)=>{c.classList.add('rv');c.style.setProperty('--d',i*.08+'s')}));
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 $$('.rv').forEach(e=>rm?e.classList.add('in'):io.observe(e));
-let t=0;const sc=()=>{t=0;const y=scrollY,k=innerWidth<700?.5:1;const hd=$('#hd');if(hd)hd.classList.toggle('s',y>20);if(!rm&&y<innerHeight*1.5)$$('[data-sp]').forEach(e=>e.style.translate=`0 ${y*e.dataset.sp*k}px`)};
+let t=0;const sc=()=>{t=0;const y=scrollY;const hd=$('#hd');if(hd)hd.classList.toggle('s',y>20)};
 addEventListener('scroll',()=>{if(!t)t=requestAnimationFrame(sc)},{passive:true});sc();
 if(!rm&&hv){
- const h=$('.hero'),ls=$$('.l');
- if(h)h.addEventListener('pointermove',e=>{const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;ls.forEach(l=>l.style.translate=`${x*l.dataset.d}px ${y*l.dataset.d}px`)});
  $$('.card').forEach(c=>{
-  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--ry',(x-.5)*8+'deg');c.style.setProperty('--rx',(.5-y)*8+'deg');c.style.setProperty('--px',x*100+'%');c.style.setProperty('--py',y*100+'%')});
+  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--ry',(x-.5)*8+'deg');c.style.setProperty('--rx',(.5-y)*8+'deg')});
   c.addEventListener('pointerleave',()=>{c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')});
  });
 }
@@ -36,7 +52,6 @@ if(!rm&&hv){
  const btn=$('#spEnter');
  if(btn)btn.addEventListener('click',e=>{e.stopPropagation();hide()});
  sp.addEventListener('click',hide);
- // Only while the splash is showing: a permanent listener would block Enter/Space on every link, button and scroll.
  const key=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hide()}};
  addEventListener('keydown',key);
  setTimeout(hide,rm?400:2200);
