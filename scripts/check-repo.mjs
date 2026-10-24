@@ -33,6 +33,7 @@ for (const file of pages) {
   if (/<script(?![^>]*\ssrc=)[^>]*>/i.test(html)) problems.push(`${file}: inline <script> is blocked by the CSP. Move it to a file in public/ and use <script src>.`)
   if (/<style[\s>]/i.test(html)) problems.push(`${file}: inline <style> is blocked by the CSP. Put the CSS in public/ap-styles.css.`)
   if (/\sstyle\s*=/i.test(html)) problems.push(`${file}: style="" attributes are blocked by the CSP. Use a CSS class in public/ap-styles.css.`)
+  if (/<img[^>]*\ssrc\s*=\s*["']?(https?:)?\/\//i.test(html)) problems.push(`${file}: <img> points to an external host. The CSP only allows images from this site, and temporary hosts (e.g. litter.catbox.moe) expire. Save the image in public/ and use src="/name.jpg".`)
   if (/\son[a-z]+\s*=/i.test(html)) problems.push(`${file}: inline event handlers (onclick=, onerror=, ...) are blocked by the CSP. Use addEventListener in public/ap-app.js.`)
 }
 
