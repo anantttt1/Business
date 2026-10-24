@@ -14,9 +14,13 @@ but nothing new gets published either. These rules keep builds green.
    The site is static now (`index.html` + `public/ap-app.js` + `public/ap-styles.css`). The CSP silently ignores
    inline `<script>`, `<style>`, `style=""` and `onclick=`/`onerror=`, so the page still builds but looks broken
    live. Use CSS classes and `addEventListener` in the files above; `scripts/check-repo.mjs` fails the build on any inline code.
-4. **JSX template literals must be closed.** `className={`a ${b ? 'x' : ''}`}` needs both `}`.
-   A missing one broke every deploy once.
+4. **No third-party requests.** Fonts live in `public/fonts/`, images in `public/`. Do not add Google
+   Fonts, CDNs, analytics or externally hosted images (temporary hosts like catbox expire and the CSP blocks
+   them). Every `target="_blank"` link needs `rel="noopener noreferrer"`. GitHub Actions in `.github/workflows`
+   must be pinned to a full commit SHA. `scripts/check-repo.mjs` enforces all of this.
 5. **Commit `package-lock.json`** together with any dependency change. Do not delete it.
-6. **One source of truth.** Prices, services, WhatsApp number, Google Form and email live in
-   `src/config.ts`. Prices are hidden while `showPrices` is `false` (services are free for now); set it to `true` to bring them back. `public/terms.html` is static text, so update it by hand if policies change.
+6. **Contact details live in two places.** The WhatsApp number (919286034026), Google Form link and email
+   appear in `index.html` and in the `WA` constant of `public/ap-app.js`. Change both together. The `src/`
+   folder and `vite.config.ts` are the old React version and are not deployed. `public/terms.html` and
+   `public/privacy.html` are static text, so update them by hand when policies change.
 7. **Do not undo other people's changes.** `git fetch` and rebase/merge before pushing.
