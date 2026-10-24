@@ -36,3 +36,19 @@ html:not(.js) .splash{display:none}
 @keyframes spOff{to{opacity:0;visibility:hidden;pointer-events:none}}
 /* Service photos: keep one consistent 16:10 frame on every screen size instead of a fixed 140px strip that crops them hard */
 .pv{height:auto;aspect-ratio:16/10}
+/* Laptop / desktop only (881px and up): tighter cards and less empty space between sections. Phones and tablets are unchanged. */
+@media(min-width:881px){
+  section{padding:52px 0}
+  .hero{padding:96px 0 48px;min-height:auto}
+  .hd{margin-bottom:28px}
+  .sg{gap:14px}
+  .sg .card{padding:14px 14px 16px}
+  .sg .card .pv{margin-bottom:12px}
+  .sg .card h4{margin-bottom:5px}
+  .sg .card p{line-height:1.5;margin-bottom:12px}
+  footer{padding-top:40px}
+}
+@media(min-width:1100px){
+  section{padding:56px 0}
+  .hero{padding:100px 0 52px}
+}
