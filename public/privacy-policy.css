@@ -1,0 +1,36 @@
+/* Privacy Policy page layout (uses main site tokens from ap-styles.css) */
+.pp-main{padding:100px 0 64px}
+.pp-wrap{width:min(760px,100% - 40px);margin-inline:auto}
+.pp-back{display:inline-flex;align-items:center;gap:6px;color:var(--mu);font-size:.92rem;font-weight:500;margin-bottom:28px;min-height:44px}
+.pp-back:hover{color:var(--tx)}
+.pp-hero{margin-bottom:36px}
+.pp-hero h1{font-size:clamp(1.85rem,4.5vw,2.6rem);margin-bottom:10px}
+.pp-updated{color:var(--mu);font-size:.9rem;margin:0}
+.pp-sec{margin-bottom:28px;padding:20px 18px}
+.pp-sec h2{font-size:1.15rem;margin:0 0 12px;color:var(--tx)}
+.pp-sec p,.pp-sec li{color:var(--mu);font-size:.95rem;line-height:1.65;margin:0 0 10px}
+.pp-sec p:last-child,.pp-sec ul:last-child{margin-bottom:0}
+.pp-sec ul{list-style:disc;padding-left:1.25rem;margin:0 0 10px}
+.pp-sec li{margin-bottom:6px}
+.pp-sec a{color:var(--or);border-bottom:1px solid rgba(255,107,53,.35);word-break:break-word;overflow-wrap:anywhere}
+.pp-sec a:hover{border-color:var(--or)}
+.pp-toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px;padding:0;list-style:none}
+.pp-toc a{display:inline-flex;align-items:center;min-height:40px;padding:6px 12px;border-radius:99px;border:1px solid var(--bd);background:rgba(255,255,255,.04);font-size:.82rem;font-weight:500;color:var(--mu)}
+.pp-toc a:hover{color:var(--tx);border-color:var(--vi)}
+.pp-footer-note{margin-top:40px;padding-top:20px;border-top:1px solid var(--bd);color:var(--mu);font-size:.88rem}
+.pp-header{position:fixed;inset:0 0 auto;z-index:50;background:rgba(12,12,16,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.pp-header .nav{height:64px}
+.pp-header .logo{font-weight:700;font-size:1.15rem}
+.pp-header .logo b{color:var(--or)}
+.pp-header .nav-links{display:flex;align-items:center;gap:16px}
+.pp-header .nav-links a{color:var(--mu);font-size:.92rem}
+.pp-header .nav-links a:hover{color:var(--tx)}
+@media(max-width:620px){
+  .pp-wrap{width:min(760px,100% - 28px)}
+  .pp-main{padding:88px 0 48px}
+  .pp-sec{padding:16px 14px}
+  .pp-toc a{font-size:.78rem;min-height:36px;padding:5px 10px}
+}
+@media(max-width:380px){
+  .pp-wrap{width:min(760px,100% - 24px)}
+}
