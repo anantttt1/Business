@@ -1,0 +1,39 @@
+/* SEO service landing pages — uses ap-styles.css tokens */
+.lp-main{padding:100px 0 64px}
+.lp-wrap{width:min(800px,100% - 40px);margin-inline:auto}
+.lp-back{display:inline-flex;align-items:center;gap:6px;color:var(--mu);font-size:.92rem;font-weight:500;margin-bottom:24px;min-height:44px}
+.lp-back:hover{color:var(--tx)}
+.lp-hero{margin-bottom:28px}
+.lp-hero h1{font-size:clamp(1.75rem,4.2vw,2.5rem);margin-bottom:12px;line-height:1.15}
+.lp-hero .lead{color:var(--mu);font-size:1.02rem;line-height:1.65;margin:0 0 20px;max-width:640px}
+.lp-cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px}
+.lp-sec{margin-bottom:22px;padding:20px 18px}
+.lp-sec h2{font-size:1.2rem;margin:0 0 12px}
+.lp-sec p,.lp-sec li{color:var(--mu);font-size:.95rem;line-height:1.65;margin:0 0 10px}
+.lp-sec p:last-child,.lp-sec ul:last-child{margin-bottom:0}
+.lp-sec ul{list-style:disc;padding-left:1.25rem;margin:0 0 10px}
+.lp-sec li{margin-bottom:6px}
+.lp-faq details{border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:rgba(255,255,255,.03)}
+.lp-faq summary{cursor:pointer;font-weight:600;font-family:var(--hf);list-style:none}
+.lp-faq summary::-webkit-details-marker{display:none}
+.lp-faq details[open] summary{margin-bottom:8px;color:var(--or)}
+.lp-faq details p{margin:0;color:var(--mu);font-size:.94rem}
+.lp-related{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.lp-related a{display:inline-flex;align-items:center;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid var(--bd);background:rgba(255,255,255,.04);font-size:.88rem;font-weight:600;color:var(--mu)}
+.lp-related a:hover{color:var(--tx);border-color:var(--vi)}
+.lp-header{position:fixed;inset:0 0 auto;z-index:50;background:rgba(12,12,16,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.lp-header .nav{height:64px}
+.lp-header .logo{font-weight:700;font-size:1.15rem}
+.lp-header .logo b{color:var(--or)}
+.lp-header .nav-links{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.lp-header .nav-links a{color:var(--mu);font-size:.9rem}
+.lp-header .nav-links a:hover{color:var(--tx)}
+@media(max-width:620px){
+  .lp-wrap{width:min(800px,100% - 28px)}
+  .lp-main{padding:88px 0 48px}
+  .lp-sec{padding:16px 14px}
+  .lp-cta .btn{width:100%}
+}
+@media(max-width:380px){
+  .lp-wrap{width:min(800px,100% - 24px)}
+}
