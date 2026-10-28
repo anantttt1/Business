@@ -44,8 +44,8 @@
   }
 
   function prepareHtml(html, cfg) {
-    html = html.replace(/href="\/portfolio-builder\/templates\/[^\"]+\/template\.css"/g, 'href="template.css"');
-    html = html.replace(/src="\/portfolio-builder\/templates\/[^\"]+\/template\.js"/g, 'src="template.js"');
+    html = html.replace(/href="\/portfolio-builder\/templates\/[^"]+\/template\.css"/g, 'href="template.css"');
+    html = html.replace(/src="\/portfolio-builder\/templates\/[^"]+\/template\.js"/g, 'src="template.js"');
     html = html.replace(/href="heatmap\.css"/g, 'href="heatmap.css"');
     html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(cfg.name) + ' — Portfolio</title>');
     return html;
@@ -65,6 +65,8 @@
     throw new Error('ZIP library failed to load — hard refresh the page');
   }
 
+  var SUPPORTED = ['modern-dark-3d', 'ideas-impact-3d', 'signature-orange', 'ember-editorial'];
+
   window.PB_exportModernDark = async function (state) {
     try {
       if (!state.photoData) {
@@ -74,18 +76,15 @@
       }
       var cfg = buildConfig(state);
       var tid = state.templateId || 'modern-dark-3d';
-      if (['modern-dark-3d', 'ideas-impact-3d', 'signature-orange'].indexOf(tid) < 0) tid = 'modern-dark-3d';
+      if (SUPPORTED.indexOf(tid) < 0) tid = 'modern-dark-3d';
       var base = '/portfolio-builder/templates/' + tid + '/';
       var cssBase = tid === 'ideas-impact-3d' ? '/portfolio-builder/templates/modern-dark-3d/' : base;
-      if (tid === 'ideas-impact-3d') {
-        /* index from ideas folder; css/js from modern-dark unless signature */
-      }
 
       var html, css, js, heatCss = '';
       try {
         html = await fetchText(base + 'index.html');
         css = await fetchText(cssBase + 'template.css');
-        js = await fetchText((tid === 'signature-orange' ? base : cssBase) + 'template.js');
+        js = await fetchText((tid === 'signature-orange' || tid === 'ember-editorial' ? base : cssBase) + 'template.js');
         if (tid === 'signature-orange' || tid === 'ideas-impact-3d') {
           try { heatCss = await fetchText('/portfolio-builder/templates/' + tid + '/heatmap.css'); } catch (e) {}
         }
