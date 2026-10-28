@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#080a10"/>
+<title>Ideas Impact 3D — Developer Portfolio</title>
+<link rel="stylesheet" href="/portfolio-builder/templates/ideas-impact-3d/template.css"/>
+</head>
+<body>
+<div class="progress" id="scrollProgress"></div>
+<header class="site-header">
+<nav class="nav container" aria-label="Main navigation">
+<a class="brand" href="#home"><span class="brand-mark" id="brandMark">YN</span><span class="brand-name" id="brandName">Your <span>Name.</span></span></a>
+<div class="nav-links" id="navLinks">
+<a href="#home" class="active">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#certs">Certificates</a><a href="#profiles">Profiles</a><a href="#contact">Contact</a>
+</div>
+<button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+</nav>
+</header>
+<main>
+<section class="hero" id="home">
+<div class="container hero-grid">
+<div class="hero-copy">
+<p class="eyebrow">Portfolio · Personal edition · Unique creative 3D</p>
+<h1>Ideas into<br><span class="gradient-text">Impact.</span></h1>
+<p class="hero-name gradient-text" id="heroName">Your Name</p>
+<p class="subtitle" id="heroRole">Your Role · Your Speciality</p>
+<p class="intro" id="heroIntro">Write a short introduction here.</p>
+<div class="hero-cta">
+<a class="btn btn-primary" href="#projects">Explore My Work</a>
+<a class="btn btn-ghost" id="resumeButton" href="#">Download Resume</a>
+</div>
+<div class="social-row" id="heroSocials">
+<a id="socGH" href="#profiles">GH</a>
+<a id="socIN" href="#profiles">in</a>
+<a id="socLC" href="#profiles">LC</a>
+<a id="socMail" href="#contact">@</a>
+</div>
+<div class="hero-meta">
+<div><strong id="metaLocation">Your Location</strong><span>Based in</span></div>
+<div><strong id="metaFocus">Your Main Focus</strong><span>Currently exploring</span></div>
+<div><strong id="metaStatus">Open to opportunities</strong><span>Current status</span></div>
+</div>
+</div>
+<div class="hero-visual">
+<div class="photo-frame" id="photoFrame">
+<img id="photoImg" alt="Profile" hidden/>
+<div class="photo-placeholder" id="photoPlaceholder">Add your photo</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="container">
+<div class="section-head"><div class="eyebrow">01 / About</div><h2>Not a template.<br><span class="gradient-text">Your signature.</span></h2></div>
+<div class="about-grid">
+<div class="panel quote-card">
+<div class="eyebrow">"</div>
+<h3 id="aboutHeadline">Curiosity turns ideas into things people can use.</h3>
+<p id="aboutQuote">Add a short personal statement.</p>
+<div style="margin-top:1.5rem;color:var(--muted);font-size:.8rem"><span id="aboutCardName">YOUR NAME</span><br>A LITTLE ABOUT ME</div>
+</div>
+<div class="panel">
+<h3 id="aboutTitle">A little more about me.</h3>
+<p id="aboutP1">Write two or three sentences about your background.</p>
+<p id="aboutP2"></p>
+<div class="focus-areas" id="focusAreas"></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="skills">
+<div class="container">
+<div class="section-head"><div class="eyebrow">02 / Technical toolkit</div><h2>Make it <span class="gradient-text">possible.</span></h2></div>
+<div class="skills-grid" id="skillsGrid"></div>
+</div>
+</section>
+
+<section id="projects">
+<div class="container">
+<div class="section-head"><div class="eyebrow">03 / Selected work</div><h2>Selected work.<br><span class="gradient-text">Real impact.</span></h2></div>
+<div class="project-filters" id="projectFilters">
+<button class="active" data-filter="all">All</button>
+<button data-filter="web">Web</button>
+<button data-filter="ai">AI / Data</button>
+<button data-filter="other">Other</button>
+</div>
+<div class="projects-grid" id="projectsGrid"></div>
+</div>
+</section>
+
+<section id="education">
+<div class="container">
+<div class="section-head"><div class="eyebrow">04 / Education & experience</div><h2>The next chapter<br><span class="gradient-text">starts here.</span></h2></div>
+<div class="timeline" id="eduTimeline"></div>
+</div>
+</section>
+
+<section id="certs">
+<div class="container">
+<div class="section-head"><div class="eyebrow">05 / Certificates</div><h2>Proof of <span class="gradient-text">curiosity.</span></h2></div>
+<div class="certs-grid" id="certsGrid"></div>
+</div>
+</section>
+
+<section id="profiles">
+<div class="container">
+<div class="section-head"><div class="eyebrow">06 / Coding profiles</div><h2>Progress, <span class="gradient-text">measured.</span></h2></div>
+<div class="profile-list" id="profileList"></div>
+<div class="panel" id="leetcodePanel" style="margin-top:1.25rem;padding:1.1rem">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <h3 style="margin:0;font-size:1rem">LeetCode · Problem counts & heatmap</h3>
+    <span id="lcStatus" style="font-size:.75rem;color:#aeb9d5">—</span>
+  </div>
+  <div class="stat-grid" id="lcStats">
+    <div class="stat-box"><strong id="lcSolved">—</strong><span>Total solved</span></div>
+    <div class="stat-box"><strong id="lcEasy">—</strong><span>Easy</span></div>
+    <div class="stat-box"><strong id="lcMed">—</strong><span>Medium</span></div>
+    <div class="stat-box"><strong id="lcHard">—</strong><span>Hard</span></div>
+  </div>
+  <div class="heatmap-head"><span>Submission activity</span><span id="heatmapTotal">0 contributions</span></div>
+  <div class="heatmap" id="leetcodeHeatmap" aria-label="LeetCode submission heatmap"></div>
+  <div class="heat-legend"><span>Less</span><span class="legend-scale"><i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i></span><span>More</span></div>
+  <p id="lcHint" style="color:var(--muted);font-size:.8rem;margin-top:12px"></p>
+  <a id="lcOpen" href="#profiles" style="display:none;margin-top:8px">Open LeetCode</a>
+</div>
+</div>
+</section>
+
+<section id="contact">
+<div class="container">
+<div class="section-head"><div class="eyebrow">07 / Contact</div><h2>Make something<br><span class="gradient-text">happen.</span></h2></div>
+<div class="contact-grid">
+<div class="panel">
+<p id="contactIntro">Have a project idea or want to connect?</p>
+<p><a id="contactEmailLink" href="#">Add your email in the form</a></p>
+<p id="contactLocation">Your city, country</p>
+<p><a id="contactLinkedIn" href="#profiles">LinkedIn</a></p>
+</div>
+<form class="contact-form panel" id="contactForm">
+<div class="field-row">
+<div class="field"><label for="senderName">Your name</label><input id="senderName" name="name" required/></div>
+<div class="field"><label for="senderEmail">Your email</label><input id="senderEmail" name="email" type="email" required/></div>
+</div>
+<div class="field"><label for="messageSubject">Subject</label><input id="messageSubject" name="subject" required/></div>
+<div class="field"><label for="messageBody">Message</label><textarea id="messageBody" name="message" required></textarea></div>
+<button class="btn btn-primary" type="submit">Prepare Email</button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer"><div class="container footer-inner"><div>© <span id="yearNow"></span> <span id="footerName">Your Name</span>. Crafted with curiosity.</div><div class="footer-links"><a href="#home">Back to top</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div></div></footer>
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+<script src="/portfolio-builder/templates/ideas-impact-3d/template.js"></script>
+</body>
+</html>
