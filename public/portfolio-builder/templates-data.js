@@ -1,6 +1,16 @@
 /* Production templates */
 window.PB_TEMPLATES = [
   {
+    id: 'paper-atelier',
+    name: 'Paper Atelier',
+    category: 'creative',
+    tagline: 'Classy cream-paper portfolio with red & yellow accents, projects, skills, journey and certificates.',
+    accent: '#ae2530',
+    theme: 'light',
+    features: ['Light Theme', 'Projects', 'Skills', 'Journey', 'Certificates'],
+    preview: '/portfolio-builder/templates/paper-atelier/'
+  },
+  {
     id: 'ember-editorial',
     name: 'Ember Editorial',
     category: 'developer',
