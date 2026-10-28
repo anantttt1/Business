@@ -222,12 +222,9 @@
     const root = $('#pb-preview');
     if (!root) return;
     root.textContent = '';
-
     const wrap = document.createElement('div');
     wrap.style.cssText = 'padding:28px 22px;color:#eef2ff;font:15px/1.55 Inter,system-ui,sans-serif;background:#080a10;min-height:460px';
-
     const accent = state.accent || '#7190ff';
-
     const hero = document.createElement('div');
     hero.style.marginBottom = '28px';
     const name = document.createElement('h1');
@@ -243,7 +240,6 @@
     hero.appendChild(role);
     hero.appendChild(tag);
     wrap.appendChild(hero);
-
     if (state.about) {
       const about = document.createElement('section');
       about.style.marginBottom = '22px';
@@ -257,7 +253,6 @@
       about.appendChild(p);
       wrap.appendChild(about);
     }
-
     if ((state.skills || []).length) {
       const sec = document.createElement('section');
       sec.style.marginBottom = '22px';
@@ -276,7 +271,6 @@
       sec.appendChild(row);
       wrap.appendChild(sec);
     }
-
     function listSection(title, items, lineFn) {
       if (!items || !items.length) return;
       const sec = document.createElement('section');
@@ -293,7 +287,6 @@
       });
       wrap.appendChild(sec);
     }
-
     listSection('Experience', state.experience, function (card, ex) {
       const t = document.createElement('strong');
       t.textContent = safeText(ex.role) + (ex.company ? ' \u00b7 ' + safeText(ex.company) : '');
@@ -307,7 +300,6 @@
       card.appendChild(d);
       card.appendChild(p);
     });
-
     listSection('Education', state.education, function (card, ed) {
       const t = document.createElement('strong');
       t.textContent = safeText(ed.degree) + (ed.field ? ' in ' + safeText(ed.field) : '');
@@ -317,7 +309,6 @@
       card.appendChild(t);
       card.appendChild(d);
     });
-
     listSection('Projects', state.projects, function (card, pr) {
       const t = document.createElement('strong');
       t.textContent = safeText(pr.name);
@@ -331,7 +322,6 @@
       card.appendChild(p);
       card.appendChild(tech);
     });
-
     const contact = document.createElement('section');
     contact.style.marginTop = '18px';
     const ch = document.createElement('h2');
@@ -350,7 +340,6 @@
       contact.appendChild(l);
     }
     wrap.appendChild(contact);
-
     root.appendChild(wrap);
   }
 
@@ -381,8 +370,8 @@
     if (btn) btn.disabled = true;
     setStatus('Generating ZIP\u2026');
     try {
-      if (typeof JSZip === 'undefined') throw new Error('ZIP library failed to load');
       if (typeof window.PB_exportModernDark !== 'function') throw new Error('Exporter missing');
+      if (typeof window.PB_simpleZip !== 'function' && typeof JSZip === 'undefined') throw new Error('ZIP library failed to load');
       const blob = await window.PB_exportModernDark(state);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
