@@ -309,23 +309,61 @@
     window.open(url, '_blank');
   }
 
-  async function uploadZipForShare(blob, fileName) {
+  async function uploadViaTmpfiles(blob, fileName) {
     const form = new FormData();
     form.append('file', blob, fileName);
     const res = await fetch('https://tmpfiles.org/api/v1/upload', {
       method: 'POST',
-      body: form
+      body: form,
+      mode: 'cors'
     });
-    if (!res.ok) throw new Error('Upload failed (' + res.status + ')');
+    if (!res.ok) throw new Error('tmpfiles HTTP ' + res.status);
     const json = await res.json();
     if (!json || json.status !== 'success' || !json.data || !json.data.url) {
-      throw new Error('Upload response invalid');
+      throw new Error('tmpfiles bad response');
     }
     var pageUrl = String(json.data.url);
     if (pageUrl.indexOf('/dl/') === -1) {
       pageUrl = pageUrl.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/');
     }
     return pageUrl;
+  }
+
+  async function uploadViaGofile(blob, fileName) {
+    const srvRes = await fetch('https://api.gofile.io/servers', { mode: 'cors' });
+    if (!srvRes.ok) throw new Error('gofile servers HTTP ' + srvRes.status);
+    const srvJson = await srvRes.json();
+    const servers = (srvJson && srvJson.data && srvJson.data.servers) || [];
+    if (!servers.length) throw new Error('gofile no servers');
+    const server = servers[0].name;
+    const form = new FormData();
+    form.append('file', blob, fileName);
+    const upRes = await fetch('https://' + server + '.gofile.io/uploadFile', {
+      method: 'POST',
+      body: form,
+      mode: 'cors'
+    });
+    if (!upRes.ok) throw new Error('gofile upload HTTP ' + upRes.status);
+    const upJson = await upRes.json();
+    if (!upJson || upJson.status !== 'ok' || !upJson.data || !upJson.data.downloadPage) {
+      throw new Error('gofile bad response');
+    }
+    return String(upJson.data.downloadPage);
+  }
+
+  async function uploadZipForShare(blob, fileName) {
+    var errors = [];
+    try {
+      return await uploadViaGofile(blob, fileName);
+    } catch (e1) {
+      errors.push('gofile: ' + (e1 && e1.message ? e1.message : e1));
+    }
+    try {
+      return await uploadViaTmpfiles(blob, fileName);
+    } catch (e2) {
+      errors.push('tmpfiles: ' + (e2 && e2.message ? e2.message : e2));
+    }
+    throw new Error(errors.join(' | '));
   }
 
   async function downloadZip() {
@@ -362,11 +400,12 @@
 
       setStatus('Uploading ZIP for WhatsApp download link…');
       var downloadLink = '';
+      var uploadErr = '';
       try {
         downloadLink = await uploadZipForShare(blob, fileName);
       } catch (upErr) {
-        console.warn(upErr);
-        downloadLink = '';
+        console.warn('ZIP upload failed', upErr);
+        uploadErr = upErr && upErr.message ? upErr.message : String(upErr);
       }
 
       var wa = (window.PB_WHATSAPP_NUMBER || '919286034026').replace(/\D/g, '');
@@ -380,13 +419,9 @@
         msg +=
           '\n\nDownload ZIP (full portfolio code):\n' +
           downloadLink +
-          '\n\nLink works on phone / laptop. Open it and download the file.';
-      } else {
-        msg +=
-          '\n\nZIP is on my device Downloads. Upload link failed — I will attach the file manually.';
+          '\n\nOpen this link on any phone or laptop to download the ZIP.';
       }
 
-      var shared = false;
       try {
         var file = new File([blob], fileName, { type: 'application/zip' });
         if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
@@ -395,7 +430,6 @@
             title: (state.fullName || 'My') + ' Portfolio ZIP',
             text: msg
           });
-          shared = true;
         }
       } catch (shareErr) {
         console.warn('Share skipped', shareErr);
@@ -404,17 +438,17 @@
       var waUrl = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
       setTimeout(function () {
         window.open(waUrl, '_blank');
-      }, shared ? 700 : 250);
+      }, 300);
 
-      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 12000);
 
       if (downloadLink) {
-        setStatus(
-          'ZIP saved + WhatsApp opened with DOWNLOADABLE link. Owner can open the link on any device.'
-        );
+        setStatus('ZIP ready. WhatsApp message has a DOWNLOADABLE link for any device.');
       } else {
         setStatus(
-          'ZIP saved locally. WhatsApp opened — attach file from Downloads if link upload failed.',
+          'ZIP saved on this device. Upload link failed (' +
+            (uploadErr || 'unknown') +
+            '). WhatsApp opened — attach ZIP from Downloads.',
           true
         );
       }
