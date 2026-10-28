@@ -303,8 +303,9 @@
     }
     saveState();
     setStatus('Opening full template preview…');
+    const tpl = templateId || 'modern-dark-3d';
     const url =
-      '/portfolio-builder/templates/modern-dark-3d/?preview=1&from=builder&t=' +
+      '/portfolio-builder/templates/' + tpl + '/?preview=1&from=builder&t=' +
       Date.now();
     window.open(url, '_blank');
   }
@@ -324,7 +325,7 @@
           state.photoData = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || '';
         } catch (e) {}
       }
-
+      state.templateId = templateId || state.templateId || 'modern-dark-3d';
       const blob = await window.PB_exportModernDark(state);
       const safeName =
         (state.fullName || 'my-portfolio')
@@ -332,7 +333,6 @@
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '') || 'my-portfolio';
       const fileName = safeName + '-portfolio.zip';
-
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -341,7 +341,6 @@
       a.click();
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-
       setStatus('Download started — extract the ZIP and open index.html.');
     } catch (e) {
       console.error(e);
@@ -370,7 +369,7 @@
 
   const accent = $('#f-accent');
   if (accent) {
-    accent.value = state.accent || '#7190ff';
+    accent.value = state.accent || tplMeta.accent || '#7190ff';
     accent.addEventListener('input', function () {
       state.accent = accent.value;
       saveState();
