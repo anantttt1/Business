@@ -309,6 +309,25 @@
     window.open(url, '_blank');
   }
 
+  async function uploadZipForShare(blob, fileName) {
+    const form = new FormData();
+    form.append('file', blob, fileName);
+    const res = await fetch('https://tmpfiles.org/api/v1/upload', {
+      method: 'POST',
+      body: form
+    });
+    if (!res.ok) throw new Error('Upload failed (' + res.status + ')');
+    const json = await res.json();
+    if (!json || json.status !== 'success' || !json.data || !json.data.url) {
+      throw new Error('Upload response invalid');
+    }
+    var pageUrl = String(json.data.url);
+    if (pageUrl.indexOf('/dl/') === -1) {
+      pageUrl = pageUrl.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/');
+    }
+    return pageUrl;
+  }
+
   async function downloadZip() {
     if (!validate()) return;
     const btn = $('#btn-download');
@@ -324,6 +343,7 @@
           state.photoData = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || '';
         } catch (e) {}
       }
+
       const blob = await window.PB_exportModernDark(state);
       const safeName =
         (state.fullName || 'my-portfolio')
@@ -331,6 +351,7 @@
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '') || 'my-portfolio';
       const fileName = safeName + '-portfolio.zip';
+
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -339,17 +360,35 @@
       a.click();
       a.remove();
 
+      setStatus('Uploading ZIP for WhatsApp download link…');
+      var downloadLink = '';
+      try {
+        downloadLink = await uploadZipForShare(blob, fileName);
+      } catch (upErr) {
+        console.warn(upErr);
+        downloadLink = '';
+      }
+
       var wa = (window.PB_WHATSAPP_NUMBER || '919286034026').replace(/\D/g, '');
       var msg =
-        'Hi AP Creative Studio, I just downloaded my portfolio ZIP (' +
+        'Hi AP Creative Studio, I just created my portfolio ZIP (' +
         fileName +
         '). Name: ' +
         (state.fullName || '') +
         '. PLEASE DEPLOY IT';
-      var file = new File([blob], fileName, { type: 'application/zip' });
-      var shared = false;
+      if (downloadLink) {
+        msg +=
+          '\n\nDownload ZIP (full portfolio code):\n' +
+          downloadLink +
+          '\n\nLink works on phone / laptop. Open it and download the file.';
+      } else {
+        msg +=
+          '\n\nZIP is on my device Downloads. Upload link failed — I will attach the file manually.';
+      }
 
+      var shared = false;
       try {
+        var file = new File([blob], fileName, { type: 'application/zip' });
         if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
@@ -365,14 +404,20 @@
       var waUrl = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
       setTimeout(function () {
         window.open(waUrl, '_blank');
-      }, shared ? 600 : 300);
+      }, shared ? 700 : 250);
 
-      setTimeout(function () { URL.revokeObjectURL(url); }, 8000);
-      setStatus(
-        shared
-          ? 'ZIP downloaded. Share sheet opened — choose WhatsApp to send the file. Chat also opened with PLEASE DEPLOY IT.'
-          : 'ZIP downloaded to your device. WhatsApp opened with PLEASE DEPLOY IT — attach the ZIP from Downloads and send.'
-      );
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+
+      if (downloadLink) {
+        setStatus(
+          'ZIP saved + WhatsApp opened with DOWNLOADABLE link. Owner can open the link on any device.'
+        );
+      } else {
+        setStatus(
+          'ZIP saved locally. WhatsApp opened — attach file from Downloads if link upload failed.',
+          true
+        );
+      }
     } catch (e) {
       console.error(e);
       setStatus('Export failed: ' + (e && e.message ? e.message : 'unknown error'), true);
