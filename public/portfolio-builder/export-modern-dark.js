@@ -65,26 +65,37 @@
       '## Deploy\nUpload to Vercel, Netlify, or GitHub Pages. No build step required.\n';
   }
 
+  async function makeZip(files) {
+    if (typeof window.PB_simpleZip === 'function') {
+      return window.PB_simpleZip(files);
+    }
+    if (typeof JSZip !== 'undefined') {
+      const zip = new JSZip();
+      files.forEach(function (f) { zip.file(f.name, f.data); });
+      return zip.generateAsync({ type: 'blob' });
+    }
+    throw new Error('ZIP library not available');
+  }
+
   window.PB_exportModernDark = async function (state) {
     let html = await fetchTemplate();
     const cfg = buildConfig(state);
     html = injectConfig(html, cfg);
     html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(cfg.name) + ' — Portfolio</title>');
 
-    const zip = new JSZip();
-    const folder = zip.folder('my-portfolio');
-    folder.file('index.html', html);
-    folder.file('README.md', readmeFor(state));
-    folder.folder('assets');
+    const files = [
+      { name: 'my-portfolio/index.html', data: html },
+      { name: 'my-portfolio/README.md', data: readmeFor(state) }
+    ];
 
     if (state.photoData && /^data:image\//.test(state.photoData)) {
       const base64 = state.photoData.split(',')[1] || '';
       const bin = atob(base64);
       const bytes = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      folder.file('assets/profile.png', bytes);
+      files.push({ name: 'my-portfolio/assets/profile.png', data: bytes });
     }
 
-    return zip.generateAsync({ type: 'blob' });
+    return makeZip(files);
   };
 })();
