@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A personal portfolio showcasing projects, skills, certificates, and coding profiles." />
+  <meta name="theme-color" content="#100d0c" />
+  <title>Your Name — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="template.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="site-header shell">
+    <a class="brand" href="#home"><span class="brand-mark">✦</span><span id="brandName">Your Name</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links" id="nav" aria-label="Main navigation">
+      <a href="#home" class="active">Home</a><a href="#about">About</a><a href="#projects">Projects</a><a href="#coding">Coding</a><a href="#certificates">Certificates</a>
+    </nav>
+    <a class="button button-small button-orange" href="#contact">Let’s Talk <span>↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero shell" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="status-dot"></span> AVAILABLE FOR OPPORTUNITIES</div>
+        <p class="hero-kicker">HELLO, WORLD — I'M</p>
+        <h1><span id="heroName">Your Name</span><br><em><span id="heroRole">Developer & Creative Thinker</span></em></h1>
+        <p class="hero-description" id="heroBio">I build thoughtful digital experiences, solve problems, and turn ideas into useful projects.</p>
+        <div class="hero-actions">
+          <a class="button button-orange" href="#projects">Explore My Work <span>↗</span></a>
+          <a class="button button-outline" href="#contact">✉ Contact Me</a>
+        </div>
+        <div class="hero-socials" id="socialLinks"></div>
+      </div>
+      <div class="hero-visual">
+        <div class="portrait-glow"></div>
+        <div class="portrait-frame">
+          <img id="photoImg" alt="Portrait" class="portrait" hidden>
+          <div class="photo-placeholder" id="photoFallback" style="display:grid"><span id="initials">YN</span><small>Add photo<br>in the builder</small></div>
+        </div>
+        <div class="floating-note note-top"><span class="note-icon">✳</span><span><b>Curious mind</b><small>Always learning</small></span></div>
+        <div class="floating-note note-bottom"><span class="note-icon">⌘</span><span><b>Building things</b><small>One project at a time</small></span></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+      </div>
+      <div class="hero-bottom"><span>BASED IN <b id="locationLabel">Your City</b></span><span>SCROLL TO EXPLORE <span class="scroll-arrow">↓</span></span></div>
+    </section>
+
+    <section class="section shell" id="about">
+      <div class="section-heading"><p class="eyebrow">01 / A LITTLE ABOUT ME</p><h2>Driven by curiosity.<br><em>Defined by what I create.</em></h2></div>
+      <div class="about-grid">
+        <p class="about-lead" id="aboutLead">I'm <span id="aboutName">Your Name</span> — <span id="aboutRole">Developer</span> with an interest in building useful, user-friendly digital experiences.</p>
+        <div class="about-detail">
+          <p id="aboutText">Use this section to write a short introduction about your background, interests, education, and goals.</p>
+          <div class="tag-list" id="aboutTags"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="projects">
+      <div class="section-topline"><div class="section-heading"><p class="eyebrow">02 / SELECTED WORK</p><h2>Projects with <em>purpose.</em></h2></div><span class="section-count" id="projectCount">01 — 03</span></div>
+      <div class="project-grid" id="projectsGrid"></div>
+    </section>
+
+    <section class="section shell" id="coding">
+      <div class="section-heading"><p class="eyebrow">03 / MY DIGITAL FOOTPRINT</p><h2>Learning in public.<br><em>Improving every day.</em></h2></div>
+      <div class="coding-grid">
+        <article class="profile-card leetcode-card">
+          <div class="profile-card-head"><span class="platform-icon">⌁</span><div><p class="project-type">CODING PRACTICE</p><h3>LeetCode Tracker</h3></div><a id="lcLink" href="https://leetcode.com/" target="_blank" rel="noreferrer" class="external-link">↗</a></div>
+          <p class="muted">Static practice tracker. Numbers come from the builder — no live API fetch.</p>
+          <div class="leetcode-stats">
+            <div class="solved-ring"><div><strong id="lcSolved">—</strong><small>solved</small></div></div>
+            <div class="stat-list"><div><span>Easy</span><b id="lcEasy">—</b></div><div><span>Medium</span><b id="lcMedium">—</b></div><div><span>Hard</span><b id="lcHard">—</b></div></div>
+          </div>
+          <div class="tracker-label"><span>MY PRACTICE TRACKER</span><span id="lcStreak">—</span></div>
+          <div class="activity-grid" id="activity-grid" aria-label="Illustrative coding activity tracker"></div>
+          <p class="tiny-note">Illustrative activity grid (visual only).</p>
+          <a class="text-link" id="lcTextLink" href="https://leetcode.com/" target="_blank" rel="noreferrer">Visit LeetCode profile <span>↗</span></a>
+        </article>
+        <article class="profile-card github-card">
+          <div class="profile-card-head"><span class="platform-icon">⌘</span><div><p class="project-type">OPEN SOURCE</p><h3>GitHub</h3></div><a id="ghLink" href="#" target="_blank" rel="noreferrer" class="external-link">↗</a></div>
+          <div class="github-placeholder"><span class="github-big">⌘</span><p>Code, experiments<br>& things I'm building.</p><span class="placeholder-label">GITHUB ACTIVITY / PROFILE PREVIEW</span></div>
+          <div class="profile-link-row"><span>Username</span><b id="ghHandle">@yourusername</b></div>
+          <a class="text-link" id="ghTextLink" href="#" target="_blank" rel="noreferrer">Explore repositories <span>↗</span></a>
+        </article>
+        <article class="profile-card linkedin-card">
+          <div class="profile-card-head"><span class="platform-icon">in</span><div><p class="project-type">PROFESSIONAL NETWORK</p><h3>LinkedIn</h3></div><a id="liLink" href="#" target="_blank" rel="noreferrer" class="external-link">↗</a></div>
+          <div class="linkedin-preview"><div class="linkedin-banner"></div><div class="linkedin-avatar" id="liAvatar">PHOTO</div><div class="linkedin-copy"><b id="liName">Your Name</b><span id="liRole">Developer</span><small id="liLocation">Your City</small></div></div>
+          <p class="muted">Connect for projects, collaboration, and opportunities.</p>
+          <a class="text-link" id="liTextLink" href="#" target="_blank" rel="noreferrer">View LinkedIn profile <span>↗</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="certificates">
+      <div class="section-topline"><div class="section-heading"><p class="eyebrow">04 / LEARNING & MILESTONES</p><h2>Proof of <em>progress.</em></h2></div><span class="section-count">CERTIFICATES</span></div>
+      <div class="certificate-grid" id="certificatesGrid"></div>
+      <p class="section-footnote">Certificates can link to a public credential or PDF.</p>
+    </section>
+
+    <section class="contact-section shell" id="contact">
+      <div class="contact-panel">
+        <p class="eyebrow">05 / YOUR NEXT IDEA STARTS HERE</p>
+        <h2>Have a project in mind?<br><em>Let’s create it together.</em></h2>
+        <p id="contactText">Open to meaningful projects, new opportunities, and good conversations.</p>
+        <a class="button button-orange" id="emailBtn" href="mailto:">Get in touch <span>↗</span></a>
+        <div class="contact-orbit">✳</div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer shell">
+    <a class="brand" href="#home"><span class="brand-mark">✦</span><span id="footerName">Your Name</span></a>
+    <p>Designed with intention. Built with curiosity.</p>
+    <span>© <span id="year"></span> <span id="footerName2">Your Name</span></span>
+  </footer>
+  <script src="template.js"></script>
+</body>
+</html>
