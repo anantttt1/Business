@@ -1,6 +1,16 @@
 /* Production templates */
 window.PB_TEMPLATES = [
   {
+    id: 'color-pop',
+    name: 'Color Pop',
+    category: 'creative',
+    tagline: 'Colourful paper-style portfolio with live LeetCode heatmap, projects, skills, journey and certificates.',
+    accent: '#5948ff',
+    theme: 'light',
+    features: ['LeetCode', 'Heatmap', 'Projects', 'Theme Toggle', 'Certificates'],
+    preview: '/portfolio-builder/templates/color-pop/'
+  },
+  {
     id: 'ideas-impact',
     name: 'Ideas Impact',
     category: 'developer',
