@@ -7,16 +7,16 @@ const WAI='<svg class="wi2" viewBox="0 0 24 24" fill="none" stroke="currentColor
 const ic=d=>`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg></span>`;
 $$('[data-i]').forEach(e=>{const d=P[e.dataset.i];if(d)e.insertAdjacentHTML('afterbegin',ic(d))});
 $$('.ph img').forEach(i=>{const bad=()=>i.remove();if(i.complete&&!i.naturalWidth)bad();else i.addEventListener('error',bad,{once:true})});
-/* Service card: Portfolio Builder for Personal Portfolio Website; WhatsApp for others */
+/* Service card: Portfolio Builder for portfolio services; WhatsApp for others */
 $$('.sg .card').forEach(e=>{
-  const title=(e.querySelector('h4')||{}).textContent||'';
+  const title=((e.querySelector('h4')||{}).textContent||'').trim();
   e.classList.add('card-link');
   const a=document.createElement('a');
-  if(title.trim()==='Personal Portfolio Website'){
+  if(title==='Personal Portfolio Website'||title==='Student & Fresher Portfolio'){
     a.className='btn p';
     a.textContent='Open Portfolio Builder';
     a.href='/portfolio-builder/';
-    a.setAttribute('aria-label','Open Portfolio Builder for Personal Portfolio Website');
+    a.setAttribute('aria-label','Open Portfolio Builder for '+title);
   }else{
     a.className='btn wb';
     a.innerHTML=WAI+'Chat on WhatsApp';
