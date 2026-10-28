@@ -65,7 +65,8 @@
     throw new Error('ZIP library failed to load — hard refresh the page');
   }
 
-  var SUPPORTED = ['modern-dark-3d', 'ideas-impact-3d', 'signature-orange', 'ember-editorial'];
+  var SUPPORTED = ['modern-dark-3d', 'ideas-impact-3d', 'signature-orange', 'ember-editorial', 'paper-atelier'];
+  var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier'];
 
   window.PB_exportModernDark = async function (state) {
     try {
@@ -84,7 +85,7 @@
       try {
         html = await fetchText(base + 'index.html');
         css = await fetchText(cssBase + 'template.css');
-        js = await fetchText((tid === 'signature-orange' || tid === 'ember-editorial' ? base : cssBase) + 'template.js');
+        js = await fetchText((OWN_JS.indexOf(tid) >= 0 ? base : cssBase) + 'template.js');
         if (tid === 'signature-orange' || tid === 'ideas-impact-3d') {
           try { heatCss = await fetchText('/portfolio-builder/templates/' + tid + '/heatmap.css'); } catch (e) {}
         }
