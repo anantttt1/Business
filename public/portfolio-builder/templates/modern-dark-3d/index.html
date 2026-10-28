@@ -29,16 +29,16 @@
 <div class="eyebrow">YOUR AVAILABILITY STATUS <span class="pill"><i class="pill-dot"></i> Portfolio template</span></div>
 <h1>Hi, I'm<br><span class="gradient-text" id="heroName">Your Name</span><span class="gradient-text">.</span></h1>
 <p class="subtitle" id="heroRole">Your Role · Your Speciality</p>
-<p class="intro" id="heroIntro">Write a short introduction here. Tell visitors what you build, what you care about, and the kind of problems you enjoy solving.</p>
+<p class="intro" id="heroIntro">Write a short introduction here.</p>
 <div class="hero-cta">
 <a href="#projects" class="btn btn-primary">Explore My Work <span class="arrow">↗</span></a>
 <a href="#" id="resumeButton" class="btn btn-secondary">Download Resume <span class="arrow">↓</span></a>
 </div>
 <div class="social-row" id="heroSocials">
-<a class="social-icon" href="#profiles">GH</a>
-<a class="social-icon" href="#profiles">in</a>
-<a class="social-icon" href="#profiles">LC</a>
-<a class="social-icon" href="#contact">@</a>
+<a class="social-icon" id="socGH" href="#profiles">GH</a>
+<a class="social-icon" id="socIN" href="#profiles">in</a>
+<a class="social-icon" id="socLC" href="#profiles">LC</a>
+<a class="social-icon" id="socMail" href="#contact">@</a>
 </div>
 <div class="hero-meta">
 <div class="meta-item"><strong id="metaLocation">Your Location</strong><small>Based in</small></div>
@@ -47,15 +47,22 @@
 </div>
 </div>
 <div class="hero-visual">
-<div class="float-card" style="top:8%;left:0"><strong>Build · Learn · Improve</strong><div style="color:var(--muted);font-size:.85rem">Your personal motto</div></div>
-<div class="photo-frame"><div class="photo-slot">+</div><strong>Add Your Photo</strong><div style="font-size:.85rem">Replace this area with your portrait</div></div>
-<div class="float-card" style="bottom:8%;right:0"><strong>Your Specialty</strong><div style="color:var(--muted);font-size:.85rem">One-line highlight</div></div>
+<div class="float-card float-card-top" id="floatTop"><strong id="floatTopTitle">Build · Learn · Improve</strong><div id="floatTopSub">Your personal motto</div></div>
+<div class="photo-frame" id="photoFrame">
+  <div class="photo-placeholder" id="photoPlaceholder">
+    <div class="photo-slot">+</div>
+    <strong>Add Your Photo</strong>
+    <div class="photo-hint">Replace this area with your portrait</div>
+  </div>
+  <img id="photoImg" class="photo-img" alt="Profile photo" hidden>
+</div>
+<div class="float-card float-card-bottom" id="floatBottom"><strong id="floatBottomTitle">Your Specialty</strong><div id="floatBottomSub">One-line highlight</div></div>
 </div>
 </div>
 </section>
 <section class="section" id="about">
 <div class="container">
-<div class="section-head"><div><div class="eyebrow">01 / About</div><h2>Make an impression.<br><span class="gradient-text">Tell your story.</span></h2></div><p>Use this section to explain who you are, what drives you, and what you want to create next.</p></div>
+<div class="section-head"><div><div class="eyebrow">01 / About</div><h2>Make an impression.<br><span class="gradient-text">Tell your story.</span></h2></div><p>Who you are and what you want to create next.</p></div>
 <div class="about-grid">
 <div class="panel quote-card"><div class="eyebrow">"</div><h3 id="aboutHeadline">Curiosity turns ideas into things people can use.</h3><p id="aboutQuote">Add a short personal statement.</p><div style="margin-top:1.5rem;color:var(--muted);font-size:.8rem"><span id="aboutCardName">YOUR NAME</span><br>A LITTLE ABOUT ME</div></div>
 <div class="panel"><h3 id="aboutTitle">A little more about me.</h3><p id="aboutP1" style="color:var(--muted);margin:.75rem 0">Write two or three sentences about your background.</p><p id="aboutP2" style="color:var(--muted)">Share how you approach challenges.</p><div class="focus-grid" id="focusAreas"></div></div>
@@ -77,9 +84,9 @@
 </section>
 <section class="section" id="education">
 <div class="container">
-<div class="section-head"><div><div class="eyebrow">04 / Education & experience</div><h2>The foundation I'm <span class="gradient-text">building.</span></h2></div><p>Add education, work, internships, milestones.</p></div>
+<div class="section-head"><div><div class="eyebrow">04 / Education & experience</div><h2>The foundation I'm <span class="gradient-text">building.</span></h2></div><p>Education, work, internships, milestones.</p></div>
 <div class="edu-grid">
-<div class="panel"><span class="pill">Your current chapter</span><h3 style="margin:1rem 0 .5rem">Learning today. Building for tomorrow.</h3><p style="color:var(--muted)">Write a short note about your journey.</p></div>
+<div class="panel"><span class="pill">Your current chapter</span><h3 style="margin:1rem 0 .5rem">Learning today. Building for tomorrow.</h3><p style="color:var(--muted)">A short note about your journey.</p></div>
 <div class="panel"><div class="timeline" id="eduTimeline"></div></div>
 </div>
 </div>
@@ -95,7 +102,20 @@
 <div class="section-head"><div><div class="eyebrow">06 / Coding profiles</div><h2>Practice in <span class="gradient-text">public.</span></h2></div><p>Connect developer profiles.</p></div>
 <div class="profiles-grid">
 <div class="panel profile-list" id="profileList"></div>
-<div class="panel"><div style="display:flex;justify-content:space-between;margin-bottom:1rem"><strong>Problem Solving Activity</strong><span style="color:var(--muted);font-size:.8rem">Demo / not connected</span></div><div class="stat-grid"><div class="stat-box"><div>—</div><small>Solved</small></div><div class="stat-box"><div>—</div><small>Easy</small></div><div class="stat-box"><div>—</div><small>Medium</small></div><div class="stat-box"><div>—</div><small>Hard</small></div></div></div>
+<div class="panel" id="leetcodePanel">
+  <div class="lc-head">
+    <strong>Problem Solving</strong>
+    <span id="lcStatus" style="color:var(--muted);font-size:.8rem">Add LeetCode link in form</span>
+  </div>
+  <div class="stat-grid" id="lcStats" hidden>
+    <div class="stat-box"><div id="lcSolved">—</div><small>Solved</small></div>
+    <div class="stat-box"><div id="lcEasy">—</div><small>Easy</small></div>
+    <div class="stat-box"><div id="lcMed">—</div><small>Medium</small></div>
+    <div class="stat-box"><div id="lcHard">—</div><small>Hard</small></div>
+  </div>
+  <p id="lcHint" style="color:var(--muted);font-size:.9rem;margin-top:.75rem;line-height:1.45">Live LeetCode stats need a connected API. Your profile link still works from the list on the left.</p>
+  <a id="lcOpen" class="btn btn-secondary btn-small" href="#profiles" style="margin-top:1rem;display:none">Open LeetCode ↗</a>
+</div>
 </div>
 </div>
 </section>
