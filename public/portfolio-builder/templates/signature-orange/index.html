@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111014">
+  <meta name="description" content="Personal portfolio — skills, projects, certificates and LeetCode progress.">
+  <title>Portfolio | Signature Orange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="template.css">
+  <link rel="stylesheet" href="heatmap.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-mark" id="brandMark">A<span>.</span></span><span id="brandName">YOUR NAME</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+    <nav id="nav">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#leetcode">LeetCode</a>
+      <a href="#certificates">Certificates</a>
+      <a class="nav-cta" href="#contact">Let's talk ↗</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> <span id="statusText">OPEN TO OPPORTUNITIES</span></div>
+        <p class="hero-kicker">HELLO, I'M <span id="heroNameSmall">YOU</span></p>
+        <h1 id="heroHeadline">Building digital<br><span class="gradient-text">things that matter.</span></h1>
+        <p class="hero-description" id="heroBio">A developer who turns curious ideas into useful digital experiences.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#projects">Explore my work ↘</a>
+          <a class="button button-quiet" id="resumeLink" href="#contact">View résumé ↗</a>
+        </div>
+        <div class="hero-socials" id="socialLinks"></div>
+      </div>
+      <div class="hero-visual">
+        <div class="orbit orbit-a"></div>
+        <div class="orbit orbit-b"></div>
+        <div class="portrait-frame">
+          <div class="photo-fallback" id="photoFallback">
+            <span id="initials">YN</span>
+            <small>PORTFOLIO</small>
+          </div>
+          <img id="photoImg" alt="Profile photo" hidden>
+        </div>
+        <div class="float-card float-card-top"><span class="float-icon">✳</span><div><b id="heroRole">Developer</b><small>Curious by default</small></div></div>
+        <div class="float-card float-card-bottom"><span class="status-dot"></span><div><b>Always learning</b><small id="locationLabel">Your city</small></div></div>
+        <div class="hero-stamp">MAKE IT<br><span>USEFUL.</span></div>
+      </div>
+      <a class="scroll-hint" href="#about">↓ &nbsp; SCROLL TO EXPLORE</a>
+    </section>
+
+    <section class="section-wrap about-section" id="about">
+      <div class="section-label"><span>01 / ABOUT</span><span class="label-line"></span></div>
+      <div class="about-grid">
+        <h2>Part builder.<br>Part <span class="gradient-text">problem-solver.</span></h2>
+        <div>
+          <p class="large-copy" id="aboutText">I enjoy learning how things work, making useful projects, and improving through consistent practice.</p>
+          <p class="muted" id="aboutExtra"></p>
+          <div class="about-facts" id="aboutFacts"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap" id="skills">
+      <div class="section-label"><span>02 / TOOLKIT</span><span class="label-line"></span></div>
+      <div class="section-heading">
+        <h2>Skills & <span class="gradient-text">tools.</span></h2>
+        <p>Things I use to bring ideas to life.</p>
+      </div>
+      <div class="skills-grid" id="skillsGrid"></div>
+    </section>
+
+    <section class="section-wrap projects-section" id="projects">
+      <div class="section-label"><span>03 / SELECTED WORK</span><span class="label-line"></span></div>
+      <div class="section-heading">
+        <h2>Made with <span class="gradient-text">intent.</span></h2>
+        <p>Selected projects, experiments, and things learned by building.</p>
+      </div>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </section>
+
+    <section class="section-wrap leetcode-section" id="leetcode">
+      <div class="section-label"><span>04 / CONSISTENCY</span><span class="label-line"></span></div>
+      <div class="leetcode-panel">
+        <div class="leetcode-intro">
+          <div class="leetcode-icon">LC</div>
+          <div>
+            <p class="hero-kicker">PROBLEM SOLVING</p>
+            <h2>LeetCode <span class="gradient-text">in numbers.</span></h2>
+            <p class="muted">Live stats and activity heatmap when a username is set.</p>
+          </div>
+        </div>
+        <div class="leetcode-profile">
+          <div><span class="muted small">USERNAME</span><b id="lcUsername">@yourusername</b></div>
+          <a id="lcProfileLink" href="https://leetcode.com/" target="_blank" rel="noreferrer">Open profile ↗</a>
+        </div>
+        <div class="lc-stats" id="lcStats"></div>
+        <div class="heatmap-wrap">
+          <h3>Activity heatmap</h3>
+          <div class="heatmap-legend">
+            <span>Less</span>
+            <span class="swatch" style="background:#ffffff08"></span>
+            <span class="swatch" style="background:#ff8a3228"></span>
+            <span class="swatch" style="background:#ff8a3255"></span>
+            <span class="swatch" style="background:#ff8a3288"></span>
+            <span class="swatch" style="background:#ff8a32"></span>
+            <span>More</span>
+          </div>
+          <div class="heat-grid" id="leetcodeHeatmap" aria-label="LeetCode activity heatmap"></div>
+          <div id="heatmapTotal">0 contributions</div>
+        </div>
+        <div class="lc-footer">
+          <span id="lcUpdated">Stats status</span>
+          <button class="text-button" type="button" id="refreshLc">Refresh stats ↻</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap" id="certificates">
+      <div class="section-label"><span>05 / PROOF OF LEARNING</span><span class="label-line"></span></div>
+      <div class="section-heading">
+        <h2>Certificates & <span class="gradient-text">milestones.</span></h2>
+        <p>Certificates can be linked to a public verification page.</p>
+      </div>
+      <div class="certificates-grid" id="certificatesGrid"></div>
+    </section>
+
+    <section class="section-wrap contact-section" id="contact">
+      <div class="section-label"><span>06 / GET IN TOUCH</span><span class="label-line"></span></div>
+      <div class="contact-panel">
+        <div>
+          <p class="hero-kicker">HAVE A PROJECT IN MIND?</p>
+          <h2>Let's make<br><span class="gradient-text">something good.</span></h2>
+          <p class="muted" id="contactText">For internships, collaborations, or just a good conversation.</p>
+        </div>
+        <div class="contact-details" id="contactDetails"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer section-wrap">
+    <a class="brand" href="#home"><span class="brand-mark" id="footerMark">A<span>.</span></span><span id="footerName">YOUR NAME</span></a>
+    <span>Built with AP Creative Studio ✳ <span id="copyrightYear"></span></span>
+    <a href="#home">Back to top ↑</a>
+  </footer>
+  <script src="template.js"></script>
+</body>
+</html>
