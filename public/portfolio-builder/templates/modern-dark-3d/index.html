@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#080a10"/>
+<title>Your Name — Developer Portfolio</title>
+<style>
+:root{--bg:#080a10;--bg2:#0d1019;--panel:rgba(17,21,33,.82);--text:#f4f6ff;--muted:#a3abc0;--line:#27334b;--accent:#7190ff;--accent2:#a66cff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#5643a51e,transparent 33%),var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,sans-serif}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:rgba(8,10,16,.85);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font-weight:700;letter-spacing:.02em}.brand span{color:var(--accent)}
+.nav a{color:var(--muted);margin-left:16px;font-size:.9rem}
+.hero{padding:72px 0 48px}
+.hero h1{font:700 clamp(2rem,5vw,3rem)/1.15 system-ui,sans-serif;margin:0 0 10px}
+.hero .role{color:var(--accent);font-weight:600;margin:0 0 12px}
+.hero .intro{color:var(--muted);max-width:54ch;margin:0 0 20px}
+.meta{display:flex;flex-wrap:wrap;gap:10px 18px;color:var(--muted);font-size:.9rem}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:10px 18px;border-radius:10px;font-weight:600;border:1px solid var(--line);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0b0f1a;margin-right:8px}
+.btn.ghost{background:transparent;color:var(--text)}
+section{padding:40px 0;border-top:1px solid var(--line)}
+h2{font-size:1.35rem;margin:0 0 16px}
+h2 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{margin:0 0 6px;font-size:1rem}.card p{margin:0;color:var(--muted);font-size:.9rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:.72rem;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:#fff06;color:#cad1e6}
+.timeline{display:grid;gap:12px}
+.item{padding:12px 0;border-bottom:1px solid var(--line)}.item strong{display:block}.item .m{color:var(--muted);font-size:.85rem;margin:4px 0}
+footer{padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+@media(max-width:640px){.nav nav{display:none}.hero{padding-top:48px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <div class="brand" id="brandName"><span id="brandMark">YN</span> Portfolio</div>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div></header>
+<main>
+  <section class="hero"><div class="wrap">
+    <h1 id="heroName">Your Name</h1>
+    <p class="role" id="heroRole">Your Role</p>
+    <p class="intro" id="heroIntro">Write a short introduction here.</p>
+    <div class="meta">
+      <span id="metaLocation">Location</span>
+      <span id="metaFocus">Focus</span>
+      <span id="metaStatus">Status</span>
+    </div>
+    <p style="margin-top:22px">
+      <a class="btn" id="btnResume" href="#" hidden>Resume</a>
+      <a class="btn ghost" href="#contact">Contact</a>
+    </p>
+  </div></section>
+
+  <section id="about"><div class="wrap">
+    <h2>About <span>me</span></h2>
+    <p id="aboutP1" style="color:var(--muted);max-width:65ch"></p>
+  </div></section>
+
+  <section id="skills"><div class="wrap">
+    <h2>Skills</h2>
+    <div class="grid" id="skillsGrid"></div>
+  </div></section>
+
+  <section id="experience"><div class="wrap">
+    <h2>Experience</h2>
+    <div class="timeline" id="expList"></div>
+  </div></section>
+
+  <section id="education"><div class="wrap">
+    <h2>Education</h2>
+    <div class="timeline" id="eduList"></div>
+  </div></section>
+
+  <section id="projects"><div class="wrap">
+    <h2>Projects</h2>
+    <div class="grid" id="projectsGrid"></div>
+  </div></section>
+
+  <section id="contact"><div class="wrap">
+    <h2>Contact</h2>
+    <p style="color:var(--muted)" id="contactIntro">Have something in mind?</p>
+    <p><a id="contactEmail" href="#"></a></p>
+    <p style="color:var(--muted)" id="contactLocation"></p>
+    <p id="socialLinks"></p>
+  </div></section>
+</main>
+<footer><div class="wrap">© <span id="yearNow"></span> <span id="footerName">Your Name</span>. Built with AP Creative Studio Portfolio Builder.</div></footer>
+<script>
+const CONFIG = {
+  name: "Your Name",
+  initials: "YN",
+  role: "Your Role · Your Speciality",
+  intro: "Write a short introduction here.",
+  location: "Your Location",
+  focus: "Your Main Focus",
+  status: "Open to opportunities",
+  resumeUrl: "",
+  aboutParagraph1: "Write a few sentences about your background.",
+  contactEmail: "",
+  contactLocation: "",
+  contactIntro: "Have a project idea or want to connect?",
+  social: { github: "", leetcode: "", hackerrank: "", linkedin: "" },
+  skills: [],
+  experience: [],
+  education: [],
+  projects: []
+};
+
+(function(){
+  const $ = (id) => document.getElementById(id);
+  const set = (id, v) => { const el = $(id); if (el && v) el.textContent = v; };
+  document.title = (CONFIG.name || 'Portfolio') + ' — Portfolio';
+  set('brandMark', CONFIG.initials);
+  set('heroName', CONFIG.name);
+  set('heroRole', CONFIG.role);
+  set('heroIntro', CONFIG.intro);
+  set('metaLocation', CONFIG.location);
+  set('metaFocus', CONFIG.focus);
+  set('metaStatus', CONFIG.status);
+  set('aboutP1', CONFIG.aboutParagraph1);
+  set('footerName', CONFIG.name);
+  set('contactIntro', CONFIG.contactIntro);
+  set('contactLocation', CONFIG.contactLocation || CONFIG.location);
+  $('yearNow').textContent = new Date().getFullYear();
+
+  if (CONFIG.resumeUrl) {
+    const b = $('btnResume'); b.hidden = false; b.href = CONFIG.resumeUrl; b.target = '_blank'; b.rel = 'noopener noreferrer';
+  }
+  if (CONFIG.contactEmail) {
+    const a = $('contactEmail'); a.textContent = CONFIG.contactEmail; a.href = 'mailto:' + CONFIG.contactEmail;
+  }
+  const social = $('socialLinks');
+  Object.keys(CONFIG.social || {}).forEach(function(k){
+    const url = CONFIG.social[k];
+    if (!url) return;
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.textContent = k; a.style.marginRight = '12px';
+    social.appendChild(a);
+  });
+
+  const skills = CONFIG.skills || [];
+  const sg = $('skillsGrid');
+  skills.forEach(function(sk){
+    const c = document.createElement('div'); c.className = 'card';
+    const h = document.createElement('h3'); h.textContent = sk; c.appendChild(h);
+    sg.appendChild(c);
+  });
+
+  function fillList(id, items, fn){
+    const root = $(id); if (!root) return;
+    (items || []).forEach(function(it){
+      const d = document.createElement('div'); d.className = 'item';
+      fn(d, it); root.appendChild(d);
+    });
+  }
+  fillList('expList', CONFIG.experience, function(d, ex){
+    const s = document.createElement('strong'); s.textContent = (ex.role||'') + (ex.company ? ' · ' + ex.company : '');
+    const m = document.createElement('div'); m.className = 'm'; m.textContent = [ex.start, ex.end].filter(Boolean).join(' – ');
+    const p = document.createElement('p'); p.style.color = 'var(--muted)'; p.textContent = ex.description || '';
+    d.appendChild(s); d.appendChild(m); d.appendChild(p);
+  });
+  fillList('eduList', CONFIG.education, function(d, ed){
+    const s = document.createElement('strong'); s.textContent = (ed.degree||'') + (ed.field ? ' in ' + ed.field : '');
+    const m = document.createElement('div'); m.className = 'm'; m.textContent = (ed.institution||'') + ' · ' + [ed.start, ed.end].filter(Boolean).join(' – ');
+    d.appendChild(s); d.appendChild(m);
+  });
+  const pg = $('projectsGrid');
+  (CONFIG.projects || []).forEach(function(pr){
+    const c = document.createElement('div'); c.className = 'card';
+    const h = document.createElement('h3'); h.textContent = pr.name || 'Project';
+    const p = document.createElement('p'); p.textContent = pr.description || '';
+    const tags = document.createElement('div'); tags.className = 'tags';
+    (pr.tech || '').split(/[,|]/).forEach(function(t){
+      t = t.trim(); if (!t) return;
+      const sp = document.createElement('span'); sp.className = 'tag'; sp.textContent = t; tags.appendChild(sp);
+    });
+    c.appendChild(h); c.appendChild(p); c.appendChild(tags);
+    if (pr.liveUrl || pr.githubUrl) {
+      const links = document.createElement('p'); links.style.marginTop = '10px';
+      if (pr.liveUrl) { const a = document.createElement('a'); a.href = pr.liveUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'Live'; a.style.marginRight = '10px'; links.appendChild(a); }
+      if (pr.githubUrl) { const a = document.createElement('a'); a.href = pr.githubUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'GitHub'; links.appendChild(a); }
+      c.appendChild(links);
+    }
+    pg.appendChild(c);
+  });
+})();
+</script>
+</body>
+</html>
