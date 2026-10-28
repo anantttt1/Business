@@ -59,145 +59,128 @@
       return { name: c.name || '', org: c.org || '', date: c.year || '', url: c.url || '' };
     });
 
+    var hasPhoto = !!(state.photoData && /^data:image\//.test(state.photoData));
+
     return {
       name: name,
       initials: initials(name),
-      role: state.title || 'Your Role',
+      role: state.title || 'Your Role · Your Speciality',
       intro: state.tagline || (state.about || '').slice(0, 220) || 'Write a short introduction here.',
-      location: state.location || '',
-      focus: skills.slice(0, 2).join(' · ') || 'Focus',
+      location: state.location || 'Your Location',
+      focus: skills.slice(0, 2).join(' · ') || 'Your Main Focus',
       status: 'Open to opportunities',
       resumeUrl: state.resumeUrl || '',
-      aboutParagraph1: state.about || '',
-      focusAreas: skills.slice(0, 4),
+      photoData: hasPhoto ? 'assets/profile.jpg' : '',
+      aboutHeadline: 'Curiosity turns ideas into things people can use.',
+      aboutQuote: (state.about || '').slice(0, 160) || 'Add a short personal statement.',
+      aboutTitle: 'A little more about me.',
+      aboutParagraph1: state.about || 'Write two or three sentences about your background.',
+      aboutParagraph2: '',
+      focusAreas: skills.slice(0, 4).length ? skills.slice(0, 4) : ['Focus one', 'Focus two', 'Focus three', 'Focus four'],
       contactEmail: state.email || '',
-      contactLocation: state.location || '',
+      contactLocation: state.location || 'Your city, country',
+      contactIntro: 'Have a project idea or want to connect?',
       social: {
         github: state.github || '',
         leetcode: state.leetcode || '',
         hackerrank: state.hackerrank || '',
         linkedin: state.linkedin || ''
       },
-      skills: skillGroups.length ? skillGroups : skills.map(function (s) {
-        return { title: s, desc: '', tags: [s] };
-      }),
+      skills: skillGroups.length
+        ? skillGroups
+        : skills.map(function (s) {
+            return { title: s, desc: '', tags: [s] };
+          }),
       projects: projects,
       education: education,
-      certificates: certificates,
-      hasPhoto: !!(state.photoData && /^data:image\//.test(state.photoData))
+      certificates: certificates
     };
   }
 
-  function buildStandaloneHtml(cfg) {
-    var skillsHtml = (cfg.skills || []).map(function (sk) {
-      var tags = (sk.tags || []).map(function (t) {
-        return '<span class="tag">' + escapeHtml(t) + '</span>';
-      }).join('');
-      return '<div class="card"><h3>' + escapeHtml(sk.title || '') + '</h3><p>' +
-        escapeHtml(sk.desc || '') + '</p><div class="tags">' + tags + '</div></div>';
-    }).join('');
+  async function fetchText(url) {
+    var res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to load ' + url + ' (' + res.status + ')');
+    return res.text();
+  }
 
-    var projHtml = (cfg.projects || []).map(function (pr) {
-      var tags = (pr.tech || []).map(function (t) {
-        return '<span class="tag">' + escapeHtml(t) + '</span>';
-      }).join('');
-      var links = '';
-      if (pr.liveUrl) links += '<a href="' + escapeHtml(pr.liveUrl) + '" target="_blank" rel="noopener">Live</a> ';
-      if (pr.githubUrl) links += '<a href="' + escapeHtml(pr.githubUrl) + '" target="_blank" rel="noopener">GitHub</a>';
-      return '<div class="card"><h3>' + escapeHtml(pr.name || 'Project') + '</h3><p>' +
-        escapeHtml(pr.description || '') + '</p><div class="tags">' + tags + '</div>' +
-        (links ? '<p class="links">' + links + '</p>' : '') + '</div>';
-    }).join('');
+  function prepareHtml(html, cfg) {
+    // Relative asset paths for offline ZIP
+    html = html.replace(
+      /href="\/portfolio-builder\/templates\/modern-dark-3d\/template\.css"/g,
+      'href="template.css"'
+    );
+    html = html.replace(
+      /src="\/portfolio-builder\/templates\/modern-dark-3d\/template\.js"/g,
+      'src="template.js"'
+    );
+    html = html.replace(
+      /<title>[\s\S]*?<\/title>/,
+      '<title>' + escapeHtml(cfg.name) + ' — Developer Portfolio</title>'
+    );
+    return html;
+  }
 
-    var eduHtml = (cfg.education || []).map(function (ed) {
-      return '<div class="item"><div class="m">' + escapeHtml(ed.when || '') +
-        '</div><strong>' + escapeHtml(ed.title || '') + '</strong><div class="m">' +
-        escapeHtml(ed.place || '') + '</div><p>' + escapeHtml(ed.detail || '') + '</p></div>';
-    }).join('');
+  function prepareJs(js, cfg) {
+    var configLiteral = 'var CONFIG = ' + JSON.stringify(cfg, null, 2) + ';';
 
-    var certHtml = (cfg.certificates || []).map(function (c) {
-      return '<div class="card"><h3>' + escapeHtml(c.name || '') + '</h3><p>' +
-        escapeHtml(c.org || '') + '</p><div class="m">' + escapeHtml(c.date || '') + '</div></div>';
-    }).join('');
+    // Replace default CONFIG block if present
+    if (/var CONFIG\s*=\s*\{/.test(js)) {
+      js = js.replace(/var CONFIG\s*=\s*\{[\s\S]*?\n\s*\};/, configLiteral);
+    } else if (/const CONFIG\s*=\s*\{/.test(js)) {
+      js = js.replace(/const CONFIG\s*=\s*\{[\s\S]*?\n\s*\};/, configLiteral);
+    } else {
+      js = configLiteral + '\n' + js;
+    }
 
-    var socialHtml = '';
-    Object.keys(cfg.social || {}).forEach(function (k) {
-      if (!cfg.social[k]) return;
-      socialHtml += '<a href="' + escapeHtml(cfg.social[k]) + '" target="_blank" rel="noopener">' +
-        escapeHtml(k) + '</a> ';
-    });
+    // Exported site must NOT read builder localStorage — use baked CONFIG only
+    js = js.replace(
+      /function mergeBuilderState\s*\([\s\S]*?\n\s*\}\n/,
+      'function mergeBuilderState() { return true; }\n'
+    );
 
-    var photoHtml = cfg.hasPhoto
-      ? '<img class="photo" src="assets/profile.jpg" alt="' + escapeHtml(cfg.name) + '">' 
-      : '<div class="photo ph">' + escapeHtml(cfg.initials) + '</div>';
+    // Allow assets/profile.jpg as photo source (not only data:image)
+    js = js.replace(
+      /if \(src && String\(src\)\.indexOf\('data:image'\) === 0\)/g,
+      "if (src && (String(src).indexOf('data:image') === 0 || String(src).indexOf('assets/') === 0))"
+    );
 
-    var resumeBtn = cfg.resumeUrl
-      ? '<a class="btn" href="' + escapeHtml(cfg.resumeUrl) + '" target="_blank" rel="noopener">Resume</a> '
-      : '';
+    // Strip preview banner logic noise (harmless if left, but cleaner)
+    js = js.replace(
+      /function showPreviewBanner\s*\([\s\S]*?\n\s*\}\n/,
+      'function showPreviewBanner() {}\n'
+    );
 
-    var emailHtml = cfg.contactEmail
-      ? '<p><a href="mailto:' + escapeHtml(cfg.contactEmail) + '">' + escapeHtml(cfg.contactEmail) + '</a></p>'
-      : '';
-
-    return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n' +
-      '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
-      '<meta name="theme-color" content="#080a10">\n' +
-      '<title>' + escapeHtml(cfg.name) + ' — Portfolio</title>\n<style>\n' +
-      ':root{--bg:#080a10;--panel:rgba(17,21,33,.92);--text:#f4f6ff;--muted:#a3abc0;--line:#27334b;--accent:#7190ff;--accent2:#a66cff}' +
-      '*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,rgba(86,67,165,.14),transparent 40%),var(--bg);color:var(--text);font:15px/1.55 system-ui,sans-serif}' +
-      'a{color:var(--accent)}.wrap{max-width:980px;margin:0 auto;padding:0 20px}' +
-      'header{position:sticky;top:0;z-index:10;background:rgba(8,10,16,.92);border-bottom:1px solid var(--line)}' +
-      '.nav{display:flex;justify-content:space-between;align-items:center;height:56px;gap:12px}' +
-      '.brand{font-weight:700}.brand span{color:var(--accent)}.nav a{color:var(--muted);margin-left:12px;font-size:.9rem;text-decoration:none}' +
-      '.hero{padding:56px 0 36px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}' +
-      'h1{font:700 clamp(2rem,5vw,2.8rem)/1.15 system-ui;margin:0 0 8px}' +
-      '.role{color:var(--accent);font-weight:600;margin:0 0 10px}.intro{color:var(--muted);max-width:52ch}' +
-      '.meta{display:flex;flex-wrap:wrap;gap:14px;color:var(--muted);font-size:.9rem;margin-top:14px}' +
-      '.btn{display:inline-flex;padding:10px 16px;border-radius:10px;font-weight:600;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0b0f1a;text-decoration:none;margin-right:8px;margin-top:14px}' +
-      '.photo{width:100%;max-width:280px;aspect-ratio:1;border-radius:22px;object-fit:cover;border:1px solid var(--line);display:block;margin:0 auto}' +
-      '.photo.ph{display:grid;place-items:center;background:rgba(113,144,255,.12);font:700 2.4rem system-ui;color:var(--accent)}' +
-      'section{padding:36px 0;border-top:1px solid var(--line)}h2{font-size:1.35rem;margin:0 0 14px}' +
-      '.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}' +
-      '.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}' +
-      '.card h3{margin:0 0 6px;font-size:1rem}.card p{margin:0;color:var(--muted);font-size:.9rem}' +
-      '.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.tag{font-size:.72rem;padding:3px 8px;border-radius:8px;border:1px solid var(--line);color:#cad1e6}' +
-      '.item{padding:10px 0;border-bottom:1px solid var(--line)}.item .m{color:var(--muted);font-size:.85rem;margin:4px 0}.item p{color:var(--muted);margin:0}' +
-      'footer{padding:24px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}.links a{margin-right:10px}' +
-      '@media(max-width:760px){.hero{grid-template-columns:1fr}.nav a{display:none}}' +
-      '</style>\n</head>\n<body>\n<header><div class="wrap nav"><div class="brand"><span>' +
-      escapeHtml(cfg.initials) + '</span> Portfolio</div><nav><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact</a></nav></div></header>\n' +
-      '<main>\n<section class="hero"><div class="wrap" style="display:contents">' +
-      '<div><h1>' + escapeHtml(cfg.name) + '</h1><p class="role">' + escapeHtml(cfg.role) +
-      '</p><p class="intro">' + escapeHtml(cfg.intro) + '</p><div class="meta"><span>' +
-      escapeHtml(cfg.location) + '</span><span>' + escapeHtml(cfg.focus) + '</span><span>' +
-      escapeHtml(cfg.status) + '</span></div>' + resumeBtn +
-      '<a class="btn" href="#contact" style="background:transparent;color:var(--text);border:1px solid var(--line)">Contact</a></div>' +
-      '<div>' + photoHtml + '</div></div></section>\n' +
-      '<section id="about"><div class="wrap"><h2>About</h2><p style="color:var(--muted)">' +
-      escapeHtml(cfg.aboutParagraph1) + '</p></div></section>\n' +
-      '<section id="skills"><div class="wrap"><h2>Skills</h2><div class="grid">' + skillsHtml + '</div></div></section>\n' +
-      '<section id="education"><div class="wrap"><h2>Education & Experience</h2>' + eduHtml + '</div></section>\n' +
-      '<section id="projects"><div class="wrap"><h2>Projects</h2><div class="grid">' + projHtml + '</div></div></section>\n' +
-      (certHtml ? '<section id="certs"><div class="wrap"><h2>Certificates</h2><div class="grid">' + certHtml + '</div></div></section>\n' : '') +
-      '<section id="contact"><div class="wrap"><h2>Contact</h2>' + emailHtml +
-      '<p style="color:var(--muted)">' + escapeHtml(cfg.contactLocation || cfg.location) +
-      '</p><p class="links">' + socialHtml + '</p></div></section>\n</main>\n' +
-      '<footer><div class="wrap">© ' + new Date().getFullYear() + ' ' + escapeHtml(cfg.name) +
-      '. Built with AP Creative Studio Portfolio Builder.</div></footer>\n</body>\n</html>';
+    return js;
   }
 
   function readmeFor(state) {
-    return '# ' + (state.fullName || 'My') + ' Portfolio\n\n' +
+    return (
+      '# ' +
+      (state.fullName || 'My') +
+      ' Portfolio\n\n' +
       'Generated with **AP Creative Studio Portfolio Builder**.\n\n' +
-      '## Open\n1. Extract this ZIP\n2. Open `my-portfolio/index.html` in Chrome or Edge\n\n' +
-      '## Deploy\nUpload the `my-portfolio` folder to Vercel, Netlify, or GitHub Pages.\n';
+      'Template: **Modern Dark 3D** (full design + animations)\n\n' +
+      '## Contents\n' +
+      '- `index.html` — main page\n' +
+      '- `template.css` — full design styles\n' +
+      '- `template.js` — sections, interactions, animations\n' +
+      '- `assets/profile.jpg` — profile photo (if uploaded)\n' +
+      '- `README.md` — this file\n\n' +
+      '## Open locally\n' +
+      '1. Extract this ZIP\n' +
+      '2. Open `my-portfolio/index.html` in Chrome or Edge\n\n' +
+      '## Deploy\n' +
+      'Upload the entire `my-portfolio` folder to Vercel, Netlify, or GitHub Pages.\n'
+    );
   }
 
   async function makeZip(files) {
     if (typeof window.PB_simpleZip === 'function') return window.PB_simpleZip(files);
     if (typeof JSZip !== 'undefined') {
       var zip = new JSZip();
-      files.forEach(function (f) { zip.file(f.name, f.data); });
+      files.forEach(function (f) {
+        zip.file(f.name, f.data);
+      });
       return zip.generateAsync({ type: 'blob' });
     }
     throw new Error('ZIP library failed to load');
@@ -212,27 +195,37 @@
   }
 
   window.PB_exportModernDark = async function (state) {
-    // Restore photo from dedicated storage if missing on state
     if (!state.photoData) {
       try {
-        state.photoData = localStorage.getItem('ap-pb-photo') || sessionStorage.getItem('ap-pb-photo') || '';
+        state.photoData =
+          localStorage.getItem('ap-pb-photo') || sessionStorage.getItem('ap-pb-photo') || '';
       } catch (e) {}
     }
 
     var cfg = buildConfig(state);
-    var html = buildStandaloneHtml(cfg);
+    var base = '/portfolio-builder/templates/modern-dark-3d/';
+
+    var html = await fetchText(base + 'index.html');
+    var css = await fetchText(base + 'template.css');
+    var js = await fetchText(base + 'template.js');
+
+    html = prepareHtml(html, cfg);
+    js = prepareJs(js, cfg);
 
     var files = [
       { name: 'my-portfolio/index.html', data: html },
+      { name: 'my-portfolio/template.css', data: css },
+      { name: 'my-portfolio/template.js', data: js },
       { name: 'my-portfolio/README.md', data: readmeFor(state) }
     ];
 
     if (state.photoData && /^data:image\//.test(state.photoData)) {
-      files.push({ name: 'my-portfolio/assets/profile.jpg', data: dataUrlToBytes(state.photoData) });
+      files.push({
+        name: 'my-portfolio/assets/profile.jpg',
+        data: dataUrlToBytes(state.photoData)
+      });
     }
 
     return makeZip(files);
   };
-
-  window.PB_WHATSAPP_NUMBER = '919286034026';
 })();
