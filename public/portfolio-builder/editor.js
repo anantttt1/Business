@@ -339,40 +339,39 @@
       a.click();
       a.remove();
 
-      var shared = false;
-      try {
-        if (navigator.canShare && navigator.share) {
-          var file = new File([blob], fileName, { type: 'application/zip' });
-          if (navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: (state.fullName || 'My') + ' Portfolio',
-              text: 'My portfolio website ZIP — built with AP Creative Studio'
-            });
-            shared = true;
-          }
-        }
-      } catch (shareErr) {
-        console.warn('Share skipped', shareErr);
-      }
-
       var wa = (window.PB_WHATSAPP_NUMBER || '919286034026').replace(/\D/g, '');
       var msg =
         'Hi AP Creative Studio, I just downloaded my portfolio ZIP (' +
         fileName +
         '). Name: ' +
         (state.fullName || '') +
-        '. Please find the file in my downloads / attachment.';
+        '. PLEASE DEPLOY IT';
+      var file = new File([blob], fileName, { type: 'application/zip' });
+      var shared = false;
+
+      try {
+        if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: (state.fullName || 'My') + ' Portfolio ZIP',
+            text: msg
+          });
+          shared = true;
+        }
+      } catch (shareErr) {
+        console.warn('Share skipped', shareErr);
+      }
+
       var waUrl = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
       setTimeout(function () {
         window.open(waUrl, '_blank');
-      }, 400);
+      }, shared ? 600 : 300);
 
-      setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 8000);
       setStatus(
         shared
-          ? 'ZIP downloaded & share sheet opened. WhatsApp also opened.'
-          : 'ZIP downloaded. WhatsApp opened — attach the ZIP from Downloads if needed.'
+          ? 'ZIP downloaded. Share sheet opened — choose WhatsApp to send the file. Chat also opened with PLEASE DEPLOY IT.'
+          : 'ZIP downloaded to your device. WhatsApp opened with PLEASE DEPLOY IT — attach the ZIP from Downloads and send.'
       );
     } catch (e) {
       console.error(e);
