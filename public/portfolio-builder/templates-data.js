@@ -1,4 +1,4 @@
-/* Single production template: Modern Dark 3D (user-provided pack) */
+/* Production templates */
 window.PB_TEMPLATES = [
   {
     id: 'modern-dark-3d',
@@ -8,7 +8,17 @@ window.PB_TEMPLATES = [
     accent: '#7190ff',
     theme: 'dark',
     features: ['3D Effects', 'Projects', 'Skills', 'Education', 'Contact'],
-    preview: '/portfolio-builder/templates/modern-dark-3d/previews/mobile.png'
+    preview: '/portfolio-builder/templates/modern-dark-3d/'
+  },
+  {
+    id: 'ideas-impact-3d',
+    name: 'Ideas Impact 3D',
+    category: 'developer',
+    tagline: 'Signature dark portfolio: hero impact layout, full sections, LeetCode stats + heatmap.',
+    accent: '#a78bfa',
+    theme: 'dark',
+    features: ['Impact Hero', 'Heatmap', 'Projects', 'Certificates', 'Profiles'],
+    preview: '/portfolio-builder/templates/ideas-impact-3d/'
   }
 ];
 
@@ -26,6 +36,8 @@ window.PB_DEMO = {
   website: '',
   leetcode: '',
   hackerrank: '',
+  leetcodeEndpoint: '',
+  leetcodeUsername: '',
   otherLinks: [],
   skills: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'HTML', 'CSS', 'SQL', 'Git'],
   education: [
@@ -79,7 +91,7 @@ window.PB_DEMO = {
   interests: ['Open source', 'UI design', 'Cricket'],
   showPhoto: true,
   photoData: '',
-  accent: '#7190ff',
+  accent: '#a78bfa',
   themeMode: 'dark',
   visibleSections: {
     about: true,
