@@ -1,6 +1,16 @@
 /* Production templates */
 window.PB_TEMPLATES = [
   {
+    id: 'ideas-impact',
+    name: 'Ideas Impact',
+    category: 'developer',
+    tagline: 'Neon dark portfolio with 3D profile card, projects, skills, education, certificates and light/dark toggle.',
+    accent: '#caff42',
+    theme: 'dark',
+    features: ['3D Card', 'Projects', 'Theme Toggle', 'Certificates', 'Responsive'],
+    preview: '/portfolio-builder/templates/ideas-impact/'
+  },
+  {
     id: 'paper-atelier',
     name: 'Paper Atelier',
     category: 'creative',
