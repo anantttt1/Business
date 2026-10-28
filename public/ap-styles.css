@@ -64,3 +64,15 @@ html:not(.js) .splash{display:none}
 @media(max-width:760px){
   .cg{grid-template-columns:minmax(0,100%);justify-content:center}
 }
+
+/* Services grid with 7 cards: centre the last row instead of leaving an empty slot */
+.sg{--sg:16px;gap:var(--sg)}
+@media(min-width:881px){.sg{--sg:14px}}
+@media(min-width:1101px){
+  .sg{grid-template-columns:repeat(8,1fr)}
+  .sg .card{grid-column:span 2}
+  .sg .card:nth-child(5):nth-last-child(3){grid-column:2/span 2}
+}
+@media(min-width:621px) and (max-width:1100px){
+  .sg .card:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc((100% - var(--sg))/2)}
+}

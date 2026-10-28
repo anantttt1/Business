@@ -12,7 +12,7 @@ $$('.sg .card').forEach(e=>{
   const title=((e.querySelector('h4')||{}).textContent||'').trim();
   e.classList.add('card-link');
   const a=document.createElement('a');
-  if(title==='Personal Portfolio Website'||title==='Student & Fresher Portfolio'){
+  if(title==='Personal Portfolio Website'){
     a.className='btn p';
     a.textContent='Open Portfolio Builder';
     a.href='/portfolio-builder/';
