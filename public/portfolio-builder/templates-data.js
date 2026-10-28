@@ -1,6 +1,16 @@
 /* Production templates */
 window.PB_TEMPLATES = [
   {
+    id: 'ember-editorial',
+    name: 'Ember Editorial',
+    category: 'developer',
+    tagline: 'Warm amber editorial portfolio with Playfair accents, projects, coding profiles and certificates.',
+    accent: '#ff641e',
+    theme: 'dark',
+    features: ['Editorial', 'Projects', 'Profiles', 'Certificates', 'Responsive'],
+    preview: '/portfolio-builder/templates/ember-editorial/'
+  },
+  {
     id: 'signature-orange',
     name: 'Signature Orange',
     category: 'developer',
