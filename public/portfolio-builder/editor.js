@@ -30,7 +30,6 @@
       const parsed = JSON.parse(raw);
       if (!parsed || typeof parsed !== 'object') return defaultState();
       parsed.templateId = tplMeta.id;
-      // Restore photo from dedicated key if missing in state
       if (!parsed.photoData) {
         try {
           const p = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY);
@@ -46,7 +45,6 @@
   function saveState() {
     try {
       const copy = Object.assign({}, state);
-      // Keep photo out of main JSON blob to avoid quota blow-ups when possible
       const photo = copy.photoData || '';
       delete copy.photoData;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
@@ -102,7 +100,6 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
           let data = canvas.toDataURL('image/jpeg', quality);
-          // Further shrink if still huge
           if (data.length > 450000 && quality > 0.5) {
             data = canvas.toDataURL('image/jpeg', 0.55);
           }
@@ -204,20 +201,18 @@
     if (!list) return;
     list.textContent = '';
     (state.education || []).forEach(function (ed, i) {
-      list.appendChild(
-        entryCard('Education ' + (i + 1), [
-          { label: 'Institution', value: ed.institution, onChange: function (v) { ed.institution = v; } },
-          { label: 'Degree', value: ed.degree, onChange: function (v) { ed.degree = v; } },
-          { label: 'Field', value: ed.field, onChange: function (v) { ed.field = v; } },
-          { label: 'Start year', value: ed.start, onChange: function (v) { ed.start = v; } },
-          { label: 'End year', value: ed.end, onChange: function (v) { ed.end = v; } },
-          { label: 'Description', value: ed.description, multiline: true, onChange: function (v) { ed.description = v; } }
-        ], function () {
-          state.education.splice(i, 1);
-          saveState();
-          renderEducation();
-        })
-      );
+      list.appendChild(entryCard('Education ' + (i + 1), [
+        { label: 'Institution', value: ed.institution, onChange: function (v) { ed.institution = v; } },
+        { label: 'Degree', value: ed.degree, onChange: function (v) { ed.degree = v; } },
+        { label: 'Field', value: ed.field, onChange: function (v) { ed.field = v; } },
+        { label: 'Start year', value: ed.start, onChange: function (v) { ed.start = v; } },
+        { label: 'End year', value: ed.end, onChange: function (v) { ed.end = v; } },
+        { label: 'Description', value: ed.description, multiline: true, onChange: function (v) { ed.description = v; } }
+      ], function () {
+        state.education.splice(i, 1);
+        saveState();
+        renderEducation();
+      }));
     });
   }
 
@@ -226,20 +221,18 @@
     if (!list) return;
     list.textContent = '';
     (state.experience || []).forEach(function (ex, i) {
-      list.appendChild(
-        entryCard('Experience ' + (i + 1), [
-          { label: 'Company', value: ex.company, onChange: function (v) { ex.company = v; } },
-          { label: 'Role', value: ex.role, onChange: function (v) { ex.role = v; } },
-          { label: 'Start', value: ex.start, onChange: function (v) { ex.start = v; } },
-          { label: 'End', value: ex.end, onChange: function (v) { ex.end = v; } },
-          { label: 'URL', value: ex.url, type: 'url', onChange: function (v) { ex.url = v; } },
-          { label: 'Description', value: ex.description, multiline: true, onChange: function (v) { ex.description = v; } }
-        ], function () {
-          state.experience.splice(i, 1);
-          saveState();
-          renderExperience();
-        })
-      );
+      list.appendChild(entryCard('Experience ' + (i + 1), [
+        { label: 'Company', value: ex.company, onChange: function (v) { ex.company = v; } },
+        { label: 'Role', value: ex.role, onChange: function (v) { ex.role = v; } },
+        { label: 'Start', value: ex.start, onChange: function (v) { ex.start = v; } },
+        { label: 'End', value: ex.end, onChange: function (v) { ex.end = v; } },
+        { label: 'URL', value: ex.url, type: 'url', onChange: function (v) { ex.url = v; } },
+        { label: 'Description', value: ex.description, multiline: true, onChange: function (v) { ex.description = v; } }
+      ], function () {
+        state.experience.splice(i, 1);
+        saveState();
+        renderExperience();
+      }));
     });
   }
 
@@ -248,19 +241,17 @@
     if (!list) return;
     list.textContent = '';
     (state.projects || []).forEach(function (pr, i) {
-      list.appendChild(
-        entryCard('Project ' + (i + 1), [
-          { label: 'Name', value: pr.name, onChange: function (v) { pr.name = v; } },
-          { label: 'Description', value: pr.description, multiline: true, onChange: function (v) { pr.description = v; } },
-          { label: 'Technologies', value: pr.tech, onChange: function (v) { pr.tech = v; } },
-          { label: 'Live URL', value: pr.liveUrl, type: 'url', onChange: function (v) { pr.liveUrl = v; } },
-          { label: 'GitHub URL', value: pr.githubUrl, type: 'url', onChange: function (v) { pr.githubUrl = v; } }
-        ], function () {
-          state.projects.splice(i, 1);
-          saveState();
-          renderProjects();
-        })
-      );
+      list.appendChild(entryCard('Project ' + (i + 1), [
+        { label: 'Name', value: pr.name, onChange: function (v) { pr.name = v; } },
+        { label: 'Description', value: pr.description, multiline: true, onChange: function (v) { pr.description = v; } },
+        { label: 'Technologies', value: pr.tech, onChange: function (v) { pr.tech = v; } },
+        { label: 'Live URL', value: pr.liveUrl, type: 'url', onChange: function (v) { pr.liveUrl = v; } },
+        { label: 'GitHub URL', value: pr.githubUrl, type: 'url', onChange: function (v) { pr.githubUrl = v; } }
+      ], function () {
+        state.projects.splice(i, 1);
+        saveState();
+        renderProjects();
+      }));
     });
   }
 
@@ -269,18 +260,16 @@
     if (!list) return;
     list.textContent = '';
     (state.certifications || []).forEach(function (c, i) {
-      list.appendChild(
-        entryCard('Certification ' + (i + 1), [
-          { label: 'Name', value: c.name, onChange: function (v) { c.name = v; } },
-          { label: 'Organization', value: c.org, onChange: function (v) { c.org = v; } },
-          { label: 'Year', value: c.year, onChange: function (v) { c.year = v; } },
-          { label: 'Credential URL', value: c.url, type: 'url', onChange: function (v) { c.url = v; } }
-        ], function () {
-          state.certifications.splice(i, 1);
-          saveState();
-          renderCerts();
-        })
-      );
+      list.appendChild(entryCard('Certification ' + (i + 1), [
+        { label: 'Name', value: c.name, onChange: function (v) { c.name = v; } },
+        { label: 'Organization', value: c.org, onChange: function (v) { c.org = v; } },
+        { label: 'Year', value: c.year, onChange: function (v) { c.year = v; } },
+        { label: 'Credential URL', value: c.url, type: 'url', onChange: function (v) { c.url = v; } }
+      ], function () {
+        state.certifications.splice(i, 1);
+        saveState();
+        renderCerts();
+      }));
     });
   }
 
@@ -306,7 +295,6 @@
   }
 
   function openPreview() {
-    // Ensure photo is available to the template tab
     if (state.photoData) {
       try {
         sessionStorage.setItem(PHOTO_KEY, state.photoData);
@@ -329,29 +317,63 @@
     try {
       if (typeof window.PB_exportModernDark !== 'function') throw new Error('Exporter missing');
       if (typeof window.PB_simpleZip !== 'function' && typeof JSZip === 'undefined') {
-        throw new Error('ZIP library failed to load');
+        throw new Error('ZIP library failed to load — hard refresh the page');
       }
-      // Attach photo for export
       if (!state.photoData) {
         try {
           state.photoData = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || '';
         } catch (e) {}
       }
       const blob = await window.PB_exportModernDark(state);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
       const safeName =
         (state.fullName || 'my-portfolio')
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '') || 'my-portfolio';
+      const fileName = safeName + '-portfolio.zip';
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
       a.href = url;
-      a.download = safeName + '-portfolio.zip';
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
-      setStatus('Download started — extract the ZIP and open index.html.');
+
+      var shared = false;
+      try {
+        if (navigator.canShare && navigator.share) {
+          var file = new File([blob], fileName, { type: 'application/zip' });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: (state.fullName || 'My') + ' Portfolio',
+              text: 'My portfolio website ZIP — built with AP Creative Studio'
+            });
+            shared = true;
+          }
+        }
+      } catch (shareErr) {
+        console.warn('Share skipped', shareErr);
+      }
+
+      var wa = (window.PB_WHATSAPP_NUMBER || '919286034026').replace(/\D/g, '');
+      var msg =
+        'Hi AP Creative Studio, I just downloaded my portfolio ZIP (' +
+        fileName +
+        '). Name: ' +
+        (state.fullName || '') +
+        '. Please find the file in my downloads / attachment.';
+      var waUrl = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
+      setTimeout(function () {
+        window.open(waUrl, '_blank');
+      }, 400);
+
+      setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+      setStatus(
+        shared
+          ? 'ZIP downloaded & share sheet opened. WhatsApp also opened.'
+          : 'ZIP downloaded. WhatsApp opened — attach the ZIP from Downloads if needed.'
+      );
     } catch (e) {
       console.error(e);
       setStatus('Export failed: ' + (e && e.message ? e.message : 'unknown error'), true);
