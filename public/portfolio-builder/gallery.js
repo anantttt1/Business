@@ -16,7 +16,9 @@
       t.name.toLowerCase().includes(q) ||
       t.tagline.toLowerCase().includes(q) ||
       t.category.toLowerCase().includes(q) ||
-      (t.features || []).some((f) => f.toLowerCase().includes(q))
+      (t.features || []).some(function (f) {
+        return f.toLowerCase().includes(q);
+      })
     );
   }
 
@@ -28,13 +30,13 @@
 
     const thumb = document.createElement('div');
     thumb.className = 'pb-card-thumb';
-    if (t.id === 'dark-tech' || t.id === 'modern-developer') {
+    if (t.preview) {
       const img = document.createElement('img');
       img.alt = t.name + ' preview';
       img.loading = 'lazy';
       img.width = 640;
       img.height = 400;
-      img.src = '/portfolio-builder/templates/modern-dark-3d/previews/mobile.png';
+      img.src = t.preview;
       img.addEventListener('error', function () {
         img.remove();
         const fb = document.createElement('div');
@@ -78,7 +80,9 @@
     const view = document.createElement('a');
     view.className = 'btn o';
     view.textContent = 'View Template';
-    view.href = '/portfolio-builder/editor/?template=' + encodeURIComponent(t.id) + '&mode=preview';
+    view.href = '/portfolio-builder/templates/modern-dark-3d/';
+    view.target = '_blank';
+    view.rel = 'noopener noreferrer';
 
     const customize = document.createElement('a');
     customize.className = 'btn p';
