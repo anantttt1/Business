@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Portfolio Builder | AP Creative Studio</title>
+<meta name="description" content="Build and download your personal portfolio website for free. Choose a template, customise your details, and export a complete working website as ZIP — AP Creative Studio.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ap-creativestudio.vercel.app/portfolio-builder/">
+<meta property="og:title" content="Portfolio Builder | AP Creative Studio">
+<meta property="og:description" content="Choose a template, customise your portfolio, and download a complete working website as ZIP.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ap-creativestudio.vercel.app/portfolio-builder/">
+<meta property="og:site_name" content="AP Creative Studio">
+<meta property="og:image" content="https://ap-creativestudio.vercel.app/hero-visual.jpg">
+<meta name="theme-color" content="#0c0c10">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/space-grotesk-var.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="/ap-styles.css">
+<link rel="stylesheet" href="/portfolio-builder/builder.css">
+</head>
+<body class="pb-body">
+<header class="pb-header">
+  <div class="wrap nav">
+    <a class="logo" href="/" aria-label="AP Creative Studio home">AP <b>Creative</b> Studio</a>
+    <nav class="pb-nav" aria-label="Builder">
+      <a href="/">Home</a>
+      <a href="/#services">Services</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="pb-main">
+  <div class="wrap">
+    <a class="pb-back" href="/#services">← Back to services</a>
+    <header class="pb-hero">
+      <span class="ey">Portfolio Builder</span>
+      <h1>Build Your Personal Portfolio</h1>
+      <p class="lead">Choose a professional template, fill in your details, preview live, and download a complete working portfolio website as a ZIP — no coding required.</p>
+    </header>
+
+    <div class="pb-toolbar">
+      <label class="pb-search-wrap">
+        <span class="pb-sr">Search templates</span>
+        <input type="search" id="pb-search" class="pb-search" placeholder="Search templates…" autocomplete="off">
+      </label>
+      <div class="pb-filters" role="group" aria-label="Template categories">
+        <button type="button" class="pb-filter is-active" data-cat="all">All</button>
+        <button type="button" class="pb-filter" data-cat="developer">Developer</button>
+        <button type="button" class="pb-filter" data-cat="professional">Professional</button>
+        <button type="button" class="pb-filter" data-cat="creative">Creative</button>
+        <button type="button" class="pb-filter" data-cat="student">Student</button>
+      </div>
+    </div>
+
+    <p class="pb-count" id="pb-count" aria-live="polite"></p>
+
+    <div class="pb-gallery" id="pb-gallery" role="list"></div>
+    <p class="pb-empty" id="pb-empty" hidden>No templates match your search. Try a different keyword or category.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div><a class="logo" href="/">AP <b>Creative</b> Studio</a><p class="mu ft1">Stand Out. Get Noticed. Get Hired.</p></div>
+      <nav aria-label="Footer"><h4>Links</h4><ul>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/portfolio-builder/">Portfolio Builder</a></li>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul></nav>
+      <div><h4>Contact</h4><ul>
+        <li><a href="mailto:apcreativestudio0@gmail.com">apcreativestudio0@gmail.com</a></li>
+        <li><a href="https://wa.me/919286034026?text=Hi%20AP%20Creative%20Studio!%20%F0%9F%91%8B%0AI%20want%20to%20enquire%20about%20your%20services.%20Please%20share%20the%20details%2C%20timeline%20and%20next%20steps." target="_blank" rel="noopener noreferrer">WhatsApp: +91 92860 34026</a></li>
+      </ul></div>
+    </div>
+    <p class="cp">© <span id="yr">2026</span> AP Creative Studio. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="/ap-app.js"></script>
+<script src="/portfolio-builder/templates-data.js"></script>
+<script src="/portfolio-builder/gallery.js"></script>
+</body>
+</html>
