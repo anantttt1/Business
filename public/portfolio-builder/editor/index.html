@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Customize Portfolio | AP Creative Studio</title>
+<meta name="description" content="Customise your portfolio template, preview live, and download a complete website as ZIP.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0c0c10">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/space-grotesk-var.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="/ap-styles.css">
+<link rel="stylesheet" href="/portfolio-builder/builder.css">
+</head>
+<body class="pb-body">
+<header class="pb-header">
+  <div class="wrap nav">
+    <a class="logo" href="/" aria-label="AP Creative Studio home">AP <b>Creative</b> Studio</a>
+    <nav class="pb-nav" aria-label="Builder">
+      <a href="/portfolio-builder/">Templates</a>
+      <a href="/">Home</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="pb-main">
+  <div class="wrap">
+    <a class="pb-back" href="/portfolio-builder/">← Back to templates</a>
+    <header class="pb-hero">
+      <span class="ey">Portfolio Builder</span>
+      <h1 id="pb-editor-title">Customize Template</h1>
+      <p class="lead" id="pb-editor-sub">Fill in your details. The preview updates as you type. Download a complete website when ready.</p>
+    </header>
+
+    <div class="pb-editor-shell">
+      <aside class="pb-editor-panel" aria-label="Portfolio form">
+        <div class="pb-section">
+          <h3>1 · Personal details</h3>
+          <div class="pb-field"><label for="f-name">Full name *</label><input id="f-name" name="fullName" autocomplete="name" required></div>
+          <div class="pb-field"><label for="f-title">Professional title *</label><input id="f-title" name="title" placeholder="e.g. Full-Stack Developer" required></div>
+          <div class="pb-field"><label for="f-tagline">Short tagline</label><input id="f-tagline" name="tagline" placeholder="One-line introduction"></div>
+          <div class="pb-field"><label for="f-about">About</label><textarea id="f-about" name="about" rows="4" placeholder="A few sentences about you"></textarea></div>
+          <div class="pb-field"><label for="f-location">Location</label><input id="f-location" name="location" placeholder="City, Country"></div>
+          <div class="pb-field"><label for="f-email">Email *</label><input id="f-email" name="email" type="email" autocomplete="email" required><p class="err" id="err-email" hidden></p></div>
+          <div class="pb-field"><label for="f-phone">Phone <span class="hint">(optional)</span></label><input id="f-phone" name="phone" type="tel"></div>
+          <div class="pb-field"><label for="f-resume">Resume URL <span class="hint">(optional)</span></label><input id="f-resume" name="resumeUrl" type="url" placeholder="https://…"></div>
+          <div class="pb-field"><label for="f-photo">Profile photo</label><input id="f-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"><p class="hint">Max 1.5 MB · JPEG/PNG/WebP</p></div>
+        </div>
+
+        <div class="pb-section">
+          <h3>2 · Links</h3>
+          <div class="pb-field"><label for="f-github">GitHub</label><input id="f-github" name="github" type="url" placeholder="https://github.com/…"></div>
+          <div class="pb-field"><label for="f-linkedin">LinkedIn</label><input id="f-linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/…"></div>
+          <div class="pb-field"><label for="f-website">Website</label><input id="f-website" name="website" type="url"></div>
+          <div class="pb-field"><label for="f-leetcode">LeetCode</label><input id="f-leetcode" name="leetcode" type="url"></div>
+          <div class="pb-field"><label for="f-hackerrank">HackerRank</label><input id="f-hackerrank" name="hackerrank" type="url"></div>
+        </div>
+
+        <div class="pb-section">
+          <h3>3 · Skills</h3>
+          <div class="pb-chip-row" id="skills-chips"></div>
+          <div class="pb-field" style="display:flex;gap:8px;align-items:flex-end">
+            <div style="flex:1"><label for="f-skill">Add skill</label><input id="f-skill" placeholder="e.g. React"></div>
+            <button type="button" class="btn o" id="btn-add-skill">Add</button>
+          </div>
+        </div>
+
+        <div class="pb-section">
+          <h3>4 · Education</h3>
+          <div id="edu-list"></div>
+          <button type="button" class="btn o" id="btn-add-edu">+ Add education</button>
+        </div>
+
+        <div class="pb-section">
+          <h3>5 · Experience</h3>
+          <div id="exp-list"></div>
+          <button type="button" class="btn o" id="btn-add-exp">+ Add experience</button>
+        </div>
+
+        <div class="pb-section">
+          <h3>6 · Projects</h3>
+          <div id="proj-list"></div>
+          <button type="button" class="btn o" id="btn-add-proj">+ Add project</button>
+        </div>
+
+        <div class="pb-section">
+          <h3>7 · Certifications</h3>
+          <div id="cert-list"></div>
+          <button type="button" class="btn o" id="btn-add-cert">+ Add certification</button>
+        </div>
+
+        <div class="pb-section">
+          <h3>8 · Appearance</h3>
+          <div class="pb-field"><label for="f-accent">Accent colour</label><input id="f-accent" name="accent" type="color" value="#7190ff"></div>
+          <div class="pb-field"><label>Theme</label>
+            <div class="pb-seg" id="theme-seg">
+              <button type="button" data-theme="dark" class="is-active">Dark</button>
+              <button type="button" data-theme="light">Light</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pb-actions-bar">
+          <button type="button" class="btn p" id="btn-download">Download Portfolio as ZIP</button>
+          <button type="button" class="btn o" id="btn-reset">Reset to demo</button>
+          <p class="pb-status" id="pb-status" role="status" aria-live="polite"></p>
+        </div>
+      </aside>
+
+      <section class="pb-preview-panel" aria-label="Live preview">
+        <div class="pb-preview-toolbar">
+          <strong id="pb-template-label">Modern Dark 3D</strong>
+          <div class="pb-seg" id="viewport-seg">
+            <button type="button" data-vp="desktop" class="is-active">Desktop</button>
+            <button type="button" data-vp="mobile">Mobile</button>
+          </div>
+          <a class="btn o" href="/portfolio-builder/" id="btn-change-tpl">Change template</a>
+        </div>
+        <div class="pb-preview-frame">
+          <div class="pb-preview-inner is-desktop" id="pb-preview"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="cp">© <span id="yr">2026</span> AP Creative Studio · Data stays in your browser only (localStorage).</p>
+  </div>
+</footer>
+
+<script src="/ap-app.js"></script>
+<script src="/portfolio-builder/vendor/jszip.min.js"></script>
+<script src="/portfolio-builder/templates-data.js"></script>
+<script src="/portfolio-builder/export-modern-dark.js"></script>
+<script src="/portfolio-builder/editor.js"></script>
+</body>
+</html>
