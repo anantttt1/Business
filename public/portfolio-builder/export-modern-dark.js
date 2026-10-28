@@ -65,10 +65,11 @@
     throw new Error('ZIP library failed to load — hard refresh the page');
   }
 
-  var SUPPORTED = ['modern-dark-3d', 'signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact'];
-  var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact'];
+  var SUPPORTED = ['modern-dark-3d', 'signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact', 'color-pop'];
+  var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact', 'color-pop'];
   var EXTRA_CSS = {
-    'ideas-impact': ['template-b.css', 'template-c.css', 'template-d.css']
+    'ideas-impact': ['template-b.css', 'template-c.css', 'template-d.css'],
+    'color-pop': ['template-b.css', 'template-c.css', 'template-d.css', 'template-e.css', 'template-f.css', 'template-g.css', 'template-h.css']
   };
 
   window.PB_exportModernDark = async function (state) {
