@@ -7,17 +7,24 @@ const WAI='<svg class="wi2" viewBox="0 0 24 24" fill="none" stroke="currentColor
 const ic=d=>`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg></span>`;
 $$('[data-i]').forEach(e=>{const d=P[e.dataset.i];if(d)e.insertAdjacentHTML('afterbegin',ic(d))});
 $$('.ph img').forEach(i=>{const bad=()=>i.remove();if(i.complete&&!i.naturalWidth)bad();else i.addEventListener('error',bad,{once:true})});
-/* Service card = WhatsApp link. The button is stretched over the whole card with CSS, so it is one real link. */
+/* Service card: Portfolio Builder for Personal Portfolio Website; WhatsApp for others */
 $$('.sg .card').forEach(e=>{
   const title=(e.querySelector('h4')||{}).textContent||'';
   e.classList.add('card-link');
   const a=document.createElement('a');
-  a.className='btn wb';
-  a.innerHTML=WAI+'Chat on WhatsApp';
-  a.href=msg(title);
-  a.target='_blank';
-  a.rel='noopener noreferrer';
-  a.setAttribute('aria-label','Chat on WhatsApp about '+title);
+  if(title.trim()==='Personal Portfolio Website'){
+    a.className='btn p';
+    a.textContent='Open Portfolio Builder';
+    a.href='/portfolio-builder/';
+    a.setAttribute('aria-label','Open Portfolio Builder for Personal Portfolio Website');
+  }else{
+    a.className='btn wb';
+    a.innerHTML=WAI+'Chat on WhatsApp';
+    a.href=msg(title);
+    a.target='_blank';
+    a.rel='noopener noreferrer';
+    a.setAttribute('aria-label','Chat on WhatsApp about '+title);
+  }
   e.appendChild(a);
 });
 /* "Enquire about a service" dropdown -> WhatsApp message with the chosen service (values are whitelisted, then URL-encoded) */
