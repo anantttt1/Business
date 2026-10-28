@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  var PHOTO_KEY = 'ap-pb-photo';
   var CONFIG = {
     name: 'Your Name',
     initials: 'YN',
@@ -21,10 +22,7 @@
     contactLocation: 'Your city, country',
     contactIntro: 'Have a project idea or want to connect?',
     social: { github: '', leetcode: '', hackerrank: '', linkedin: '' },
-    skills: [
-      { title: 'Programming', desc: 'Languages and fundamentals.', tags: ['Skill one', 'Skill two'] },
-      { title: 'Web Development', desc: 'Tools for building websites.', tags: ['HTML', 'CSS', 'JS'] }
-    ],
+    skills: [],
     projects: [],
     education: [],
     certificates: []
@@ -37,14 +35,22 @@
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
+  function readPhoto() {
+    try {
+      return localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || '';
+    } catch (e) {
+      return '';
+    }
+  }
+
   function mergeBuilderState() {
     var params = new URLSearchParams(location.search);
     var isPreview = params.get('preview') === '1' || params.get('from') === 'builder';
     try {
       var raw = localStorage.getItem('ap-pb-v1');
-      if (!raw) return isPreview;
-      var s = JSON.parse(raw);
-      if (!s || typeof s !== 'object') return isPreview;
+      if (!raw && !isPreview) return false;
+      var s = raw ? JSON.parse(raw) : {};
+      if (!s || typeof s !== 'object') s = {};
 
       var name = s.fullName || CONFIG.name;
       var skills = s.skills || [];
@@ -62,7 +68,7 @@
       CONFIG.location = s.location || CONFIG.location;
       CONFIG.focus = skills.slice(0, 2).join(' · ') || CONFIG.focus;
       CONFIG.resumeUrl = s.resumeUrl || '';
-      CONFIG.photoData = s.photoData || '';
+      CONFIG.photoData = s.photoData || readPhoto() || '';
       CONFIG.aboutQuote = (s.about || '').slice(0, 160) || CONFIG.aboutQuote;
       CONFIG.aboutParagraph1 = s.about || CONFIG.aboutParagraph1;
       CONFIG.focusAreas = skills.slice(0, 4).length ? skills.slice(0, 4) : CONFIG.focusAreas;
@@ -125,6 +131,7 @@
       return true;
     } catch (e) {
       console.warn('Could not load builder state', e);
+      CONFIG.photoData = readPhoto() || CONFIG.photoData;
       return isPreview;
     }
   }
@@ -162,8 +169,9 @@
     var ph = $('photoPlaceholder');
     var frame = $('photoFrame');
     if (!img || !ph) return;
-    if (CONFIG.photoData && String(CONFIG.photoData).indexOf('data:image') === 0) {
-      img.src = CONFIG.photoData;
+    var src = CONFIG.photoData || readPhoto();
+    if (src && String(src).indexOf('data:image') === 0) {
+      img.src = src;
       img.hidden = false;
       ph.hidden = true;
       if (frame) frame.classList.add('has-photo');
@@ -173,6 +181,112 @@
       ph.hidden = false;
       if (frame) frame.classList.remove('has-photo');
     }
+  }
+
+  function extractLeetCodeUsername(url) {
+    if (!url) return '';
+    var s = String(url).trim();
+    // https://leetcode.com/u/username/ or /username/
+    var m = s.match(/leetcode\.com\/(?:u\/)?([A-Za-z0-9_-]+)/i);
+    if (m) return m[1];
+    if (/^[A-Za-z0-9_-]+$/.test(s)) return s;
+    return '';
+  }
+
+  function parseLcStats(data) {
+    if (!data || typeof data !== 'object') return null;
+    var total = data.totalSolved != null ? data.totalSolved : data.solvedProblem;
+    var easy = data.easySolved;
+    var med = data.mediumSolved;
+    var hard = data.hardSolved;
+    if (data.data && data.data.byDifficulty) {
+      total = data.data.totalSolved != null ? data.data.totalSolved : total;
+      easy = data.data.byDifficulty.easy;
+      med = data.data.byDifficulty.medium;
+      hard = data.data.byDifficulty.hard;
+    }
+    if (total == null && data.matchedUserStats && data.matchedUserStats.acSubmissionNum) {
+      data.matchedUserStats.acSubmissionNum.forEach(function (x) {
+        if (x.difficulty === 'All') total = x.count;
+        if (x.difficulty === 'Easy') easy = x.count;
+        if (x.difficulty === 'Medium') med = x.count;
+        if (x.difficulty === 'Hard') hard = x.count;
+      });
+    }
+    if (total == null) return null;
+    return {
+      total: total,
+      easy: easy != null ? easy : '—',
+      medium: med != null ? med : '—',
+      hard: hard != null ? hard : '—'
+    };
+  }
+
+  function loadLeetCodeStats() {
+    var url = CONFIG.social && CONFIG.social.leetcode;
+    var user = extractLeetCodeUsername(url);
+    var lcStatus = $('lcStatus');
+    var lcHint = $('lcHint');
+    var lcOpen = $('lcOpen');
+    var lcStats = $('lcStats');
+
+    if (lcOpen && url) {
+      lcOpen.href = url;
+      lcOpen.target = '_blank';
+      lcOpen.rel = 'noopener noreferrer';
+      lcOpen.style.display = 'inline-flex';
+    }
+
+    if (!user) {
+      if (lcStatus) lcStatus.textContent = 'Add LeetCode URL in the form';
+      if (lcHint) lcHint.textContent = 'Paste your LeetCode profile link in the editor to load solved counts.';
+      if (lcStats) lcStats.hidden = true;
+      return;
+    }
+
+    if (lcStatus) lcStatus.textContent = 'Loading stats…';
+    if (lcHint) lcHint.textContent = 'Fetching solved counts for @' + user + '…';
+
+    var endpoints = [
+      'https://leetcode-api-faisalshohag.vercel.app/' + encodeURIComponent(user),
+      'https://leetcode-stats.tashif.codes/' + encodeURIComponent(user),
+      'https://alfa-leetcode-api.onrender.com/' + encodeURIComponent(user) + '/solved'
+    ];
+
+    function tryNext(i) {
+      if (i >= endpoints.length) {
+        if (lcStatus) lcStatus.textContent = 'Stats unavailable';
+        if (lcHint) {
+          lcHint.textContent =
+            'Could not load live numbers right now. Your profile link still works below.';
+        }
+        if (lcStats) lcStats.hidden = true;
+        return;
+      }
+      fetch(endpoints[i], { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('bad status');
+          return res.json();
+        })
+        .then(function (json) {
+          var stats = parseLcStats(json);
+          if (!stats) throw new Error('parse');
+          if ($('lcSolved')) $('lcSolved').textContent = String(stats.total);
+          if ($('lcEasy')) $('lcEasy').textContent = String(stats.easy);
+          if ($('lcMed')) $('lcMed').textContent = String(stats.medium);
+          if ($('lcHard')) $('lcHard').textContent = String(stats.hard);
+          if (lcStats) lcStats.hidden = false;
+          if (lcStatus) lcStatus.textContent = 'Live stats · @' + user;
+          if (lcHint) {
+            lcHint.textContent =
+              'Total solved: ' + stats.total + ' (Easy ' + stats.easy + ' · Medium ' + stats.medium + ' · Hard ' + stats.hard + ').';
+          }
+        })
+        .catch(function () {
+          tryNext(i + 1);
+        });
+    }
+    tryNext(0);
   }
 
   function applyConfig() {
@@ -414,16 +528,16 @@
         var row = document.createElement('div');
         row.className = 'profile-row';
         var left = document.createElement('div');
-        var url = (CONFIG.social && CONFIG.social[pr.key]) || '';
+        var u = (CONFIG.social && CONFIG.social[pr.key]) || '';
         left.innerHTML =
           '<strong>' + pr.label + '</strong>' +
           '<div style="color:var(--muted);font-size:.85rem;word-break:break-all">' +
-          (url || 'Add your link in the form') +
+          (u || 'Add your link in the form') +
           '</div>';
         var a = document.createElement('a');
         a.textContent = '\u2197';
-        a.href = url || '#profiles';
-        if (url) {
+        a.href = u || '#profiles';
+        if (u) {
           a.target = '_blank';
           a.rel = 'noopener noreferrer';
         }
@@ -433,28 +547,7 @@
       });
     }
 
-    var lcUrl = CONFIG.social && CONFIG.social.leetcode;
-    var lcStatus = $('lcStatus');
-    var lcHint = $('lcHint');
-    var lcOpen = $('lcOpen');
-    var lcStats = $('lcStats');
-    if (lcStats) lcStats.hidden = true;
-    if (lcUrl) {
-      if (lcStatus) lcStatus.textContent = 'Profile linked';
-      if (lcHint) {
-        lcHint.textContent =
-          'Live question counts need a server API (browser blocks LeetCode directly). Open your profile for full stats.';
-      }
-      if (lcOpen) {
-        lcOpen.href = lcUrl;
-        lcOpen.target = '_blank';
-        lcOpen.rel = 'noopener noreferrer';
-        lcOpen.style.display = 'inline-flex';
-      }
-    } else {
-      if (lcStatus) lcStatus.textContent = 'Add LeetCode URL in the form';
-      if (lcOpen) lcOpen.style.display = 'none';
-    }
+    loadLeetCodeStats();
   }
 
   function bindUi() {
