@@ -1,0 +1,12 @@
+.heatmap-wrap{margin-top:20px}
+.heatmap-wrap h3{font:600 18px var(--display);margin:0 0 8px}
+.heatmap-legend{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);margin-bottom:10px}
+.heatmap-legend .swatch{width:11px;height:11px;border-radius:2px;border:1px solid var(--line)}
+.heat-grid{display:grid;grid-template-columns:repeat(53,minmax(0,1fr));gap:3px;overflow-x:auto;padding-bottom:6px}
+.heat-cell{aspect-ratio:1;border-radius:2px;background:#ffffff08;border:1px solid transparent;min-width:8px}
+.heat-cell[data-level="1"]{background:#ff8a3228}
+.heat-cell[data-level="2"]{background:#ff8a3255}
+.heat-cell[data-level="3"]{background:#ff8a3288}
+.heat-cell[data-level="4"]{background:#ff8a32}
+#heatmapTotal{font-size:11px;color:var(--muted);margin-top:8px}
+@media(max-width:650px){.heat-grid{grid-template-columns:repeat(26,minmax(0,1fr))}}
