@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f7f2" />
+  <meta name="description" content="Colourful developer portfolio with LeetCode stats." />
+  <title>Color Pop — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="template.css" />
+  <script src="template.js" defer></script>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
+  <header class="site-header" id="top">
+    <a class="brand" href="#home"><span class="brand-mark"><span id="brandInitials">Y.</span></span><span data-config="name">YOUR NAME</span><span class="brand-dot"></span></a>
+    <nav class="desktop-nav" aria-label="Main">
+      <a class="nav-link active" href="#home">Home</a>
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#skills">Skills</a>
+      <a class="nav-link" href="#projects">Projects</a>
+      <a class="nav-link" href="#journey">Journey</a>
+      <a class="nav-link" href="#coding">Coding</a>
+      <a class="nav-link" href="#contact">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"/><circle cx="12" cy="12" r="4"/></svg>
+      </button>
+      <a class="header-cta" href="#contact">Let's talk <span>↗</span></a>
+      <button class="icon-button menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="#home">Home</a><a href="#about">About</a><a href="#skills">Skills</a>
+    <a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#coding">Coding</a><a href="#contact">Contact</a>
+  </nav>
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy reveal is-visible">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> INDEPENDENT CREATOR · AVAILABLE FOR OPPORTUNITIES</div>
+        <h1>MAKE<br/>GOOD <span class="headline-art">STUFF<span class="headline-period">.</span></span></h1>
+        <div class="hero-name-line"><span class="name-rule"></span><span data-config="name">YOUR NAME</span></div>
+        <p class="hero-role" data-config="role">YOUR ROLE · YOUR SPECIALITY</p>
+        <p class="hero-description" data-config="tagline">YOUR SHORT INTRODUCTION GOES HERE.</p>
+        <div class="hero-buttons">
+          <a class="button button-primary" href="#projects">Explore my work <span>↗</span></a>
+          <a class="button button-outline" id="resume-download" href="#contact">Download resume <span>↓</span></a>
+        </div>
+        <div class="hero-socials">
+          <a href="#" data-profile="github">GH</a>
+          <a href="#" data-profile="linkedin">in</a>
+          <a href="#" data-profile="leetcode">LC</a>
+          <a href="#contact">@</a>
+        </div>
+        <div class="hero-meta">
+          <div><span class="meta-label">BASED IN</span><strong data-config="location">YOUR CITY</strong></div>
+          <div><span class="meta-label">FOCUS</span><strong data-config="focus">YOUR FOCUS</strong></div>
+          <div><span class="meta-label">STATUS</span><strong><i class="status-dot"></i> <span data-config="availability">OPEN</span></strong></div>
+        </div>
+      </div>
+      <div class="hero-art reveal is-visible">
+        <div class="art-card">
+          <div class="art-avatar image-target" id="profile-image-target"><span>Y<span>.</span></span></div>
+          <div class="art-card-title">Ideas into <em>impact.</em></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap about-section section-space" id="about">
+      <div class="section-heading reveal"><div><div class="section-kicker"><span>01</span> / ABOUT</div><h2>NOT JUST A<br/><span class="text-outline">PIXEL PUSHER.</span></h2></div>
+      <p class="section-intro">Your story, made real.</p></div>
+      <div class="about-grid">
+        <article class="manifesto-card reveal"><span class="tag tag-lime">A NOTE</span><h3 data-config="manifesto">Curiosity is a creative superpower.</h3><div class="manifesto-sign"><span data-config="name">YOUR NAME</span></div></article>
+        <article class="about-details reveal"><h3>Hey, I'm <span data-config="name">YOUR NAME</span>.</h3>
+          <p data-config="about">About you.</p><p data-config="approach">How you work.</p>
+          <div class="focus-grid">
+            <div><span>01</span><strong data-config="focusOne">Interest one</strong></div>
+            <div><span>02</span><strong data-config="focusTwo">Interest two</strong></div>
+            <div><span>03</span><strong data-config="focusThree">Interest three</strong></div>
+            <div><span>04</span><strong data-config="focusFour">Interest four</strong></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="skills-section section-space" id="skills">
+      <div class="section-wrap">
+        <div class="section-heading reveal"><div><div class="section-kicker"><span>02</span> / SKILLS</div><h2>TOOLS OF<br/><span class="highlight-purple">THE TRADE.</span></h2></div></div>
+        <div class="skills-grid">
+          <article class="skill-card skill-coral reveal"><h3>Programming</h3><div class="skill-chips"><span>Java</span><span>Python</span><span>JS</span></div></article>
+          <article class="skill-card skill-blue reveal"><h3>Problem solving</h3><div class="skill-chips"><span>DSA</span><span>OOP</span></div></article>
+          <article class="skill-card skill-lime reveal"><h3>Web</h3><div class="skill-chips"><span>HTML</span><span>CSS</span><span>React</span></div></article>
+          <article class="skill-card skill-purple reveal"><h3>AI / Data</h3><div class="skill-chips"><span>ML</span><span>Python</span></div></article>
+          <article class="skill-card skill-yellow reveal"><h3>Frameworks</h3><div class="skill-chips"><span>Node</span><span>Vite</span></div></article>
+          <article class="skill-card skill-ink reveal"><h3>Workflow</h3><div class="skill-chips"><span>Git</span><span>GitHub</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap projects-section section-space" id="projects">
+      <div class="section-heading reveal"><div><div class="section-kicker"><span>03</span> / PROJECTS</div><h2>LESS TALK.<br/><span class="highlight-coral">MORE BUILD.</span></h2></div></div>
+      <div class="project-toolbar reveal">
+        <div class="project-filters">
+          <button class="filter-button active" data-filter="all">ALL</button>
+          <button class="filter-button" data-filter="web">WEB</button>
+          <button class="filter-button" data-filter="ai">AI / DATA</button>
+          <button class="filter-button" data-filter="other">OTHER</button>
+        </div>
+        <span class="project-counter" id="project-counter">SHOWING PROJECTS</span>
+      </div>
+      <div class="projects-grid">
+        <article class="project-card reveal" data-category="web" data-project="0"><div class="project-visual"></div><div class="project-info"><h3>Project One</h3><p>Add projects in the builder.</p><div class="project-tags"><span>Tech</span></div></div></article>
+        <article class="project-card reveal" data-category="ai" data-project="1"><div class="project-visual"></div><div class="project-info"><h3>Project Two</h3><p>Add projects in the builder.</p><div class="project-tags"><span>Tech</span></div></div></article>
+        <article class="project-card reveal" data-category="ai" data-project="2"><div class="project-visual"></div><div class="project-info"><h3>Project Three</h3><p>Add projects in the builder.</p><div class="project-tags"><span>Tech</span></div></div></article>
+        <article class="project-card reveal" data-category="other" data-project="3"><div class="project-visual"></div><div class="project-info"><h3>Project Four</h3><p>Add projects in the builder.</p><div class="project-tags"><span>Tech</span></div></div></article>
+      </div>
+    </section>
+
+    <section class="journey-section section-space" id="journey">
+      <div class="section-wrap">
+        <div class="section-heading reveal"><div><div class="section-kicker"><span>04</span> / JOURNEY</div><h2>PROGRESS, NOT<br/><span class="highlight-purple">PERFECTION.</span></h2></div></div>
+        <div class="journey-grid">
+          <article class="journey-note reveal"><span class="tag tag-coral">NEXT CHAPTER</span><h3>STAY CURIOUS.</h3><p>Your learning path.</p></article>
+          <div class="timeline reveal">
+            <article class="timeline-item"><span class="timeline-marker"></span><h3>Education</h3><p>Add education in the builder.</p></article>
+            <article class="timeline-item"><span class="timeline-marker"></span><h3>Experience</h3><p>Add experience in the builder.</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap certificates-section section-space" id="certificates">
+      <div class="section-heading reveal"><div><div class="section-kicker"><span>05</span> / CERTIFICATES</div><h2>LEARN IT.<br/><span class="highlight-coral">EARN IT.</span></h2></div></div>
+      <div class="certificates-grid">
+        <article class="certificate-card reveal"><div class="certificate-icon">✦</div><div class="certificate-content"><h3>Certificate One</h3><p>Add in builder</p></div></article>
+        <article class="certificate-card reveal"><div class="certificate-icon">◈</div><div class="certificate-content"><h3>Certificate Two</h3><p>Add in builder</p></div></article>
+        <article class="certificate-card reveal"><div class="certificate-icon">⌘</div><div class="certificate-content"><h3>Certificate Three</h3><p>Add in builder</p></div></article>
+        <article class="certificate-card reveal"><div class="certificate-icon">✳</div><div class="certificate-content"><h3>Certificate Four</h3><p>Add in builder</p></div></article>
+      </div>
+    </section>
+
+    <section class="coding-section section-space" id="coding">
+      <div class="section-wrap">
+        <div class="section-heading reveal"><div><div class="section-kicker"><span>06</span> / CODING</div><h2>SMALL STEPS.<br/><span class="highlight-purple">DAILY WINS.</span></h2></div></div>
+        <div class="coding-layout">
+          <div class="profiles-panel reveal">
+            <h3>FIND ME AROUND</h3>
+            <a class="profile-row" data-profile="github" href="#"><span class="profile-icon">GH</span><span><strong>GitHub</strong></span></a>
+            <a class="profile-row" data-profile="leetcode" href="#"><span class="profile-icon">LC</span><span><strong>LeetCode</strong></span></a>
+            <a class="profile-row" data-profile="hackerrank" href="#"><span class="profile-icon">HR</span><span><strong>HackerRank</strong></span></a>
+            <a class="profile-row" data-profile="linkedin" href="#"><span class="profile-icon">in</span><span><strong>LinkedIn</strong></span></a>
+          </div>
+          <div class="leetcode-panel reveal">
+            <div class="lc-panel-top"><h3>LEETCODE STATS</h3><span class="live-pill" id="lc-status"> DEMO</span></div>
+            <div class="lc-input-row">
+              <input id="leetcode-username" type="text" placeholder="LeetCode username" />
+              <button id="sync-leetcode" class="button-dark" type="button">Sync stats</button>
+            </div>
+            <div class="lc-stats-grid">
+              <article class="lc-stat"><span>TOTAL</span><strong id="lc-total">000</strong></article>
+              <article class="lc-stat"><span>EASY</span><strong id="lc-easy">000</strong></article>
+              <article class="lc-stat"><span>MEDIUM</span><strong id="lc-medium">000</strong></article>
+              <article class="lc-stat"><span>HARD</span><strong id="lc-hard">000</strong></article>
+            </div>
+            <div class="heatmap-grid" id="leetcode-heatmap"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section section-space" id="contact">
+      <div class="section-wrap">
+        <div class="section-heading reveal"><div><div class="section-kicker"><span>07</span> / CONTACT</div><h2>GOT A GOOD<br/><span class="highlight-coral">FEELING?</span></h2></div></div>
+        <div class="contact-panel reveal">
+          <div class="contact-panel-left">
+            <span class="tag tag-lime">INBOX OPEN</span>
+            <h3>LET'S MAKE<br/>SOMETHING<br/><span>MATTER.</span></h3>
+            <p>Send a note — opens your email app.</p>
+            <div class="contact-information">
+              <div><span class="contact-info-icon">@</span><strong data-config="email">email@example.com</strong></div>
+              <div><span class="contact-info-icon">⌖</span><strong data-config="location">Your city</strong></div>
+            </div>
+          </div>
+          <form class="contact-form" id="contact-form">
+            <div class="form-fields">
+              <label>Name *<input name="name" required /></label>
+              <label>Email *<input name="email" type="email" required /></label>
+              <label class="field-full">Subject *<input name="subject" required /></label>
+              <label class="field-full">Message *<textarea name="message" rows="4" required></textarea></label>
+            </div>
+            <button type="submit" class="button button-primary">Prepare email <span>↗</span></button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="section-wrap footer-inner">
+      <span data-config="name">YOUR NAME</span>
+      <div class="footer-links"><a href="#top">TOP ↑</a><a href="#projects">PROJECTS</a><a href="#contact">CONTACT</a></div>
+      <span class="footer-year">© <span id="current-year">2026</span></span>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>
