@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fffdf8">
+  <meta name="description" content="A classy personal portfolio template with projects, skills, certificates and coding profiles.">
+  <title>Your Name — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="template.css">
+</head>
+<body>
+  <div class="page-grain" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Back to home"><span class="brand-symbol">A<span>.</span></span><span id="brandName">Your Name</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="nav" id="mainNav" aria-label="Main navigation">
+      <a href="#about">About</a><a href="#work">Work</a><a href="#skills">Expertise</a><a href="#journey">Journey</a><a class="nav-contact" href="#contact">Let's talk <span>↗</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero content-width" id="home">
+      <div class="hero-copy">
+        <div class="availability"><span class="availability-dot"></span><span id="availabilityText">OPEN TO SELECT OPPORTUNITIES</span></div>
+        <p class="eyebrow">PORTFOLIO / 2026</p>
+        <h1>Thoughtfully<br>built. <em>Boldly</em><br><span class="hero-last-line">imagined<span class="yellow-period">.</span></span></h1>
+        <p class="hero-summary" id="heroSummary">I'm a curious developer and creative thinker turning ideas into useful, thoughtful digital experiences.</p>
+        <div class="hero-actions"><a class="button button-red" href="#work">Explore my work <span>↘</span></a><a class="text-link" href="#about">A little about me <span>↗</span></a></div>
+        <div class="hero-meta"><span>BASED IN <b id="location">Your City</b></span><span class="meta-divider"></span><span>ALWAYS LEARNING <span class="spark">✳</span></span></div>
+      </div>
+      <div class="hero-art">
+        <div class="art-backdrop"></div><div class="art-sun"></div>
+        <div class="art-frame">
+          <img id="photoImg" alt="Portrait" class="profile-art" hidden>
+          <div class="photo-fallback" id="photoFallback"><span id="initials">YN</span><small>Add photo in builder</small></div>
+          <span class="image-index">FIG. 01 — THE CREATIVE MIND</span>
+        </div>
+        <div class="floating-note note-yellow"><span class="note-icon">✳</span><span><b>Curiosity first</b><small>Make room for ideas</small></span></div>
+        <div class="floating-note note-white"><span class="note-icon red-icon">↗</span><span><b>Make it matter</b><small>Intent over noise</small></span></div>
+        <div class="vertical-note">DESIGN · CODE · DISCOVERY</div>
+      </div>
+      <a class="scroll-cue" href="#about"><span class="scroll-line"></span> SCROLL TO DISCOVER</a>
+    </section>
+    <section class="section content-width about-section" id="about">
+      <div class="section-kicker"><span>01</span><span class="kicker-line"></span><span>THE PERSON BEHIND THE PIXELS</span></div>
+      <div class="about-layout"><h2>A little heart.<br>A lot of <em>curiosity.</em></h2><div class="about-copy"><p class="about-lead" id="aboutLead">I like to understand the why, enjoy the how, and keep improving what I make.</p><p class="body-copy" id="aboutBody">Use this space to share your background, interests, learning journey and the kind of work you hope to do next.</p><div class="about-pills" id="aboutPills"></div></div></div>
+    </section>
+    <section class="section work-section" id="work"><div class="content-width">
+      <div class="section-kicker"><span>02</span><span class="kicker-line"></span><span>A FEW THINGS I'VE MADE</span></div>
+      <div class="section-heading"><h2>Selected <em>work.</em></h2><p>Thoughtful experiments, real problems and ideas brought to life.</p></div>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div></section>
+    <section class="section content-width skills-section" id="skills">
+      <div class="section-kicker"><span>03</span><span class="kicker-line"></span><span>TOOLS OF THE TRADE</span></div>
+      <div class="skills-layout"><div><h2>Good work takes<br><em>good tools.</em></h2><p class="body-copy">A growing toolkit, shaped by practice and a willingness to try something new.</p></div><div class="skill-groups" id="skillGroups"></div></div>
+    </section>
+    <section class="section journey-section" id="journey"><div class="content-width">
+      <div class="section-kicker"><span>04</span><span class="kicker-line"></span><span>PROGRESS, NOT PERFECTION</span></div>
+      <div class="section-heading"><h2>The learning <em>curve.</em></h2><p>A few milestones along the way. Keep this section honest, personal and current.</p></div>
+      <div class="journey-grid"><article class="journey-card journey-red"><span class="journey-number">A / 01</span><span class="journey-icon">✦</span><h3>Learning by making</h3><p>Small projects, curious experiments and the lessons that come with shipping something.</p><span class="journey-tag">PROJECTS & PRACTICE</span></article><article class="journey-card journey-yellow"><span class="journey-number">A / 02</span><span class="journey-icon">◎</span><h3>Solving with logic</h3><p>Building consistency through programming fundamentals, problem-solving and reflection.</p><span class="journey-tag">CODE & CONSISTENCY</span></article><article class="journey-card journey-white"><span class="journey-number">A / 03</span><span class="journey-icon">↗</span><h3>Growing together</h3><p>Learning from others, sharing ideas and making room for meaningful collaboration.</p><span class="journey-tag">PEOPLE & POSSIBILITY</span></article></div>
+    </div></section>
+    <section class="section content-width coding-section" id="coding">
+      <div class="section-kicker"><span>05</span><span class="kicker-line"></span><span>THE PROBLEM-SOLVING HABIT</span></div>
+      <div class="coding-panel"><div class="coding-top"><div><p class="eyebrow">PRACTICE LOG</p><h2>One problem<br>at a <em>time.</em></h2><p class="body-copy">Connect a LeetCode username to show public profile stats when available.</p></div><div class="lc-mark">LC<span>↗</span></div></div><div class="lc-profile-row"><div><span class="micro-label">LEETCODE PROFILE</span><strong id="lcUsername">@yourusername</strong></div><a id="lcProfileLink" href="https://leetcode.com/" target="_blank" rel="noreferrer">Visit profile ↗</a></div><div class="lc-stats" id="lcStats"></div><div class="lc-bottom"><span id="lcStatus">Add a username in the builder for live stats.</span><button type="button" id="refreshLc" class="refresh-button">Refresh stats ↻</button></div></div>
+    </section>
+    <section class="section content-width certificates-section" id="certificates">
+      <div class="section-kicker"><span>06</span><span class="kicker-line"></span><span>PROOF OF PROGRESS</span></div>
+      <div class="section-heading"><h2>Earned, learned, <em>remembered.</em></h2><p>Show the learning that matters to you. Link a certificate to its public verification page.</p></div>
+      <div class="certificates-grid" id="certificatesGrid"></div>
+    </section>
+    <section class="contact-section content-width" id="contact"><div class="contact-scribble" aria-hidden="true">✳</div><div class="contact-copy"><p class="eyebrow">HAVE SOMETHING IN MIND?</p><h2>Let's make<br>it <em>meaningful.</em></h2><p id="contactMessage">Open to good ideas, thoughtful collaboration and interesting conversations.</p><a class="button button-yellow" id="emailLink" href="mailto:">Start a conversation <span>↗</span></a></div><div class="contact-side"><span class="contact-side-label">SAY HELLO</span><a id="contactEmail" href="mailto:">hello@example.com</a><div class="contact-rule"></div><div id="contactSocials" class="contact-socials"></div></div></section>
+  </main>
+  <footer class="site-footer content-width"><a class="brand" href="#home"><span class="brand-symbol">A<span>.</span></span><span id="footerName">Your Name</span></a><span class="footer-note">MADE WITH INTENTION <b>✳</b> <span id="copyrightYear"></span></span><a class="back-top" href="#home">BACK TO TOP ↑</a></footer>
+  <script src="template.js"></script>
+</body>
+</html>
