@@ -1,6 +1,16 @@
 /* Production templates */
 window.PB_TEMPLATES = [
   {
+    id: 'signature-orange',
+    name: 'Signature Orange',
+    category: 'developer',
+    tagline: 'Bold orange-accent portfolio with LeetCode stats, activity heatmap, projects, skills and certificates.',
+    accent: '#ff8a32',
+    theme: 'dark',
+    features: ['Heatmap', 'LeetCode', 'Projects', 'Certificates', 'Skills'],
+    preview: '/portfolio-builder/templates/signature-orange/'
+  },
+  {
     id: 'modern-dark-3d',
     name: 'Modern Dark 3D',
     category: 'developer',
@@ -79,29 +89,6 @@ window.PB_DEMO = {
     }
   ],
   certifications: [
-    {
-      name: 'JavaScript Algorithms and Data Structures',
-      org: 'freeCodeCamp',
-      year: '2023',
-      url: '',
-      description: ''
-    }
-  ],
-  achievements: ['Hackathon finalist — college tech fest 2023'],
-  interests: ['Open source', 'UI design', 'Cricket'],
-  showPhoto: true,
-  photoData: '',
-  accent: '#a78bfa',
-  themeMode: 'dark',
-  visibleSections: {
-    about: true,
-    skills: true,
-    education: true,
-    experience: true,
-    projects: true,
-    certifications: true,
-    achievements: true,
-    interests: true,
-    contact: true
-  }
+    { name: 'Web Development Fundamentals', org: 'Example Academy', year: '2024', url: '' }
+  ]
 };
