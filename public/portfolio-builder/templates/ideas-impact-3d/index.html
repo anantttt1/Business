@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#080a10"/>
 <title>Ideas Impact 3D — Developer Portfolio</title>
-<link rel="stylesheet" href="/portfolio-builder/templates/ideas-impact-3d/template.css"/>
+<link rel="stylesheet" href="/portfolio-builder/templates/modern-dark-3d/template.css"/>
+<link rel="stylesheet" href="/portfolio-builder/templates/ideas-impact-3d/heatmap.css"/>
 </head>
 <body>
 <div class="progress" id="scrollProgress"></div>
@@ -24,12 +25,12 @@
 <div class="hero-copy">
 <p class="eyebrow">Portfolio · Personal edition · Unique creative 3D</p>
 <h1>Ideas into<br><span class="gradient-text">Impact.</span></h1>
-<p class="hero-name gradient-text" id="heroName">Your Name</p>
+<p class="subtitle" style="font-size:1.35rem;margin:.4rem 0" id="heroName">Your Name</p>
 <p class="subtitle" id="heroRole">Your Role · Your Speciality</p>
-<p class="intro" id="heroIntro">Write a short introduction here.</p>
+<p class="intro" id="heroIntro">Write a short introduction here. Tell visitors what you build, what you care about, and the kind of problems you enjoy solving.</p>
 <div class="hero-cta">
 <a class="btn btn-primary" href="#projects">Explore My Work</a>
-<a class="btn btn-ghost" id="resumeButton" href="#">Download Resume</a>
+<a class="btn btn-secondary" id="resumeButton" href="#">Download Resume</a>
 </div>
 <div class="social-row" id="heroSocials">
 <a id="socGH" href="#profiles">GH</a>
@@ -46,7 +47,7 @@
 <div class="hero-visual">
 <div class="photo-frame" id="photoFrame">
 <img id="photoImg" alt="Profile" hidden/>
-<div class="photo-placeholder" id="photoPlaceholder">Add your photo</div>
+<div class="photo-placeholder" id="photoPlaceholder">ADD YOUR PHOTO</div>
 </div>
 </div>
 </div>
@@ -112,7 +113,7 @@
 <div class="profile-list" id="profileList"></div>
 <div class="panel" id="leetcodePanel" style="margin-top:1.25rem;padding:1.1rem">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-    <h3 style="margin:0;font-size:1rem">LeetCode · Problem counts & heatmap</h3>
+    <h3 style="margin:0;font-size:1rem">LeetCode · Problem counts &amp; heatmap</h3>
     <span id="lcStatus" style="font-size:.75rem;color:#aeb9d5">—</span>
   </div>
   <div class="stat-grid" id="lcStats">
@@ -155,6 +156,7 @@
 </main>
 <footer class="footer"><div class="container footer-inner"><div>© <span id="yearNow"></span> <span id="footerName">Your Name</span>. Crafted with curiosity.</div><div class="footer-links"><a href="#home">Back to top</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div></div></footer>
 <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<script src="/portfolio-builder/templates/ideas-impact-3d/template.js"></script>
+<script src="/portfolio-builder/templates/modern-dark-3d/template.js"></script>
+<script src="/portfolio-builder/templates/ideas-impact-3d/heatmap.js"></script>
 </body>
 </html>
