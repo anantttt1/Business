@@ -44,7 +44,7 @@
   }
 
   function prepareHtml(html, cfg) {
-    html = html.replace(/href="\/portfolio-builder\/templates\/[^"]+\/template\.css"/g, 'href="template.css"');
+    html = html.replace(/href="\/portfolio-builder\/templates\/[^"]+\/(template[^\"]*\.css)"/g, 'href="$1"');
     html = html.replace(/src="\/portfolio-builder\/templates\/[^"]+\/template\.js"/g, 'src="template.js"');
     html = html.replace(/href="heatmap\.css"/g, 'href="heatmap.css"');
     html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(cfg.name) + ' — Portfolio</title>');
@@ -65,8 +65,11 @@
     throw new Error('ZIP library failed to load — hard refresh the page');
   }
 
-  var SUPPORTED = ['modern-dark-3d', 'signature-orange', 'ember-editorial', 'paper-atelier'];
-  var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier'];
+  var SUPPORTED = ['modern-dark-3d', 'signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact'];
+  var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact'];
+  var EXTRA_CSS = {
+    'ideas-impact': ['template-b.css', 'template-c.css', 'template-d.css']
+  };
 
   window.PB_exportModernDark = async function (state) {
     try {
@@ -84,7 +87,7 @@
       try {
         html = await fetchText(base + 'index.html');
         css = await fetchText(base + 'template.css');
-        js = await fetchText((OWN_JS.indexOf(tid) >= 0 ? base : base) + 'template.js');
+        js = await fetchText(base + 'template.js');
         if (tid === 'signature-orange') {
           try { heatCss = await fetchText(base + 'heatmap.css'); } catch (e) {}
         }
@@ -101,6 +104,14 @@
         { name: 'my-portfolio/README.md', data: readmeFor(state) }
       ];
       if (heatCss) files.push({ name: 'my-portfolio/heatmap.css', data: heatCss });
+
+      var extras = EXTRA_CSS[tid] || [];
+      for (var i = 0; i < extras.length; i++) {
+        try {
+          var extra = await fetchText(base + extras[i]);
+          files.push({ name: 'my-portfolio/' + extras[i], data: extra });
+        } catch (e) {}
+      }
 
       if (state.photoData && String(state.photoData).indexOf('data:image') === 0) {
         files.push({ name: 'my-portfolio/assets/profile.jpg', data: state.photoData });
