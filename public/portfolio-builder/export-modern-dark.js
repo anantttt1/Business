@@ -65,7 +65,7 @@
     throw new Error('ZIP library failed to load — hard refresh the page');
   }
 
-  var SUPPORTED = ['modern-dark-3d', 'ideas-impact-3d', 'signature-orange', 'ember-editorial', 'paper-atelier'];
+  var SUPPORTED = ['modern-dark-3d', 'signature-orange', 'ember-editorial', 'paper-atelier'];
   var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier'];
 
   window.PB_exportModernDark = async function (state) {
@@ -79,15 +79,14 @@
       var tid = state.templateId || 'modern-dark-3d';
       if (SUPPORTED.indexOf(tid) < 0) tid = 'modern-dark-3d';
       var base = '/portfolio-builder/templates/' + tid + '/';
-      var cssBase = tid === 'ideas-impact-3d' ? '/portfolio-builder/templates/modern-dark-3d/' : base;
 
       var html, css, js, heatCss = '';
       try {
         html = await fetchText(base + 'index.html');
-        css = await fetchText(cssBase + 'template.css');
-        js = await fetchText((OWN_JS.indexOf(tid) >= 0 ? base : cssBase) + 'template.js');
-        if (tid === 'signature-orange' || tid === 'ideas-impact-3d') {
-          try { heatCss = await fetchText('/portfolio-builder/templates/' + tid + '/heatmap.css'); } catch (e) {}
+        css = await fetchText(base + 'template.css');
+        js = await fetchText((OWN_JS.indexOf(tid) >= 0 ? base : base) + 'template.js');
+        if (tid === 'signature-orange') {
+          try { heatCss = await fetchText(base + 'heatmap.css'); } catch (e) {}
         }
       } catch (fetchErr) {
         throw new Error('Template load failed: ' + (fetchErr && fetchErr.message ? fetchErr.message : String(fetchErr)));
