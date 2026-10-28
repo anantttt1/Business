@@ -39,16 +39,6 @@ window.PB_TEMPLATES = [
     theme: 'dark',
     features: ['3D Effects', 'Projects', 'Skills', 'Education', 'Contact'],
     preview: '/portfolio-builder/templates/modern-dark-3d/'
-  },
-  {
-    id: 'ideas-impact-3d',
-    name: 'Ideas Impact 3D',
-    category: 'developer',
-    tagline: 'Signature dark portfolio: hero impact layout, full sections, LeetCode stats + heatmap.',
-    accent: '#a78bfa',
-    theme: 'dark',
-    features: ['Impact Hero', 'Heatmap', 'Projects', 'Certificates', 'Profiles'],
-    preview: '/portfolio-builder/templates/ideas-impact-3d/'
   }
 ];
 
