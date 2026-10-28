@@ -326,21 +326,8 @@
         } catch (e) {}
       }
       state.templateId = templateId || state.templateId || 'modern-dark-3d';
-      const blob = await window.PB_exportModernDark(state);
-      const safeName =
-        (state.fullName || 'my-portfolio')
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '') || 'my-portfolio';
-      const fileName = safeName + '-portfolio.zip';
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      // Exporter builds ZIP and triggers browser download itself
+      await window.PB_exportModernDark(state);
       setStatus('Download started — extract the ZIP and open index.html.');
     } catch (e) {
       console.error(e);
