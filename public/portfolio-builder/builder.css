@@ -1,0 +1,68 @@
+/* Portfolio Builder — AP Creative Studio */
+.pb-body{background:radial-gradient(900px 520px at 88% 8%,rgba(80,60,180,.18),transparent 55%),radial-gradient(700px 480px at 5% 20%,rgba(255,107,53,.07),transparent 55%),var(--bg)}
+.pb-header{position:sticky;top:0;z-index:40;background:rgba(12,12,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd)}
+.pb-header .nav{height:60px}
+.pb-nav{display:flex;gap:18px;align-items:center}
+.pb-nav a{color:var(--mu);font-size:.92rem}
+.pb-nav a:hover{color:var(--tx)}
+.pb-main{padding:28px 0 72px}
+.pb-back{display:inline-flex;align-items:center;gap:6px;color:var(--mu);font-size:.9rem;margin-bottom:18px}
+.pb-back:hover{color:var(--or)}
+.pb-hero{max-width:720px;margin-bottom:28px}
+.pb-hero h1{font-size:clamp(1.9rem,4.5vw,2.8rem);margin-bottom:12px}
+.pb-hero .lead{color:var(--mu);font-size:1.02rem}
+.pb-toolbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:18px}
+.pb-search-wrap{flex:1;min-width:200px}
+.pb-search{width:100%;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--tx);font:inherit}
+.pb-search:focus{outline:2px solid var(--mg);outline-offset:2px}
+.pb-filters{display:flex;flex-wrap:wrap;gap:8px}
+.pb-filter{min-height:40px;padding:8px 14px;border-radius:99px;border:1px solid var(--bd);background:rgba(255,255,255,.03);color:var(--mu);font:600 .85rem inherit;cursor:pointer}
+.pb-filter.is-active,.pb-filter:hover{border-color:rgba(255,107,53,.5);color:var(--tx);background:rgba(255,107,53,.12)}
+.pb-count{color:var(--mu);font-size:.9rem;margin-bottom:16px}
+.pb-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px}
+.pb-card{display:flex;flex-direction:column;padding:0;overflow:hidden;border:1px solid var(--bd);border-radius:var(--r);background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02))}
+.pb-card-thumb{aspect-ratio:16/10;background:linear-gradient(145deg,#141828,#0c0f18);position:relative;overflow:hidden;border-bottom:1px solid var(--bd)}
+.pb-card-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pb-card-thumb .pb-thumb-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center}
+.pb-card-thumb .pb-thumb-fallback span{font:700 1.1rem var(--hf);background:linear-gradient(100deg,var(--or),var(--co));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pb-card-body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1;gap:8px}
+.pb-card-body h3{font-size:1.15rem;margin:0}
+.pb-card-body p{color:var(--mu);font-size:.9rem;margin:0;flex:1}
+.pb-tags{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.pb-tag{font-size:.72rem;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--mu)}
+.pb-card-actions{display:flex;gap:8px;margin-top:auto}
+.pb-card-actions .btn{flex:1;min-height:42px;font-size:.9rem}
+.pb-empty{text-align:center;color:var(--mu);padding:40px 16px;border:1px dashed var(--bd);border-radius:var(--r)}
+.pb-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.pb-editor-shell{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:18px;align-items:start;min-height:70vh}
+.pb-editor-panel,.pb-preview-panel{border:1px solid var(--bd);border-radius:var(--r);background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));overflow:hidden}
+.pb-editor-panel{padding:16px;max-height:calc(100vh - 120px);overflow:auto}
+.pb-preview-panel{min-height:520px;display:flex;flex-direction:column}
+.pb-preview-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd);background:rgba(0,0,0,.25)}
+.pb-preview-frame{flex:1;overflow:auto;background:#080a10;padding:12px}
+.pb-preview-inner{margin:0 auto;transition:max-width .25s;background:#080a10;border-radius:12px;border:1px solid #1a2030;overflow:hidden;min-height:480px}
+.pb-preview-inner.is-mobile{max-width:390px}
+.pb-preview-inner.is-desktop{max-width:100%}
+.pb-section{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--bd)}
+.pb-section h3{font-size:1rem;margin:0 0 10px;color:var(--or)}
+.pb-field{margin-bottom:10px}
+.pb-field label{display:block;font-size:.85rem;font-weight:600;margin-bottom:4px}
+.pb-field input,.pb-field textarea,.pb-field select{width:100%;min-height:42px;padding:8px 10px;border-radius:10px;border:1px solid var(--bd);background:rgba(0,0,0,.25);color:var(--tx);font:inherit}
+.pb-field textarea{min-height:88px;resize:vertical}
+.pb-field .hint{font-size:.78rem;color:var(--mu);margin-top:3px}
+.pb-field .err{font-size:.78rem;color:#ff8a8a;margin-top:3px}
+.pb-list-item{border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(0,0,0,.2)}
+.pb-list-item .entry-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pb-list-item .entry-head strong{font-size:.9rem}
+.pb-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.pb-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:99px;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.35);font-size:.82rem}
+.pb-chip button{border:0;background:transparent;color:var(--mu);cursor:pointer;font-size:1rem;line-height:1;padding:0}
+.pb-actions-bar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;position:sticky;bottom:0;padding-top:12px;background:linear-gradient(transparent,rgba(12,12,16,.95) 30%)}
+.pb-status{font-size:.88rem;color:var(--mu);min-height:1.2em}
+.pb-status.is-ok{color:#82e7bc}
+.pb-status.is-err{color:#ff8a8a}
+.pb-seg{display:flex;gap:6px;flex-wrap:wrap}
+.pb-seg button{min-height:36px;padding:6px 12px;border-radius:8px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--mu);font:600 .82rem inherit;cursor:pointer}
+.pb-seg button.is-active{background:rgba(255,107,53,.18);border-color:rgba(255,107,53,.5);color:var(--tx)}
+@media(max-width:960px){.pb-editor-shell{grid-template-columns:1fr}.pb-editor-panel{max-height:none}.pb-preview-panel{min-height:420px}}
+@media(max-width:620px){.pb-card-actions{flex-direction:column}.pb-nav{display:none}}
