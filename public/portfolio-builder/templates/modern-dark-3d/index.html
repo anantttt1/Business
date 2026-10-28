@@ -1,1 +1,116 @@
-PLACEHOLDER
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#080a10"/>
+<title>Your Name — Developer Portfolio</title>
+<link rel="stylesheet" href="/portfolio-builder/templates/modern-dark-3d/template.css"/>
+</head>
+<body>
+<div class="progress" id="scrollProgress"></div>
+<header class="site-header">
+<nav class="nav container" aria-label="Main navigation">
+<a class="brand" href="#home"><span class="brand-mark" id="brandMark">YN</span><span class="brand-name" id="brandName">Your <span>Name.</span></span></a>
+<div class="nav-links" id="navLinks">
+<a href="#home" class="active">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#certificates">Certificates</a><a href="#profiles">Profiles</a><a href="#contact">Contact</a>
+</div>
+<div class="nav-actions">
+<button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">☼</button>
+<a href="#contact" class="btn btn-primary btn-small">Let's Talk <span class="arrow">↗</span></a>
+<button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
+</div>
+</nav>
+</header>
+<main id="main-content">
+<section class="hero" id="home">
+<div class="container hero-grid">
+<div class="hero-copy">
+<div class="eyebrow">YOUR AVAILABILITY STATUS <span class="pill"><i class="pill-dot"></i> Portfolio template</span></div>
+<h1>Hi, I'm<br><span class="gradient-text" id="heroName">Your Name</span><span class="gradient-text">.</span></h1>
+<p class="subtitle" id="heroRole">Your Role · Your Speciality</p>
+<p class="intro" id="heroIntro">Write a short introduction here. Tell visitors what you build, what you care about, and the kind of problems you enjoy solving.</p>
+<div class="hero-cta">
+<a href="#projects" class="btn btn-primary">Explore My Work <span class="arrow">↗</span></a>
+<a href="#" id="resumeButton" class="btn btn-secondary">Download Resume <span class="arrow">↓</span></a>
+</div>
+<div class="social-row" id="heroSocials">
+<a class="social-icon" href="#profiles">GH</a>
+<a class="social-icon" href="#profiles">in</a>
+<a class="social-icon" href="#profiles">LC</a>
+<a class="social-icon" href="#contact">@</a>
+</div>
+<div class="hero-meta">
+<div class="meta-item"><strong id="metaLocation">Your Location</strong><small>Based in</small></div>
+<div class="meta-item"><strong id="metaFocus">Your Main Focus</strong><small>Currently exploring</small></div>
+<div class="meta-item"><strong id="metaStatus">Open to opportunities</strong><small>Current status</small></div>
+</div>
+</div>
+<div class="hero-visual">
+<div class="float-card" style="top:8%;left:0"><strong>Build · Learn · Improve</strong><div style="color:var(--muted);font-size:.85rem">Your personal motto</div></div>
+<div class="photo-frame"><div class="photo-slot">+</div><strong>Add Your Photo</strong><div style="font-size:.85rem">Replace this area with your portrait</div></div>
+<div class="float-card" style="bottom:8%;right:0"><strong>Your Specialty</strong><div style="color:var(--muted);font-size:.85rem">One-line highlight</div></div>
+</div>
+</div>
+</section>
+<section class="section" id="about">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">01 / About</div><h2>Make an impression.<br><span class="gradient-text">Tell your story.</span></h2></div><p>Use this section to explain who you are, what drives you, and what you want to create next.</p></div>
+<div class="about-grid">
+<div class="panel quote-card"><div class="eyebrow">"</div><h3 id="aboutHeadline">Curiosity turns ideas into things people can use.</h3><p id="aboutQuote">Add a short personal statement.</p><div style="margin-top:1.5rem;color:var(--muted);font-size:.8rem"><span id="aboutCardName">YOUR NAME</span><br>A LITTLE ABOUT ME</div></div>
+<div class="panel"><h3 id="aboutTitle">A little more about me.</h3><p id="aboutP1" style="color:var(--muted);margin:.75rem 0">Write two or three sentences about your background.</p><p id="aboutP2" style="color:var(--muted)">Share how you approach challenges.</p><div class="focus-grid" id="focusAreas"></div></div>
+</div>
+</div>
+</section>
+<section class="section" id="skills">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">02 / Technical toolkit</div><h2>Tools of the <span class="gradient-text">trade.</span></h2></div><p>Organise your skills into clear groups.</p></div>
+<div class="skills-grid" id="skillsGrid"></div>
+</div>
+</section>
+<section class="section" id="projects">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">03 / Selected projects</div><h2>Ideas made <span class="gradient-text">real.</span></h2></div><p>Show the problem, solution, tech, and demo.</p></div>
+<div class="filter-row" id="projectFilters"><button class="active" type="button" data-filter="all">All projects</button><button type="button" data-filter="web">Web</button><button type="button" data-filter="ai">AI / Data</button><button type="button" data-filter="other">Other</button></div>
+<div class="projects-grid" id="projectsGrid"></div>
+</div>
+</section>
+<section class="section" id="education">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">04 / Education & experience</div><h2>The foundation I'm <span class="gradient-text">building.</span></h2></div><p>Add education, work, internships, milestones.</p></div>
+<div class="edu-grid">
+<div class="panel"><span class="pill">Your current chapter</span><h3 style="margin:1rem 0 .5rem">Learning today. Building for tomorrow.</h3><p style="color:var(--muted)">Write a short note about your journey.</p></div>
+<div class="panel"><div class="timeline" id="eduTimeline"></div></div>
+</div>
+</div>
+</section>
+<section class="section" id="certificates">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">05 / Certificates</div><h2>Keep learning. Keep <span class="gradient-text">growing.</span></h2></div><p>List verifiable credentials.</p></div>
+<div class="certs-grid" id="certsGrid"></div>
+</div>
+</section>
+<section class="section" id="profiles">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">06 / Coding profiles</div><h2>Practice in <span class="gradient-text">public.</span></h2></div><p>Connect developer profiles.</p></div>
+<div class="profiles-grid">
+<div class="panel profile-list" id="profileList"></div>
+<div class="panel"><div style="display:flex;justify-content:space-between;margin-bottom:1rem"><strong>Problem Solving Activity</strong><span style="color:var(--muted);font-size:.8rem">Demo / not connected</span></div><div class="stat-grid"><div class="stat-box"><div>—</div><small>Solved</small></div><div class="stat-box"><div>—</div><small>Easy</small></div><div class="stat-box"><div>—</div><small>Medium</small></div><div class="stat-box"><div>—</div><small>Hard</small></div></div></div>
+</div>
+</div>
+</section>
+<section class="section" id="contact">
+<div class="container">
+<div class="section-head"><div><div class="eyebrow">07 / Contact</div><h2>Have something in <span class="gradient-text">mind?</span></h2></div><p>Discuss opportunities and projects.</p></div>
+<div class="panel contact-panel">
+<div><div class="eyebrow">Get in touch</div><h3>Let's make something <span class="gradient-text">meaningful.</span></h3><p id="contactIntro" style="color:var(--muted);margin:1rem 0">Send a note using the form.</p><div class="contact-details"><div class="contact-detail"><span>@</span><a id="contactEmailLink" href="#">your.email@example.com</a></div><div class="contact-detail"><span>⌖</span><span id="contactLocation">Your city, country</span></div><div class="contact-detail"><span>↗</span><a id="contactLinkedIn" href="#" target="_blank" rel="noreferrer">Professional profile</a></div></div></div>
+<form class="contact-form" id="contactForm"><div class="field-row"><div class="field"><label for="senderName">Your name</label><input id="senderName" name="name" required/></div><div class="field"><label for="senderEmail">Your email</label><input id="senderEmail" name="email" type="email" required/></div></div><div class="field"><label for="messageSubject">Subject</label><input id="messageSubject" name="subject" required/></div><div class="field"><label for="messageBody">Message</label><textarea id="messageBody" name="message" required></textarea></div><button class="btn btn-primary" type="submit">Prepare Email <span class="arrow">↗</span></button></form>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer"><div class="container footer-inner"><div>© <span id="yearNow"></span> <span id="footerName">Your Name</span>. Crafted with curiosity.</div><div class="footer-links"><a href="#home">Back to top ↑</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div></div></footer>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="/portfolio-builder/templates/modern-dark-3d/template.js"></script>
+</body>
+</html>
