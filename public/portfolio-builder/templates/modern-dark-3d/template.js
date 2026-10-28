@@ -5,46 +5,29 @@
     name: 'Your Name',
     initials: 'YN',
     role: 'Your Role · Your Speciality',
-    intro: 'Write a short introduction here. Tell visitors what you build, what you care about, and the kind of problems you enjoy solving.',
+    intro: 'Write a short introduction here.',
     location: 'Your Location',
     focus: 'Your Main Focus',
     status: 'Open to opportunities',
     resumeUrl: '',
+    photoData: '',
     aboutHeadline: 'Curiosity turns ideas into things people can use.',
-    aboutQuote: 'Add a short personal statement, guiding principle, or line that captures your approach to work.',
+    aboutQuote: 'Add a short personal statement.',
     aboutTitle: 'A little more about me.',
-    aboutParagraph1: 'Write two or three sentences about your background, the skills you are developing, and the work you enjoy.',
-    aboutParagraph2: 'Share how you approach challenges, collaborate with others, or turn feedback into better work.',
-    focusAreas: ['Your focus area one', 'Your focus area two', 'Your focus area three', 'Your focus area four'],
+    aboutParagraph1: 'Write two or three sentences about your background.',
+    aboutParagraph2: 'Share how you approach challenges.',
+    focusAreas: ['Focus one', 'Focus two', 'Focus three', 'Focus four'],
     contactEmail: '',
     contactLocation: 'Your city, country',
-    contactIntro: 'Have a project idea or want to connect? Send a note using the form.',
+    contactIntro: 'Have a project idea or want to connect?',
     social: { github: '', leetcode: '', hackerrank: '', linkedin: '' },
     skills: [
-      { title: 'Programming', desc: 'Languages and fundamentals.', tags: ['Skill one', 'Skill two', 'Skill three'] },
-      { title: 'Core Concepts', desc: 'Foundations and problem solving.', tags: ['Concept one', 'Concept two', 'Concept three'] },
-      { title: 'Web Development', desc: 'Tools for building websites and apps.', tags: ['Technology one', 'Technology two', 'Technology three'] },
-      { title: 'AI / Data / Speciality', desc: 'Your specialist or emerging skill area.', tags: ['Tool one', 'Tool two', 'Tool three'] },
-      { title: 'Frameworks & Libraries', desc: 'Libraries and frameworks you have used.', tags: ['Library one', 'Library two', 'Library three'] },
-      { title: 'Developer Tools', desc: 'Your day-to-day workflow.', tags: ['Tool one', 'Tool two', 'Tool three'] }
+      { title: 'Programming', desc: 'Languages and fundamentals.', tags: ['Skill one', 'Skill two'] },
+      { title: 'Web Development', desc: 'Tools for building websites.', tags: ['HTML', 'CSS', 'JS'] }
     ],
-    projects: [
-      { name: 'Project Title One', description: 'Describe the problem you solved, what you built, and why it matters.', tech: ['Tech One', 'Tech Two', 'Tech Three'], category: 'web', liveUrl: '', githubUrl: '' },
-      { name: 'Project Title Two', description: 'Explain your approach, the key feature, and what you learned.', tech: ['Tech One', 'Tech Two'], category: 'web', liveUrl: '', githubUrl: '' },
-      { name: 'Project Title Three', description: 'Highlight a different project, hackathon prototype, or useful tool.', tech: ['Tech One', 'Tech Two'], category: 'ai', liveUrl: '#', githubUrl: '#' },
-      { name: 'Project Title Four', description: 'Add another example that demonstrates your range and growth.', tech: ['Tech One', 'Tech Two', 'Tech Three'], category: 'other', liveUrl: '#', githubUrl: '#' }
-    ],
-    education: [
-      { when: 'YYYY – YYYY', title: 'Degree / Qualification', place: 'Institution Name · Location', detail: 'Optional details, major, achievements, or relevant coursework.' },
-      { when: 'MONTH YYYY – MONTH YYYY', title: 'Role / Internship / Experience', place: 'Organisation Name · Type', detail: 'Describe your responsibilities or the impact of your contribution.' },
-      { when: 'MONTH YYYY', title: 'Additional Milestone', place: 'Organisation or programme name', detail: 'Include another relevant experience, award, or academic milestone.' }
-    ],
-    certificates: [
-      { name: 'Certificate / Credential Title One', org: 'Issuing Organisation · skill covered.', date: 'Month DD, YYYY', url: '#' },
-      { name: 'Certificate / Credential Title Two', org: 'Issuing Organisation · skill covered.', date: 'Month DD, YYYY', url: '#' },
-      { name: 'Certificate / Credential Title Three', org: 'Issuing Organisation · skill covered.', date: 'Month DD, YYYY', url: '#' },
-      { name: 'Certificate / Credential Title Four', org: 'Issuing Organisation · skill covered.', date: 'Month DD, YYYY', url: '#' }
-    ]
+    projects: [],
+    education: [],
+    certificates: []
   };
 
   function initials(name) {
@@ -56,12 +39,12 @@
 
   function mergeBuilderState() {
     var params = new URLSearchParams(location.search);
-    if (params.get('preview') !== '1' && params.get('from') !== 'builder') return false;
+    var isPreview = params.get('preview') === '1' || params.get('from') === 'builder';
     try {
       var raw = localStorage.getItem('ap-pb-v1');
-      if (!raw) return true;
+      if (!raw) return isPreview;
       var s = JSON.parse(raw);
-      if (!s || typeof s !== 'object') return true;
+      if (!s || typeof s !== 'object') return isPreview;
 
       var name = s.fullName || CONFIG.name;
       var skills = s.skills || [];
@@ -79,6 +62,7 @@
       CONFIG.location = s.location || CONFIG.location;
       CONFIG.focus = skills.slice(0, 2).join(' · ') || CONFIG.focus;
       CONFIG.resumeUrl = s.resumeUrl || '';
+      CONFIG.photoData = s.photoData || '';
       CONFIG.aboutQuote = (s.about || '').slice(0, 160) || CONFIG.aboutQuote;
       CONFIG.aboutParagraph1 = s.about || CONFIG.aboutParagraph1;
       CONFIG.focusAreas = skills.slice(0, 4).length ? skills.slice(0, 4) : CONFIG.focusAreas;
@@ -141,7 +125,7 @@
       return true;
     } catch (e) {
       console.warn('Could not load builder state', e);
-      return true;
+      return isPreview;
     }
   }
 
@@ -153,14 +137,12 @@
     bar.className = 'pb-preview-banner';
     bar.setAttribute('role', 'banner');
     bar.innerHTML =
-      '<span>Previewing your portfolio — edits come from the form</span>' +
+      '<span>Previewing your portfolio</span>' +
       '<span style="display:flex;gap:8px;flex-wrap:wrap">' +
       '<a href="/portfolio-builder/editor/?template=modern-dark-3d">← Back to editor</a>' +
       '<a class="pb-preview-primary" href="/portfolio-builder/editor/?template=modern-dark-3d">Edit details</a>' +
       '</span>';
     document.body.insertBefore(bar, document.body.firstChild);
-
-    // Load banner styles without relying on builder.css if missing
     if (!document.querySelector('link[href*="builder.css"]')) {
       var link = document.createElement('link');
       link.rel = 'stylesheet';
@@ -174,6 +156,24 @@
     var el = $(id);
     if (el && v != null && String(v) !== '') el.textContent = v;
   };
+
+  function applyPhoto() {
+    var img = $('photoImg');
+    var ph = $('photoPlaceholder');
+    var frame = $('photoFrame');
+    if (!img || !ph) return;
+    if (CONFIG.photoData && String(CONFIG.photoData).indexOf('data:image') === 0) {
+      img.src = CONFIG.photoData;
+      img.hidden = false;
+      ph.hidden = true;
+      if (frame) frame.classList.add('has-photo');
+    } else {
+      img.hidden = true;
+      img.removeAttribute('src');
+      ph.hidden = false;
+      if (frame) frame.classList.remove('has-photo');
+    }
+  }
 
   function applyConfig() {
     document.title = (CONFIG.name || 'Your Name') + ' — Developer Portfolio';
@@ -194,6 +194,13 @@
     set('contactLocation', CONFIG.contactLocation || CONFIG.location);
     set('footerName', CONFIG.name);
     if ($('yearNow')) $('yearNow').textContent = String(new Date().getFullYear());
+
+    set('floatTopTitle', 'Build · Learn · Improve');
+    set('floatTopSub', CONFIG.focus || 'Your focus');
+    set('floatBottomTitle', CONFIG.role || 'Your Specialty');
+    set('floatBottomSub', (CONFIG.intro || '').slice(0, 48) || 'One-line highlight');
+
+    applyPhoto();
 
     var brandName = document.querySelector('.brand-name');
     if (brandName) {
@@ -219,6 +226,24 @@
       }
     }
 
+    function wireSoc(id, url, fallback) {
+      var el = $(id);
+      if (!el) return;
+      if (url) {
+        el.href = url;
+        el.target = '_blank';
+        el.rel = 'noopener noreferrer';
+      } else {
+        el.href = fallback || '#profiles';
+      }
+    }
+    wireSoc('socGH', CONFIG.social.github, '#profiles');
+    wireSoc('socIN', CONFIG.social.linkedin, '#profiles');
+    wireSoc('socLC', CONFIG.social.leetcode, '#profiles');
+    if ($('socMail') && CONFIG.contactEmail) {
+      $('socMail').href = 'mailto:' + CONFIG.contactEmail;
+    }
+
     var email = $('contactEmailLink');
     if (email) {
       if (CONFIG.contactEmail) {
@@ -228,11 +253,8 @@
         email.textContent = 'Add your email in the form';
       }
     }
-
     var li = $('contactLinkedIn');
-    if (li && CONFIG.social && CONFIG.social.linkedin) {
-      li.href = CONFIG.social.linkedin;
-    }
+    if (li && CONFIG.social.linkedin) li.href = CONFIG.social.linkedin;
 
     var fa = $('focusAreas');
     if (fa) {
@@ -410,6 +432,29 @@
         pl.appendChild(row);
       });
     }
+
+    var lcUrl = CONFIG.social && CONFIG.social.leetcode;
+    var lcStatus = $('lcStatus');
+    var lcHint = $('lcHint');
+    var lcOpen = $('lcOpen');
+    var lcStats = $('lcStats');
+    if (lcStats) lcStats.hidden = true;
+    if (lcUrl) {
+      if (lcStatus) lcStatus.textContent = 'Profile linked';
+      if (lcHint) {
+        lcHint.textContent =
+          'Live question counts need a server API (browser blocks LeetCode directly). Open your profile for full stats.';
+      }
+      if (lcOpen) {
+        lcOpen.href = lcUrl;
+        lcOpen.target = '_blank';
+        lcOpen.rel = 'noopener noreferrer';
+        lcOpen.style.display = 'inline-flex';
+      }
+    } else {
+      if (lcStatus) lcStatus.textContent = 'Add LeetCode URL in the form';
+      if (lcOpen) lcOpen.style.display = 'none';
+    }
   }
 
   function bindUi() {
@@ -445,10 +490,11 @@
       });
     }
 
-    var filters = document.querySelectorAll('#projectFilters button');
-    filters.forEach(function (btn) {
+    document.querySelectorAll('#projectFilters button').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        filters.forEach(function (b) { b.classList.remove('active'); });
+        document.querySelectorAll('#projectFilters button').forEach(function (b) {
+          b.classList.remove('active');
+        });
         btn.classList.add('active');
         var f = btn.getAttribute('data-filter') || 'all';
         document.querySelectorAll('#projectsGrid .project-card').forEach(function (card) {
