@@ -80,7 +80,7 @@
     const view = document.createElement('a');
     view.className = 'btn o';
     view.textContent = 'View Template';
-    view.href = '/portfolio-builder/templates/modern-dark-3d/';
+    view.href = (t.preview || ('/portfolio-builder/templates/' + t.id + '/'));
     view.target = '_blank';
     view.rel = 'noopener noreferrer';
 
