@@ -10,8 +10,6 @@
     'modern-dark-3d': { name: 'Modern Dark 3D', priceInr: 29 }
   };
 
-  window.PB_TEMPLATE_PRICES = PRICES;
-
   function el(tag, cls, text) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -64,20 +62,37 @@
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
+    var pollTimer = null;
+    var pollInFlight = false;
+    var stopped = false;
+    var unlocked = false;
+    var currentToken = '';
+    var claimSecret = '';
+    var orderId = '';
+
+    function stopPolling() {
+      stopped = true;
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    }
+
     function close() {
+      stopPolling();
       overlay.remove();
     }
+
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) close();
     });
 
-    var unlocked = false;
-
     function finishApproved(order, downloadToken) {
       if (unlocked) return;
       unlocked = true;
+      stopPolling();
       status.className = 'ap-pay-status ok';
-      status.textContent = 'Payment verified — generating your portfolio ZIP…';
+      status.textContent = 'Approved — unlocking your portfolio ZIP…';
       if (onApproved) {
         try {
           onApproved(order, downloadToken || '');
@@ -87,10 +102,79 @@
           unlocked = false;
           return;
         }
-        setTimeout(close, 800);
+        setTimeout(close, 900);
       } else if (downloadToken) {
         window.location.href = '/api/download?token=' + encodeURIComponent(downloadToken);
       }
+    }
+
+    function setStatus(kind, text) {
+      status.className = 'ap-pay-status' + (kind ? ' ' + kind : '');
+      status.textContent = text;
+    }
+
+    function handleStatus(s) {
+      if (!s || s.error) return;
+      if (s.orderToken) currentToken = s.orderToken;
+
+      var st = String(s.status || '').toUpperCase();
+      if (st === 'APPROVED') {
+        setStatus('ok', 'Approved — unlocking ZIP…');
+        finishApproved(s, s.downloadToken || '');
+        return;
+      }
+      if (st === 'REJECTED') {
+        stopPolling();
+        var reason = (s.decision && s.decision.reason) || 'Payment was not approved';
+        setStatus(
+          'err',
+          'Rejected: ' + reason + '. You can close this window and start a new order with a valid payment.'
+        );
+        return;
+      }
+      if (st === 'EXPIRED') {
+        stopPolling();
+        setStatus('err', 'This order expired. Close and start a new payment.');
+        return;
+      }
+      if (st === 'PENDING_REVIEW' || st === 'EVIDENCE_SUBMITTED') {
+        setStatus('', 'Under admin review — keep this window open. ZIP unlocks automatically when approved.');
+        return;
+      }
+      if (st === 'CREATED') {
+        setStatus('', 'Waiting for payment evidence — pay via UPI, then submit screenshot + UTR.');
+      }
+    }
+
+    function pollOnce() {
+      if (stopped || pollInFlight || unlocked || !orderId) return;
+      pollInFlight = true;
+      var url =
+        '/api/orders/status?orderId=' +
+        encodeURIComponent(orderId) +
+        '&claim=' +
+        encodeURIComponent(claimSecret || '') +
+        '&orderToken=' +
+        encodeURIComponent(currentToken || '') +
+        '&_=' +
+        Date.now();
+      fetch(url, { cache: 'no-store' })
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function (s) {
+          if (s && !s.error) handleStatus(s);
+        })
+        .catch(function () {})
+        .finally(function () {
+          pollInFlight = false;
+        });
+    }
+
+    function startPolling() {
+      if (pollTimer || stopped) return;
+      pollOnce();
+      pollTimer = setInterval(pollOnce, 2000);
     }
 
     fetch('/api/orders/create', {
@@ -105,32 +189,27 @@
         });
       })
       .then(function (order) {
-        status.textContent = '';
-        status.className = 'ap-pay-status';
-        body.hidden = false;
-
         if (Number(order.amountInr) !== meta.priceInr) {
-          status.className = 'ap-pay-status err';
-          status.textContent = 'Price mismatch — please refresh.';
-          return;
+          throw new Error('Price mismatch — refresh and try again');
         }
 
-        var currentToken = order.orderToken || '';
+        currentToken = order.orderToken || '';
+        claimSecret = order.claimSecret || '';
+        orderId = order.orderId || order.id || '';
 
-        var row = el('div', 'ap-pay-row');
-        var left = el('div');
-        var price = el('div', 'ap-pay-price', '₹' + order.amountInr);
-        price.appendChild(el('span', 'ap-pay-badge', 'INR'));
-        left.appendChild(price);
-        left.appendChild(el('p', 'sub', 'Order ' + order.orderId));
+        body.hidden = false;
+        setStatus('', 'Waiting for payment evidence.');
+
+        var left = el('div', 'ap-pay-left');
+        left.appendChild(el('div', 'ap-pay-price', '₹' + order.amountInr));
+        left.appendChild(el('p', 'sub', meta.name));
+        left.appendChild(el('p', 'sub', 'Order ref · ' + String(orderId).slice(0, 10)));
+        body.appendChild(left);
 
         var qrWrap = el('div', 'ap-pay-qr');
         renderQr(qrWrap, order.upiUri);
-        row.appendChild(left);
-        row.appendChild(qrWrap);
-        body.appendChild(row);
+        body.appendChild(qrWrap);
 
-        body.appendChild(el('p', 'sub', 'UPI ID'));
         body.appendChild(el('div', 'ap-pay-upi', order.upiId));
 
         var actions = el('div', 'ap-pay-actions');
@@ -159,9 +238,9 @@
         steps.className = 'ap-pay-steps';
         [
           'Scan the QR (or Open UPI app) and pay exactly ₹' + order.amountInr + '.',
-          'Upload payment screenshot + enter UTR, then Submit for verification.',
-          'Share your Order token with AP Creative Studio for approval.',
-          'After approval, paste the approved token below (or wait if auto-detected) to unlock ZIP.'
+          'Upload the payment screenshot and enter the UTR / UPI reference.',
+          'Submit for verification — this window updates automatically when approved.',
+          'After admin approval, your ZIP unlocks here. No codes to copy or paste.'
         ].forEach(function (t) {
           var li = document.createElement('li');
           li.textContent = t;
@@ -173,7 +252,7 @@
           el(
             'div',
             'ap-pay-warn',
-            'Never share UPI PIN / OTP. Screenshot is only for review — not automatic bank proof.'
+            'Never share UPI PIN or OTP. Screenshot review is manual — not automatic bank proof.'
           )
         );
 
@@ -203,8 +282,7 @@
           var file = fileInput.files && fileInput.files[0];
           if (!file) return;
           if (file.size > 4 * 1024 * 1024) {
-            status.className = 'ap-pay-status err';
-            status.textContent = 'Image must be under 4 MB';
+            setStatus('err', 'Image must be under 4 MB');
             fileInput.value = '';
             return;
           }
@@ -227,133 +305,19 @@
         submitRow.appendChild(cancel);
         body.appendChild(submitRow);
 
-        var tokenBox = el('div', 'ap-pay-field');
-        tokenBox.appendChild(el('label', null, 'Your order token (send this to admin)'));
-        var tokenInput = document.createElement('textarea');
-        tokenInput.rows = 3;
-        tokenInput.readOnly = true;
-        tokenInput.value = currentToken;
-        tokenInput.style.cssText =
-          'width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#9aa3bd;padding:8px;font-size:11px';
-        tokenBox.appendChild(tokenInput);
-        var copyTok = el('button', 'ap-pay-btn ghost', 'Copy order token');
-        copyTok.type = 'button';
-        copyTok.style.marginTop = '6px';
-        copyTok.addEventListener('click', function () {
-          navigator.clipboard.writeText(currentToken).then(
-            function () {
-              copyTok.textContent = 'Copied';
-              setTimeout(function () {
-                copyTok.textContent = 'Copy order token';
-              }, 1500);
-            },
-            function () {
-              prompt('Copy token', currentToken);
-            }
-          );
-        });
-        tokenBox.appendChild(copyTok);
-        body.appendChild(tokenBox);
-
-        // Unlock section (after admin approves)
-        var unlockBox = el('div', 'ap-pay-field');
-        unlockBox.appendChild(
-          el('label', null, 'After admin approves — paste APPROVED order token here')
-        );
-        var approvedInput = document.createElement('textarea');
-        approvedInput.rows = 3;
-        approvedInput.placeholder = 'Paste approved token from AP Creative Studio';
-        approvedInput.style.cssText =
-          'width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#eef1ff;padding:8px;font-size:11px';
-        unlockBox.appendChild(approvedInput);
-        var unlockBtn = el('button', 'ap-pay-btn primary', 'Verify & unlock ZIP');
-        unlockBtn.type = 'button';
-        unlockBtn.style.marginTop = '8px';
-        unlockBox.appendChild(unlockBtn);
-        body.appendChild(unlockBox);
-
-        function checkToken(token) {
-          return fetch(
-            '/api/orders/status?orderId=' +
-              encodeURIComponent(order.orderId) +
-              '&claim=' +
-              encodeURIComponent(order.claimSecret || '') +
-              '&orderToken=' +
-              encodeURIComponent(token || '')
-          ).then(function (r) {
-            return r.json();
-          });
-        }
-
-        function handleStatus(s) {
-          if (s.orderToken) {
-            currentToken = s.orderToken;
-            tokenInput.value = currentToken;
-          }
-          if (s.status === 'APPROVED') {
-            finishApproved(order, s.downloadToken || '');
-            return true;
-          }
-          if (s.status === 'REJECTED') {
-            status.className = 'ap-pay-status err';
-            status.textContent =
-              'Rejected' +
-              (s.decision && s.decision.reason ? ': ' + s.decision.reason : '');
-            return true;
-          }
-          status.textContent =
-            'Status: ' + s.status + (s.riskLevel ? ' · risk ' + s.riskLevel : '');
-          return false;
-        }
-
-        unlockBtn.addEventListener('click', function () {
-          var tok = (approvedInput.value || currentToken || '').trim();
-          if (!tok) {
-            status.className = 'ap-pay-status err';
-            status.textContent = 'Paste the approved order token first';
-            return;
-          }
-          status.textContent = 'Verifying approval…';
-          unlockBtn.disabled = true;
-          checkToken(tok)
-            .then(function (s) {
-              if (s.error) throw new Error(s.error);
-              if (s.status !== 'APPROVED') {
-                throw new Error(
-                  'Not approved yet (status: ' + (s.status || 'unknown') + '). Wait for admin or paste the approved token.'
-                );
-              }
-              currentToken = s.orderToken || tok;
-              handleStatus(s);
-            })
-            .catch(function (err) {
-              status.className = 'ap-pay-status err';
-              status.textContent = err.message || 'Verification failed';
-            })
-            .finally(function () {
-              unlockBtn.disabled = false;
-            });
-        });
-
-        var pollTimer = null;
-        function pollStatus() {
-          checkToken(currentToken)
-            .then(function (s) {
-              if (s.error) return;
-              handleStatus(s);
-            })
-            .catch(function () {});
-        }
+        var live = el('div', 'ap-pay-live');
+        live.setAttribute('aria-live', 'polite');
+        live.textContent = 'Status updates every few seconds after you submit.';
+        body.appendChild(live);
 
         submit.addEventListener('click', function () {
-          status.className = 'ap-pay-status';
-          status.textContent = 'Submitting evidence for verification…';
+          setStatus('', 'Submitting evidence…');
           submit.disabled = true;
           fetch('/api/orders/submit-evidence', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              orderId: order.orderId,
+              orderId: orderId,
               orderToken: currentToken,
               utr: utrInput.value.trim(),
               screenshotDataUrl: fileDataUrl,
@@ -367,30 +331,25 @@
               });
             })
             .then(function (j) {
-              if (j.orderToken) {
-                currentToken = j.orderToken;
-                tokenInput.value = currentToken;
-              }
-              status.className = 'ap-pay-status ok';
-              status.textContent =
-                'Verification submitted (' +
-                j.status +
-                ', risk ' +
-                j.riskLevel +
-                '). Copy order token → send to admin. After approval paste approved token and click Unlock.';
+              if (j.orderToken) currentToken = j.orderToken;
+              setStatus(
+                'ok',
+                'Evidence submitted — under admin review. Keep this window open; ZIP unlocks automatically when approved.'
+              );
+              live.textContent = 'Waiting for admin decision…';
               submit.disabled = true;
-              if (!pollTimer) pollTimer = setInterval(pollStatus, 10000);
+              utrInput.disabled = true;
+              fileInput.disabled = true;
+              startPolling();
             })
             .catch(function (err) {
-              status.className = 'ap-pay-status err';
-              status.textContent = err.message || 'Submit failed';
+              setStatus('err', err.message || 'Submit failed');
               submit.disabled = false;
             });
         });
       })
       .catch(function (err) {
-        status.className = 'ap-pay-status err';
-        status.textContent = err.message || 'Could not create order';
+        setStatus('err', err.message || 'Could not create order');
       });
   }
 
