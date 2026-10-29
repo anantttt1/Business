@@ -14,17 +14,32 @@ export default async function handler(req, res) {
   const claim = url.searchParams.get('claim') || '';
   const orderToken = url.searchParams.get('orderToken') || '';
 
-  let order = orderToken ? verifyOrderToken(orderToken) : null;
+  let fromToken = orderToken ? verifyOrderToken(orderToken) : null;
+  let order = fromToken;
   if (!order && orderId) {
     order = await getOrder(orderId);
   }
   if (!order) return json(res, 404, { error: 'Order not found' });
 
-  // Prefer fresher store copy if available
+  // Merge store copy without losing downloadToken / claimSecret from the signed token
   if (order.id) {
     try {
       const stored = await getOrder(order.id);
-      if (stored) order = stored;
+      if (stored) {
+        order = {
+          ...fromToken,
+          ...stored,
+          downloadToken: stored.downloadToken || (fromToken && fromToken.downloadToken) || order.downloadToken || null,
+          downloadExpiresAt:
+            stored.downloadExpiresAt ||
+            (fromToken && fromToken.downloadExpiresAt) ||
+            order.downloadExpiresAt ||
+            null,
+          claimSecret: stored.claimSecret || (fromToken && fromToken.claimSecret) || order.claimSecret || null,
+          decision: stored.decision || (fromToken && fromToken.decision) || order.decision || null,
+          status: stored.status || order.status
+        };
+      }
     } catch (e) {}
   }
 
@@ -43,15 +58,19 @@ export default async function handler(req, res) {
     orderToken: signOrderToken(order)
   };
 
-  if (
+  const claimOk =
     claim &&
     order.claimSecret &&
-    timingSafeEqualStr(claim, order.claimSecret) &&
-    order.status === 'APPROVED' &&
+    timingSafeEqualStr(claim, order.claimSecret);
+
+  if (
+    claimOk &&
+    (order.status === 'APPROVED' || order.status === 'PAYMENT_CONFIRMED') &&
     order.downloadToken
   ) {
     out.downloadToken = order.downloadToken;
     out.downloadExpiresAt = order.downloadExpiresAt || null;
+    out.autoUnlockReady = true;
   }
 
   return json(res, 200, out);
