@@ -27,7 +27,8 @@
     var params = new URLSearchParams(location.search);
     var isPreview = params.get('preview') === '1' || params.get('from') === 'builder';
     try {
-      var raw = localStorage.getItem('ap-pb-v1');
+      var raw = null;
+      try { if (window.__PB_EXPORT_DATA__) raw = JSON.stringify(window.__PB_EXPORT_DATA__); else raw = localStorage.getItem('ap-pb-v1'); } catch (e0) { if (window.__PB_EXPORT_DATA__) raw = JSON.stringify(window.__PB_EXPORT_DATA__); }
       if (!raw && !isPreview) return false;
       var s = raw ? JSON.parse(raw) : {};
       if (!s || typeof s !== 'object') s = {};
@@ -107,7 +108,7 @@
       $('#projectsGrid').innerHTML = CONFIG.projects.map(function (p, i) {
         var media = p.image
           ? '<img src="' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy">'
-          : '<div style="aspect-ratio:1.9;display:grid;place-items:center;color:#a8a0a5;font-size:12px">' + esc(p.title) + '</div>';
+          : '<div style="aspect-ratio:1.9;display:grid;place-items:center;color:#a8a0a5;font-size:13px">' + esc(p.title) + '</div>';
         return '<article class="project-card"><a class="project-image" href="' + esc(p.url || '#') +
           '" target="_blank" rel="noreferrer">' + media + '</a><div class="project-meta"><span>' +
           String(i + 1).padStart(2, '0') + ' / ' + esc(p.type || 'PROJECT') + '</span><a href="' + esc(p.url || '#') +
@@ -162,13 +163,23 @@
   function parseCalendar(data) {
     var activity = [];
     if (!data) return activity;
-    if (Array.isArray(data)) {
-      data.forEach(function (row) {
-        if (row.date) activity.push({ date: row.date, count: row.count || row.submissionCount || 0 });
+    if (data.data && typeof data.data === 'object') data = data.data;
+    var rows = data.dailyContributions || data.contributions;
+    if (Array.isArray(rows)) {
+      rows.forEach(function (row) {
+        if (!row) return;
+        var date = row.date || row.day;
+        if (date) activity.push({ date: String(date).slice(0, 10), count: Number(row.count || row.submissionCount || 0) });
       });
       return activity;
     }
-    var cal = data.submissionCalendar || data.calendar || data.data || data;
+    if (Array.isArray(data)) {
+      data.forEach(function (row) {
+        if (row && row.date) activity.push({ date: String(row.date).slice(0, 10), count: row.count || row.submissionCount || 0 });
+      });
+      return activity;
+    }
+    var cal = data.submissionCalendar || data.calendar || data;
     if (typeof cal === 'string') { try { cal = JSON.parse(cal); } catch (e) { cal = {}; } }
     if (cal && typeof cal === 'object' && !Array.isArray(cal)) {
       Object.keys(cal).forEach(function (ts) {
@@ -190,14 +201,19 @@
     }
     $('#lcStats').innerHTML = '<div class="lc-loading">Fetching stats…</div>';
     try {
-      var response = await fetch('https://leetcode-stats-api.herokuapp.com/' + encodeURIComponent(username));
-      var data = await response.json();
-      if (!response.ok || data.status === 'error' || data.error) throw new Error('fail');
+      var response = await fetch('https://leetcode-stats.tashif.codes/' + encodeURIComponent(username) + '/stats', { cache: 'no-store' });
+      var raw = await response.json();
+      if (!response.ok || raw.status === 'error' || raw.error) throw new Error('fail');
+      var data = (raw && raw.data && typeof raw.data === 'object') ? raw.data : raw;
+      var easy = data.easySolved != null ? data.easySolved : (data.easy || 0);
+      var medium = data.mediumSolved != null ? data.mediumSolved : (data.medium || 0);
+      var hard = data.hardSolved != null ? data.hardSolved : (data.hard || 0);
+      var total = data.totalSolved != null ? data.totalSolved : (easy + medium + hard);
       $('#lcStats').innerHTML = [
-        stat('TOTAL SOLVED', data.totalSolved, 'problems'),
-        stat('EASY', data.easySolved),
-        stat('MEDIUM', data.mediumSolved),
-        stat('HARD', data.hardSolved),
+        stat('TOTAL SOLVED', total, 'problems'),
+        stat('EASY', easy),
+        stat('MEDIUM', medium),
+        stat('HARD', hard),
         stat('ACCEPTANCE', data.acceptanceRate != null ? data.acceptanceRate + '%' : '—'),
         stat('RANK', data.ranking != null ? Number(data.ranking).toLocaleString() : '—')
       ].join('');
@@ -207,7 +223,7 @@
       $('#lcUpdated').textContent = 'Could not refresh stats.';
     }
     var heatUrls = [
-      'https://alfa-leetcode-api.onrender.com/' + encodeURIComponent(username) + '/calendar',
+      'https://leetcode-stats.tashif.codes/' + encodeURIComponent(username) + '/heatmap?view=last_365',
       'https://leetcode-api-faisalshohag.vercel.app/' + encodeURIComponent(username)
     ];
     function tryHeat(i) {
