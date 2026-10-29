@@ -76,3 +76,45 @@ html:not(.js) .splash{display:none}
 @media(min-width:621px) and (max-width:1100px){
   .sg .card:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc((100% - var(--sg))/2)}
 }
+
+/* ===== Touch devices (phones, tablets, small windows): every link/button gets a 44px hit area; desktop with a mouse is unchanged ===== */
+@media(max-width:1100px),(pointer:coarse){
+  .logo{display:inline-block;padding:12px 0}
+  header .btn{min-height:44px}
+  .lp-header .nav-links a,.pp-header .nav-links a,.pb-nav a{display:inline-flex;align-items:center;min-height:44px;padding-inline:4px}
+  footer li{margin-bottom:0}
+  footer li a{display:inline-flex;align-items:center;min-height:44px;overflow-wrap:anywhere}
+  .lk a,.tm .lk a{min-height:44px}
+  .vm{min-height:44px;padding:0 6px;margin-top:0}
+  ul.pp-toc a,.lp-related.lp-related a{min-height:44px}
+  .pb-filter.pb-filter{min-height:44px;min-width:44px}
+  .pb-seg.pb-seg button{min-height:44px;min-width:44px}
+  .lp-faq summary{display:flex;align-items:center;min-height:44px}
+  .pp-sec#contact li a{display:inline-flex;align-items:center;min-height:44px}
+  .pb-chip{padding-block:0;min-height:44px}
+  .pb-chip button{min-width:44px;min-height:44px;margin-right:-10px}
+  .entry-head .btn{min-height:44px!important} /* editor.js sets min-height:32px on the element itself */
+}
+/* Header menu links on tablets / small laptops (881-1100px): the menu is inline there, so give the links a taller hit area */
+@media(min-width:881px) and (max-width:1100px),(min-width:881px) and (pointer:coarse){
+  header nav li a:not(.btn){display:inline-flex;align-items:center;min-height:44px;padding-inline:4px}
+}
+/* Phones held sideways: shrink the floating buttons to icons so they do not cover a third of the screen */
+@media(max-height:500px){
+  .fw-stack{gap:8px}
+  .fw-stack .fw,.fw-stack .fw-wa{width:44px;height:44px;padding:0;justify-content:center}
+  .fw-stack .fw span{display:none!important}
+}
+
+/* Page-title <header> blocks inside <main> (Privacy Policy, SEO pages, Portfolio Builder) must scroll with the page; only the site header at the top is fixed */
+header.pp-hero,header.lp-hero,header.pb-hero{position:static;inset:auto;z-index:auto;border-bottom:0}
+
+/* Footer "Links" is a <nav> too: the mobile dropdown rules (hidden menu) must not hide it on phones and tablets. Two columns of links on small screens; one footer column on phones. */
+@media(max-width:880px){
+  footer nav{position:static;display:block;padding:0;background:none;border:0}
+  footer nav ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:0}
+  footer nav li a:not(.btn){display:inline-flex;align-items:center;min-height:44px;padding:0}
+}
+@media(max-width:620px){
+  .fg{grid-template-columns:1fr}
+}
