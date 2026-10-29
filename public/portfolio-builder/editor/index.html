@@ -104,19 +104,25 @@
           </div>
         </div>
 
-        <div class="pb-actions-bar">
-          <button type="button" class="btn p" id="btn-preview">Preview portfolio</button>
-          <button type="button" class="btn p" id="btn-download">Download Portfolio as ZIP</button>
-          <a class="btn p pb-deploy-btn" id="btn-deploy" href="https://forms.gle/AuRc2tH41tPfCNiV9" target="_blank" rel="noopener noreferrer">Upload Your Downloaded ZIP File For Deploy (Compulsory)</a>
-          <button type="button" class="btn o" id="btn-reset">Reset to demo</button>
-          <p class="pb-status" id="pb-status" role="status" aria-live="polite"></p>
-        </div>
+        <!-- spacer so sticky bar doesn't cover last fields -->
+        <div class="pb-actions-spacer" aria-hidden="true"></div>
       </div>
     </div>
   </div>
 </main>
 
-<footer>
+<!-- Fixed bottom action bar — always one compact row -->
+<div class="pb-actions-bar" role="toolbar" aria-label="Portfolio actions">
+  <div class="wrap pb-actions-inner">
+    <button type="button" class="btn p pb-act" id="btn-preview">Preview</button>
+    <button type="button" class="btn p pb-act" id="btn-download">Download ZIP</button>
+    <a class="btn p pb-act pb-deploy-btn" id="btn-deploy" href="https://forms.gle/AuRc2tH41tPfCNiV9" target="_blank" rel="noopener noreferrer" title="Upload Your Downloaded ZIP File For Deploy (Compulsory)">Upload ZIP for Deploy</a>
+    <button type="button" class="btn o pb-act" id="btn-reset">Reset</button>
+    <p class="pb-status" id="pb-status" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<footer class="pb-footer-slim">
   <div class="wrap">
     <p class="cp">© <span id="yr">2026</span> AP Creative Studio · Data stays in your browser only.</p>
   </div>
