@@ -18,7 +18,13 @@
       projects: [], certificates: []
     };
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      let raw = null;
+      try {
+        if (window.__PB_EXPORT_DATA__) raw = JSON.stringify(window.__PB_EXPORT_DATA__);
+        else raw = localStorage.getItem(STORAGE_KEY);
+      } catch (eLS) {
+        if (window.__PB_EXPORT_DATA__) raw = JSON.stringify(window.__PB_EXPORT_DATA__);
+      }
       if (raw) {
         const s = JSON.parse(raw);
         if (s && typeof s === 'object') {
@@ -58,7 +64,7 @@
         }
       }
     } catch (_) {}
-    try { if (!cfg.profileImage) cfg.profileImage = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || ''; } catch (_) {}
+    try { if (!cfg.profileImage) cfg.profileImage = (window.__PB_EXPORT_DATA__ && window.__PB_EXPORT_DATA__.photoData) || localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || ''; } catch (_) {}
     return cfg;
   }
   window.PORTFOLIO_CONFIG = loadBuilderConfig();
