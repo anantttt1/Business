@@ -14,6 +14,7 @@
 <link rel="preload" href="/fonts/space-grotesk-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="/ap-styles.css">
 <link rel="stylesheet" href="/portfolio-builder/builder.css">
+<link rel="stylesheet" href="/portfolio-builder/payment.css">
 </head>
 <body class="pb-body">
 <header class="pb-header">
@@ -33,7 +34,7 @@
     <header class="pb-hero">
       <span class="ey">Portfolio Builder</span>
       <h1 id="pb-editor-title">Customize · Modern Dark 3D</h1>
-      <p class="lead" id="pb-editor-sub">Fill your details, then use Preview or Download ZIP.</p>
+      <p class="lead" id="pb-editor-sub">Fill your details, then Preview. Download ZIP opens UPI payment first.</p>
     </header>
 
     <div class="pb-editor-shell pb-form-only">
@@ -93,14 +94,12 @@
           <button type="button" class="btn o" id="btn-add-cert">+ Add certification</button>
         </div>
 
-        <!-- spacer so sticky bar doesn't cover last fields -->
         <div class="pb-actions-spacer" aria-hidden="true"></div>
       </div>
     </div>
   </div>
 </main>
 
-<!-- Fixed bottom action bar — always one compact row -->
 <div class="pb-actions-bar" role="toolbar" aria-label="Portfolio actions">
   <div class="wrap pb-actions-inner">
     <button type="button" class="btn p pb-act" id="btn-preview">Preview</button>
@@ -121,6 +120,7 @@
 <script src="/portfolio-builder/simple-zip.js"></script>
 <script src="/portfolio-builder/templates-data.js"></script>
 <script src="/portfolio-builder/export-modern-dark.js"></script>
+<script src="/portfolio-builder/payment.js"></script>
 <script src="/portfolio-builder/editor.js"></script>
 </body>
 </html>
