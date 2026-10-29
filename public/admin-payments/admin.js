@@ -4,6 +4,7 @@
   var rows = document.getElementById('rows');
   var panel = document.getElementById('panel');
   var loginStatus = document.getElementById('login-status');
+  var tokenStatus = document.getElementById('token-status');
 
   function secret() {
     return (secretInput && secretInput.value) || sessionStorage.getItem('ap_admin_secret') || '';
@@ -12,7 +13,7 @@
   function load() {
     var s = secret();
     if (!s) {
-      loginStatus.textContent = 'Enter ADMIN_SECRET';
+      loginStatus.textContent = 'Enter ADMIN_SECRET (set in Vercel env, min 12 chars)';
       loginStatus.className = 'ap-pay-status err';
       return;
     }
@@ -26,7 +27,10 @@
         });
       })
       .then(function (data) {
-        loginStatus.textContent = '';
+        loginStatus.textContent =
+          (data.orders || []).length === 0
+            ? 'No stored orders (normal without Upstash). Use token paste below.'
+            : '';
         panel.hidden = false;
         rows.textContent = '';
         (data.orders || []).forEach(function (o) {
@@ -64,7 +68,7 @@
             ap.textContent = 'Approve';
             ap.style.marginRight = '6px';
             ap.addEventListener('click', function () {
-              decide(o.id, 'approve');
+              decide({ orderId: o.id }, 'approve');
             });
             var rj = document.createElement('button');
             rj.className = 'ap-pay-btn ghost';
@@ -72,7 +76,7 @@
             rj.textContent = 'Reject';
             rj.addEventListener('click', function () {
               var reason = prompt('Rejection reason') || 'Rejected';
-              decide(o.id, 'reject', reason);
+              decide({ orderId: o.id }, 'reject', reason);
             });
             actions.appendChild(ap);
             actions.appendChild(rj);
@@ -88,29 +92,62 @@
       });
   }
 
-  function decide(orderId, action, reason) {
-    fetch('/api/admin/decide', {
+  function decide(payload, action, reason) {
+    var body = {
+      orderId: payload.orderId || '',
+      orderToken: payload.orderToken || '',
+      action: action,
+      reason: reason || ''
+    };
+    return fetch('/api/admin/decide', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-admin-secret': secret()
       },
-      body: JSON.stringify({ orderId: orderId, action: action, reason: reason || '' })
+      body: JSON.stringify(body)
     })
       .then(function (r) {
         return r.json().then(function (j) {
           if (!r.ok) throw new Error(j.error || 'Failed');
           return j;
         });
-      })
-      .then(function () {
+      });
+  }
+
+  function decideToken(action) {
+    var token = (document.getElementById('token-paste').value || '').trim();
+    if (!token) {
+      tokenStatus.className = 'ap-pay-status err';
+      tokenStatus.textContent = 'Paste orderToken first';
+      return;
+    }
+    tokenStatus.textContent = 'Working…';
+    var reason = action === 'reject' ? prompt('Rejection reason') || 'Rejected' : '';
+    decide({ orderToken: token }, action, reason)
+      .then(function (j) {
+        tokenStatus.className = 'ap-pay-status ok';
+        tokenStatus.textContent =
+          j.status +
+          (j.downloadToken ? ' · download token issued' : '') +
+          (j.orderToken ? ' · give buyer updated token if needed' : '');
+        if (j.orderToken) {
+          document.getElementById('token-paste').value = j.orderToken;
+        }
         load();
       })
       .catch(function (e) {
-        alert(e.message || 'Failed');
+        tokenStatus.className = 'ap-pay-status err';
+        tokenStatus.textContent = e.message || 'Failed';
       });
   }
 
   document.getElementById('btn-load').addEventListener('click', load);
   document.getElementById('btn-refresh').addEventListener('click', load);
+  document.getElementById('btn-approve-token').addEventListener('click', function () {
+    decideToken('approve');
+  });
+  document.getElementById('btn-reject-token').addEventListener('click', function () {
+    decideToken('reject');
+  });
 })();

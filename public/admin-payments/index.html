@@ -13,13 +13,14 @@ table{width:100%;border-collapse:collapse;font-size:.86rem}
 th,td{border-bottom:1px solid #2a3550;padding:8px 6px;text-align:left;vertical-align:top}
 th{color:#9aa3bd;font-weight:600}
 .risk-HIGH{color:#ff8f8f}.risk-MEDIUM{color:#f0c9a0}.risk-LOW{color:#7dffb3}
-input[type=password]{width:min(320px,100%);padding:10px;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#eef1ff}
+input[type=password],textarea{width:min(100%,100%);padding:10px;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#eef1ff;box-sizing:border-box}
+textarea{min-height:90px;font-size:11px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Payment review</h1>
-  <p style="color:#9aa3bd">Manual approval only. Risk scores are advisory — not bank proof.</p>
+  <p style="color:#9aa3bd">Manual approval only. Risk scores are advisory — not bank proof. Without Upstash Redis, paste the buyer <b>order token</b> from their payment modal.</p>
   <div id="login">
     <label for="secret">Admin secret</label><br/>
     <input id="secret" type="password" autocomplete="current-password"/>
@@ -27,7 +28,16 @@ input[type=password]{width:min(320px,100%);padding:10px;border-radius:10px;borde
     <p id="login-status" class="ap-pay-status"></p>
   </div>
   <div id="panel" hidden>
-    <button type="button" class="ap-pay-btn ghost" id="btn-refresh">Refresh</button>
+    <button type="button" class="ap-pay-btn ghost" id="btn-refresh">Refresh list</button>
+    <div style="margin:16px 0;padding:12px;border:1px solid #2a3550;border-radius:12px">
+      <label for="token-paste">Paste buyer order token</label>
+      <textarea id="token-paste" placeholder="Paste orderToken from buyer payment modal"></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="ap-pay-btn primary" id="btn-approve-token">Approve token</button>
+        <button type="button" class="ap-pay-btn ghost" id="btn-reject-token">Reject token</button>
+      </div>
+      <p id="token-status" class="ap-pay-status"></p>
+    </div>
     <div style="overflow:auto;margin-top:12px">
       <table>
         <thead>
