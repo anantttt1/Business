@@ -1,0 +1,28 @@
+/* UPI payment modal — AP Creative Studio */
+.ap-pay-overlay{position:fixed;inset:0;z-index:10000;background:rgba(6,8,14,.72);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;padding:12px;overflow:auto}
+@media(min-width:720px){.ap-pay-overlay{align-items:center}}
+.ap-pay-modal{width:min(520px,100%);background:#0f1420;color:#eef1ff;border:1px solid #2a3550;border-radius:18px;padding:18px 18px 14px;box-shadow:0 24px 80px rgba(0,0,0,.45);max-height:min(92vh,900px);overflow:auto}
+.ap-pay-modal h2{margin:0 0 4px;font-size:1.2rem}
+.ap-pay-modal .sub{color:#9aa3bd;font-size:.88rem;margin:0 0 14px}
+.ap-pay-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.ap-pay-price{font-size:1.6rem;font-weight:700;letter-spacing:-.03em}
+.ap-pay-price span{font-size:.85rem;color:#9aa3bd;font-weight:500;margin-left:6px}
+.ap-pay-qr{background:#fff;border-radius:12px;padding:10px;display:inline-block}
+.ap-pay-qr img,.ap-pay-qr table{display:block}
+.ap-pay-upi{font-family:ui-monospace,monospace;font-size:.92rem;word-break:break-all;background:#161c2c;border:1px solid #2a3550;border-radius:10px;padding:10px 12px}
+.ap-pay-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ap-pay-btn{appearance:none;border:0;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer;font-size:.9rem}
+.ap-pay-btn.primary{background:linear-gradient(135deg,#7190ff,#a66cff);color:#0b0f1a}
+.ap-pay-btn.ghost{background:transparent;color:#eef1ff;border:1px solid #2a3550}
+.ap-pay-btn:disabled{opacity:.5;cursor:not-allowed}
+.ap-pay-steps{margin:12px 0;padding:0 0 0 18px;color:#b7bfd6;font-size:.86rem}
+.ap-pay-steps li{margin:4px 0}
+.ap-pay-warn{background:#2a1a12;border:1px solid #5a3a22;color:#f0c9a0;border-radius:10px;padding:10px 12px;font-size:.82rem;margin:10px 0}
+.ap-pay-field{margin:10px 0}
+.ap-pay-field label{display:block;font-size:.78rem;color:#9aa3bd;margin-bottom:4px}
+.ap-pay-field input[type=text],.ap-pay-field input[type=file]{width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#eef1ff;padding:10px}
+.ap-pay-status{margin-top:10px;font-size:.88rem;min-height:1.2em}
+.ap-pay-status.err{color:#ff8f8f}
+.ap-pay-status.ok{color:#7dffb3}
+.ap-pay-preview{max-width:160px;max-height:120px;border-radius:8px;margin-top:8px;border:1px solid #2a3550}
+.ap-pay-badge{display:inline-block;font-size:.72rem;padding:3px 8px;border-radius:999px;border:1px solid #2a3550;color:#9aa3bd;margin-left:6px}

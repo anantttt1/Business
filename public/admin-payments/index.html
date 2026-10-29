@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Payment review · AP Creative Studio</title>
+<link rel="stylesheet" href="/portfolio-builder/payment.css"/>
+<style>
+body{margin:0;background:#0a0d14;color:#eef1ff;font:15px/1.45 system-ui,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th,td{border-bottom:1px solid #2a3550;padding:8px 6px;text-align:left;vertical-align:top}
+th{color:#9aa3bd;font-weight:600}
+.risk-HIGH{color:#ff8f8f}.risk-MEDIUM{color:#f0c9a0}.risk-LOW{color:#7dffb3}
+input[type=password]{width:min(320px,100%);padding:10px;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#eef1ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Payment review</h1>
+  <p style="color:#9aa3bd">Manual approval only. Risk scores are advisory — not bank proof.</p>
+  <div id="login">
+    <label for="secret">Admin secret</label><br/>
+    <input id="secret" type="password" autocomplete="current-password"/>
+    <button type="button" class="ap-pay-btn primary" id="btn-load" style="margin-top:10px">Load orders</button>
+    <p id="login-status" class="ap-pay-status"></p>
+  </div>
+  <div id="panel" hidden>
+    <button type="button" class="ap-pay-btn ghost" id="btn-refresh">Refresh</button>
+    <div style="overflow:auto;margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>Order</th><th>Template</th><th>₹</th><th>Status</th><th>UTR</th><th>Risk</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="/admin-payments/admin.js"></script>
+</body>
+</html>
