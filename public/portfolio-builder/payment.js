@@ -92,13 +92,13 @@
       unlocked = true;
       stopPolling();
       status.className = 'ap-pay-status ok';
-      status.textContent = 'Approved — unlocking your portfolio ZIP…';
+      status.textContent = 'Payment confirmed — unlocking your portfolio ZIP…';
       if (onApproved) {
         try {
           onApproved(order, downloadToken || '');
         } catch (e) {
           status.className = 'ap-pay-status err';
-          status.textContent = e.message || 'ZIP export failed after approval';
+          status.textContent = e.message || 'ZIP export failed after confirmation';
           unlocked = false;
           return;
         }
@@ -118,18 +118,15 @@
       if (s.orderToken) currentToken = s.orderToken;
 
       var st = String(s.status || '').toUpperCase();
-      if (st === 'APPROVED') {
-        setStatus('ok', 'Approved — unlocking ZIP…');
+      if (st === 'APPROVED' || st === 'PAYMENT_CONFIRMED') {
+        setStatus('ok', 'Payment confirmed — unlocking ZIP…');
         finishApproved(s, s.downloadToken || '');
         return;
       }
       if (st === 'REJECTED') {
         stopPolling();
-        var reason = (s.decision && s.decision.reason) || 'Payment was not approved';
-        setStatus(
-          'err',
-          'Rejected: ' + reason + '. You can close this window and start a new order with a valid payment.'
-        );
+        var reason = (s.decision && s.decision.reason) || 'Payment was not confirmed';
+        setStatus('err', 'Rejected: ' + reason + '. Close and start a new order if needed.');
         return;
       }
       if (st === 'EXPIRED') {
@@ -137,8 +134,16 @@
         setStatus('err', 'This order expired. Close and start a new payment.');
         return;
       }
-      if (st === 'PENDING_REVIEW' || st === 'EVIDENCE_SUBMITTED') {
-        setStatus('', 'Under admin review — keep this window open. ZIP unlocks automatically when approved.');
+      if (
+        st === 'PENDING_REVIEW' ||
+        st === 'EVIDENCE_SUBMITTED' ||
+        st === 'VERIFYING' ||
+        st === 'AWAITING_PAYMENT'
+      ) {
+        setStatus(
+          '',
+          'Verifying payment… Keep this window open. ZIP unlocks only after the transaction is confirmed.'
+        );
         return;
       }
       if (st === 'CREATED') {
@@ -239,8 +244,8 @@
         [
           'Scan the QR (or Open UPI app) and pay exactly ₹' + order.amountInr + '.',
           'Upload the payment screenshot and enter the UTR / UPI reference.',
-          'Submit for verification — this window updates automatically when approved.',
-          'After admin approval, your ZIP unlocks here. No codes to copy or paste.'
+          'Submit UTR + screenshot. Unlock happens only after the payment is confirmed.',
+          'No codes to copy or paste. Screenshot alone is not bank proof.'
         ].forEach(function (t) {
           var li = document.createElement('li');
           li.textContent = t;
@@ -252,7 +257,7 @@
           el(
             'div',
             'ap-pay-warn',
-            'Never share UPI PIN or OTP. Screenshot review is manual — not automatic bank proof.'
+            'Never share UPI PIN or OTP. Screenshot is supporting evidence only — not automatic bank proof.'
           )
         );
 
@@ -334,9 +339,10 @@
               if (j.orderToken) currentToken = j.orderToken;
               setStatus(
                 'ok',
-                'Evidence submitted — under admin review. Keep this window open; ZIP unlocks automatically when approved.'
+                j.message ||
+                  'Evidence received. Confirming payment against trusted records… Keep this window open.'
               );
-              live.textContent = 'Waiting for admin decision…';
+              live.textContent = 'Waiting for trusted payment confirmation…';
               submit.disabled = true;
               utrInput.disabled = true;
               fileInput.disabled = true;
