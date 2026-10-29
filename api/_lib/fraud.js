@@ -1,26 +1,19 @@
 /**
  * Heuristic + structured screening of payment evidence.
  * This is NOT bank confirmation and does not prove funds were received.
- * OCR is not available in the current serverless footprint (no local Tesseract /
- * heavy models). Amount / recipient / status in the image are therefore unknown.
- * Auto-approval, when enabled, is screening-only and must be labelled as such.
+ * OCR is not available in the current serverless footprint.
+ * Auto-approval is screening-only and must be labelled as such.
  */
 
 const UTR_RE = /^[A-Z0-9]{8,22}$/;
 
-/** Common UPI / RRN style patterns (informational only). */
 function utrLooksPlausible(utr) {
   if (!UTR_RE.test(utr)) return false;
-  // 12-digit RRN is common; also allow longer alphanumeric UPI refs
   if (/^\d{12}$/.test(utr)) return true;
   if (/^[A-Z0-9]{10,22}$/.test(utr)) return true;
   return false;
 }
 
-/**
- * Minimal image forensics without external models.
- * Missing EXIF is normal for screenshots — never treat as fraud by itself.
- */
 function inspectImageBytes(bytes, mime) {
   const findings = [];
   let score = 0;
@@ -70,7 +63,6 @@ function inspectImageBytes(bytes, mime) {
     score += 30;
   }
 
-  // Very crude recompression / uniformity heuristic (not proof of AI)
   if (isJpeg && bytes.length > 2000) {
     let zeroRuns = 0;
     for (let i = 2; i < Math.min(bytes.length, 4000); i++) {
@@ -86,9 +78,12 @@ function inspectImageBytes(bytes, mime) {
   return { findings, score, signals };
 }
 
-/**
- * Structured analysis result. OCR fields stay empty until a local engine is added.
- */
+function isHardFailFinding(f) {
+  return /UTR already associated|screenshot hash matches|Order has expired|UTR format invalid|UTR\/transaction reference missing|No screenshot provided|Screenshot exceeds 4 MB|MIME not in allowed|File signature does not match/i.test(
+    String(f || '')
+  );
+}
+
 export function analyzeEvidence({
   expectedAmountInr,
   expectedUpiId,
@@ -110,7 +105,6 @@ export function analyzeEvidence({
     .toUpperCase()
     .replace(/\s+/g, '');
 
-  // --- UTR checks ---
   if (!utrClean) {
     findings.push('UTR/transaction reference missing');
     score += 45;
@@ -131,12 +125,10 @@ export function analyzeEvidence({
     score += 50;
   }
 
-  // --- Image checks ---
   const img = inspectImageBytes(screenshotBytes, screenshotMime);
   findings.push(...img.findings);
   score += img.score;
 
-  // --- Order window ---
   if (orderExpiresAt && now > orderExpiresAt) {
     findings.push('Order has expired');
     score += 40;
@@ -146,7 +138,6 @@ export function analyzeEvidence({
     score += 15;
   }
 
-  // --- OCR stub (explicit) ---
   const ocr = {
     available: false,
     engine: null,
@@ -163,36 +154,24 @@ export function analyzeEvidence({
       confirmationText: null
     },
     found: [],
-    missing: [
-      'amount',
-      'recipient',
-      'status',
-      'transactionId',
-      'date',
-      'time'
-    ],
+    missing: ['amount', 'recipient', 'status', 'transactionId', 'date', 'time'],
     conflicts: []
   };
   findings.push(
-    'OCR not configured in this deployment — amount, recipient, status and timestamp inside the image were not machine-read'
+    'OCR not configured — image text (amount/recipient/status) was not machine-read (soft signal only)'
   );
-  score += 8;
+  score += 5;
 
   findings.push(
     'Expected amount ₹' + expectedAmountInr + ' to ' + (expectedUpiId || 'merchant UPI')
   );
 
-  // --- Level ---
   let level = 'LOW';
   if (score >= 70) level = 'HIGH';
-  else if (score >= 35) level = 'MEDIUM';
+  else if (score >= 40) level = 'MEDIUM';
   else if (!screenshotBytes || !utrClean) level = 'INSUFFICIENT';
 
-  // Critical flags that must never auto-approve
-  const critical =
-    findings.some((f) =>
-      /missing|invalid|already|expired|does not match|exceeds/i.test(f)
-    ) || level === 'HIGH' || level === 'INSUFFICIENT';
+  const critical = findings.some(isHardFailFinding) || level === 'HIGH' || level === 'INSUFFICIENT';
 
   return {
     riskLevel: level,
@@ -206,20 +185,18 @@ export function analyzeEvidence({
   };
 }
 
-/** Map risk + rules to a decision code for the engine. */
 export function screeningDecisionCode(risk) {
   if (!risk) return 'VERIFICATION_UNAVAILABLE';
   if (risk.riskLevel === 'INSUFFICIENT') return 'INSUFFICIENT_EVIDENCE';
-  if (risk.findings.some((f) => /UTR already/i.test(f))) return 'REJECTED_DUPLICATE_REFERENCE';
+  if (risk.findings.some((f) => /UTR already associated/i.test(f))) return 'REJECTED_DUPLICATE_REFERENCE';
   if (risk.findings.some((f) => /screenshot hash matches/i.test(f)))
     return 'REJECTED_DUPLICATE_REFERENCE';
-  if (risk.findings.some((f) => /expired/i.test(f))) return 'REJECTED_EXPIRED_ORDER';
+  if (risk.findings.some((f) => /Order has expired/i.test(f))) return 'REJECTED_EXPIRED_ORDER';
   if (risk.findings.some((f) => /UTR format invalid|UTR\/transaction reference missing/i.test(f)))
     return 'REJECTED_INVALID_EVIDENCE';
-  if (risk.findings.some((f) => /File signature|MIME not in allowed/i.test(f)))
+  if (risk.findings.some((f) => /File signature does not match|MIME not in allowed|No screenshot provided/i.test(f)))
     return 'REJECTED_INVALID_EVIDENCE';
   if (risk.critical || risk.riskLevel === 'HIGH') return 'REJECTED_INCONSISTENT_DETAILS';
-  if (risk.riskLevel === 'MEDIUM') return 'INSUFFICIENT_EVIDENCE';
-  // LOW and no critical → candidate for screening approval
+  // LOW or MEDIUM without hard fails → auto-approve candidate
   return 'AUTO_APPROVED_SCREENING_PASSED';
 }
