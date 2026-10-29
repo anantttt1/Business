@@ -73,6 +73,6 @@ export default async function handler(req, res) {
     expiresAt: order.expiresAt,
     storeMode: storeMode(),
     notice:
-      'Pay the exact amount to the UPI ID shown. Then upload a genuine payment screenshot and UTR. Approval is manual; screenshots are not bank verification.'
+      'Pay the exact amount shown. Upload a genuine payment screenshot and enter the UTR. Unlock happens automatically after screening passes or trusted confirmation arrives. Screenshots alone are not bank proof.'
   });
 }

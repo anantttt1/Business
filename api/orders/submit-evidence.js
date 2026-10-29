@@ -2,7 +2,7 @@ import { getOrder, saveOrder, findByUtr, findByHash } from '../_lib/store.js';
 import { UPI_ID } from '../_lib/pricing.js';
 import { sha256Hex, signOrderToken, verifyOrderToken } from '../_lib/crypto.js';
 import { analyzeEvidence } from '../_lib/fraud.js';
-import { evidenceOnlyOutcome, hasWebhookSecret } from '../_lib/verify.js';
+import { decideFromScreening, hasWebhookSecret } from '../_lib/verify.js';
 import { json, readBody, cors, clientIp, rateLimit } from '../_lib/http.js';
 
 const MAX_BYTES = 4 * 1024 * 1024;
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
   const orderId = String(body.orderId || '').trim();
   const orderToken = String(body.orderToken || '').trim();
-  const utr = String(body.utr || '').trim().toUpperCase();
+  const utr = String(body.utr || '').trim().toUpperCase().replace(/\s+/g, '');
   const dataUrl = String(body.screenshotDataUrl || '');
 
   let order = orderToken ? verifyOrderToken(orderToken) : null;
@@ -53,7 +53,9 @@ export default async function handler(req, res) {
       orderId: order.id,
       orderToken: signOrderToken(order),
       status: order.status,
-      message: 'Payment already confirmed'
+      downloadToken: order.downloadToken || null,
+      message: 'Payment already confirmed',
+      autoUnlockReady: Boolean(order.downloadToken)
     });
   }
   if (order.status === 'REJECTED') return json(res, 400, { error: 'Order was rejected' });
@@ -68,10 +70,14 @@ export default async function handler(req, res) {
 
   if (!utr) return json(res, 400, { error: 'UTR / transaction reference is required' });
   if (!/^[A-Z0-9]{8,22}$/.test(utr)) {
-    return json(res, 400, { error: 'UTR format looks invalid (use 8–22 letters/digits)' });
+    return json(res, 400, {
+      error: 'UTR format looks invalid (use 8–22 letters/digits, no spaces)'
+    });
   }
 
-  const m = dataUrl.match(/^data:(image\/(?:jpeg|jpg|png|webp));base64,([A-Za-z0-9+/=\s]+)$/i);
+  const m = dataUrl.match(
+    /^data:(image\/(?:jpeg|jpg|png|webp));base64,([A-Za-z0-9+/=\s]+)$/i
+  );
   if (!m) return json(res, 400, { error: 'Screenshot must be a JPEG, PNG, or WebP data URL' });
   const mime = m[1].toLowerCase().replace('image/jpg', 'image/jpeg');
   let bytes;
@@ -108,7 +114,9 @@ export default async function handler(req, res) {
     screenshotMime: mime,
     existingByUtr: byUtr,
     existingByHash: byHash,
-    currentOrderId: order.id
+    currentOrderId: order.id,
+    orderCreatedAt: order.createdAt,
+    orderExpiresAt: order.expiresAt
   });
 
   order.utr = utr;
@@ -119,8 +127,7 @@ export default async function handler(req, res) {
   order.evidenceSubmittedAt = Date.now();
   order.risk = risk;
 
-  const outcome = evidenceOnlyOutcome(risk);
-  order.status = outcome.status;
+  const outcome = decideFromScreening(order, risk);
 
   try {
     await saveOrder(order);
@@ -135,10 +142,12 @@ export default async function handler(req, res) {
     orderId: order.id,
     orderToken: signOrderToken(order),
     status: order.status,
+    decisionCode: outcome.code,
     riskLevel: risk.riskLevel,
     findings: risk.findings,
     disclaimer: risk.disclaimer,
-    autoUnlockReady: false,
+    autoUnlockReady: Boolean(outcome.autoUnlockReady && order.downloadToken),
+    downloadToken: outcome.autoUnlockReady ? order.downloadToken || null : null,
     webhookConfigured: hasWebhookSecret(),
     message: outcome.message
   });
