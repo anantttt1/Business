@@ -310,31 +310,43 @@
     window.open(url, '_blank');
   }
 
-  async function downloadZip() {
-    if (!validate()) return;
-    const btn = $('#btn-download');
-    if (btn) btn.disabled = true;
-    setStatus('Generating ZIP…');
-    try {
-      if (typeof window.PB_exportModernDark !== 'function') throw new Error('Exporter missing');
-      if (typeof window.PB_simpleZip !== 'function' && typeof JSZip === 'undefined') {
-        throw new Error('ZIP library failed to load — hard refresh the page');
-      }
-      if (!state.photoData) {
-        try {
-          state.photoData = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || '';
-        } catch (e) {}
-      }
-      state.templateId = templateId || state.templateId || 'modern-dark-3d';
-      // Exporter builds ZIP and triggers browser download itself
-      await window.PB_exportModernDark(state);
-      setStatus('Download started — extract the ZIP and open index.html.');
-    } catch (e) {
-      console.error(e);
-      setStatus('Export failed: ' + (e && e.message ? e.message : 'unknown error'), true);
-    } finally {
-      if (btn) btn.disabled = false;
+  async function runExport() {
+    if (typeof window.PB_exportModernDark !== 'function') throw new Error('Exporter missing');
+    if (typeof window.PB_simpleZip !== 'function' && typeof JSZip === 'undefined') {
+      throw new Error('ZIP library failed to load — hard refresh the page');
     }
+    if (!state.photoData) {
+      try {
+        state.photoData = localStorage.getItem(PHOTO_KEY) || sessionStorage.getItem(PHOTO_KEY) || '';
+      } catch (e) {}
+    }
+    state.templateId = templateId || state.templateId || 'modern-dark-3d';
+    await window.PB_exportModernDark(state);
+  }
+
+  function downloadZip() {
+    if (!validate()) return;
+    saveState();
+
+    if (typeof window.PB_openPayment !== 'function') {
+      setStatus('Payment module missing — hard refresh the page.', true);
+      return;
+    }
+
+    setStatus('Open payment to unlock ZIP download…');
+    window.PB_openPayment(templateId, {
+      onApproved: function () {
+        setStatus('Payment approved — generating your portfolio ZIP…');
+        runExport()
+          .then(function () {
+            setStatus('Download started — extract the ZIP and open index.html.');
+          })
+          .catch(function (e) {
+            console.error(e);
+            setStatus('Export failed: ' + (e && e.message ? e.message : 'unknown error'), true);
+          });
+      }
+    });
   }
 
   const titleEl = $('#pb-editor-title');
