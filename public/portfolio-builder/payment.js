@@ -142,7 +142,7 @@
       ) {
         setStatus(
           '',
-          'Verifying payment… Keep this window open. ZIP unlocks only after the transaction is confirmed.'
+          'Automated screening in progress… Keep this window open. You will unlock automatically if checks pass, or see what to correct.'
         );
         return;
       }
@@ -337,12 +337,24 @@
             })
             .then(function (j) {
               if (j.orderToken) currentToken = j.orderToken;
-              setStatus(
-                'ok',
-                j.message ||
-                  'Evidence received. Confirming payment against trusted records… Keep this window open.'
-              );
-              live.textContent = 'Waiting for trusted payment confirmation…';
+              var st = String(j.status || '').toUpperCase();
+              if (st === 'APPROVED' || st === 'PAYMENT_CONFIRMED') {
+                setStatus('ok', j.message || 'Screening passed — unlocking ZIP…');
+                live.textContent = j.screeningOnly
+                  ? 'Unlocked via automated screenshot screening (not bank API confirmation).'
+                  : 'Payment confirmed.';
+                finishApproved(j, j.downloadToken || '');
+                return;
+              }
+              if (st === 'REJECTED') {
+                setStatus('err', j.message || 'Evidence rejected');
+                live.textContent = 'Correct the issue and start a new order if needed.';
+                submit.disabled = false;
+                return;
+              }
+              setStatus('', j.message || 'Evidence received. Automated screening in progress…');
+              live.textContent =
+                'Analyzing screenshot (OCR + fraud checks). ZIP unlocks automatically if all checks pass.';
               submit.disabled = true;
               utrInput.disabled = true;
               fileInput.disabled = true;
