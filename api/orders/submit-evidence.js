@@ -2,7 +2,7 @@ import { getOrder, saveOrder, findByUtr, findByHash } from '../_lib/store.js';
 import { UPI_ID } from '../_lib/pricing.js';
 import { sha256Hex, signOrderToken, verifyOrderToken } from '../_lib/crypto.js';
 import { analyzeEvidence } from '../_lib/fraud.js';
-import { evidenceOnlyOutcome, hasWebhookSecret } from '../_lib/verify.js';
+import { applyScreeningDecision, hasWebhookSecret } from '../_lib/verify.js';
 import { json, readBody, cors, clientIp, rateLimit } from '../_lib/http.js';
 
 const MAX_BYTES = 4 * 1024 * 1024;
@@ -53,7 +53,8 @@ export default async function handler(req, res) {
       orderId: order.id,
       orderToken: signOrderToken(order),
       status: order.status,
-      message: 'Payment already confirmed'
+      message: 'Payment already confirmed',
+      downloadToken: order.downloadToken || null
     });
   }
   if (order.status === 'REJECTED') return json(res, 400, { error: 'Order was rejected' });
@@ -100,7 +101,7 @@ export default async function handler(req, res) {
     return json(res, 409, { error: 'This UTR was already used for another purchase' });
   }
 
-  const risk = analyzeEvidence({
+  const risk = await analyzeEvidence({
     expectedAmountInr: order.amountInr,
     expectedUpiId: UPI_ID,
     utr,
@@ -108,7 +109,9 @@ export default async function handler(req, res) {
     screenshotMime: mime,
     existingByUtr: byUtr,
     existingByHash: byHash,
-    currentOrderId: order.id
+    currentOrderId: order.id,
+    orderCreatedAt: order.createdAt,
+    orderExpiresAt: order.expiresAt
   });
 
   order.utr = utr;
@@ -118,28 +121,52 @@ export default async function handler(req, res) {
   order.screenshotSize = bytes.length;
   order.evidenceSubmittedAt = Date.now();
   order.risk = risk;
+  if (risk.signals?.perceptualHash) {
+    order.perceptualHash = risk.signals.perceptualHash;
+  }
 
-  const outcome = evidenceOnlyOutcome(risk);
-  order.status = outcome.status;
-
+  let result;
   try {
-    await saveOrder(order);
+    result = await applyScreeningDecision(order, risk);
   } catch (e) {
     return json(res, 503, {
-      error: 'Could not persist order. Configure durable storage (Upstash KV).',
+      error: 'Could not persist verification decision. Configure durable storage (Upstash KV).',
       storeError: true
     });
   }
 
-  return json(res, 200, {
+  order = result.order;
+  const outcome = result.outcome;
+
+  const payload = {
     orderId: order.id,
     orderToken: signOrderToken(order),
     status: order.status,
+    decisionCode: outcome.code,
     riskLevel: risk.riskLevel,
+    riskScore: risk.riskScore,
     findings: risk.findings,
+    ocr: risk.signals?.ocr
+      ? {
+          engine: risk.signals.ocr.engine,
+          evidenceConfidence: risk.signals.ocr.evidenceConfidence,
+          found: risk.signals.ocr.found,
+          missing: risk.signals.ocr.missing,
+          conflicts: risk.signals.ocr.conflicts,
+          fields: risk.signals.ocr.fields
+        }
+      : null,
     disclaimer: risk.disclaimer,
-    autoUnlockReady: false,
+    autoUnlockReady: order.status === 'APPROVED',
+    screeningOnly: !!outcome.screeningOnly,
     webhookConfigured: hasWebhookSecret(),
     message: outcome.message
-  });
+  };
+
+  if (order.status === 'APPROVED' && order.downloadToken) {
+    payload.downloadToken = order.downloadToken;
+    payload.downloadExpiresAt = order.downloadExpiresAt;
+  }
+
+  return json(res, 200, payload);
 }
