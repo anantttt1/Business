@@ -142,7 +142,7 @@
       ) {
         setStatus(
           '',
-          'Verifying payment… Keep this window open. ZIP unlocks only after the transaction is confirmed.'
+          'Verifying payment… Keep this window open. ZIP unlocks after screening passes or trusted confirmation.'
         );
         return;
       }
@@ -244,8 +244,8 @@
         [
           'Scan the QR (or Open UPI app) and pay exactly ₹' + order.amountInr + '.',
           'Upload the payment screenshot and enter the UTR / UPI reference.',
-          'Submit UTR + screenshot. Unlock happens only after the payment is confirmed.',
-          'No codes to copy or paste. Screenshot alone is not bank proof.'
+          'Submit. The system screens the evidence automatically — no admin, no tokens to copy.',
+          'Screenshot screening is not bank proof. ZIP unlocks when checks pass or trusted confirmation arrives.'
         ].forEach(function (t) {
           var li = document.createElement('li');
           li.textContent = t;
@@ -257,7 +257,7 @@
           el(
             'div',
             'ap-pay-warn',
-            'Never share UPI PIN or OTP. Screenshot is supporting evidence only — not automatic bank proof.'
+            'Never share UPI PIN or OTP. Screenshot is supporting evidence only — not bank confirmation of funds.'
           )
         );
 
@@ -337,15 +337,20 @@
             })
             .then(function (j) {
               if (j.orderToken) currentToken = j.orderToken;
-              setStatus(
-                'ok',
-                j.message ||
-                  'Evidence received. Confirming payment against trusted records… Keep this window open.'
-              );
-              live.textContent = 'Waiting for trusted payment confirmation…';
               submit.disabled = true;
               utrInput.disabled = true;
               fileInput.disabled = true;
+              if (j.autoUnlockReady && (j.downloadToken || j.status === 'APPROVED' || j.status === 'PAYMENT_CONFIRMED')) {
+                setStatus('ok', j.message || 'Screening passed — unlocking ZIP…');
+                finishApproved(j, j.downloadToken || '');
+                return;
+              }
+              setStatus(
+                'ok',
+                j.message ||
+                  'Evidence received. Running automated screening… Keep this window open.'
+              );
+              live.textContent = 'Screening evidence / waiting for confirmation…';
               startPolling();
             })
             .catch(function (err) {
