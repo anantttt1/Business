@@ -101,18 +101,64 @@ header.pb-header .nav{
 .pb-card-actions .btn{flex:1 1 auto;min-width:120px;min-height:42px;justify-content:center;text-align:center}
 .pb-empty{color:var(--mu);text-align:center;padding:32px 16px}
 
-/* Editor (shared) */
+/* Editor form sections — clear gaps so blocks are not stuck */
+.pb-editor-panel{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.pb-section{
+  margin:0 0 28px;
+  padding:20px 18px 22px;
+  border:1px solid var(--bd);
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+}
+.pb-section:last-of-type{
+  margin-bottom:12px;
+}
+.pb-section h3{
+  margin:0 0 16px;
+  padding:0 0 12px;
+  font-size:1.05rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+  border-bottom:1px solid var(--bd);
+  color:var(--tx);
+}
+.pb-section > .btn.o{
+  margin-top:12px;
+  display:inline-flex;
+}
+.pb-skill-add{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:flex-end;
+  margin-bottom:0;
+}
+.pb-skill-add .pb-skill-input{
+  flex:1 1 180px;
+  min-width:0;
+}
+.pb-skill-add > .btn{
+  margin-bottom:0;
+}
+
+/* Editor fields */
 .pb-editor-grid{display:grid;gap:20px}
-.pb-field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.pb-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.pb-field:last-child{margin-bottom:0}
 .pb-field label{font-size:.85rem;font-weight:600;color:var(--mu)}
 .pb-field input,.pb-field textarea,.pb-field select{min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--tx);font:inherit}
 .pb-field textarea{min-height:100px;resize:vertical}
 .pb-skill-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .pb-skill-input{flex:1;min-width:160px}
-.pb-list-item{border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px;background:rgba(0,0,0,.2)}
-.pb-list-item .entry-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.pb-list-item{border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px;background:rgba(0,0,0,.22)}
+.pb-list-item:last-child{margin-bottom:4px}
+.pb-list-item .entry-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .pb-list-item .entry-head strong{font-size:.9rem}
-.pb-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.pb-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
 .pb-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:99px;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.35);font-size:.82rem;line-height:1.2}
 .pb-chip button{border:0;background:transparent;color:var(--mu);cursor:pointer;font-size:1rem;line-height:1;padding:0}
 .pb-seg{display:flex;gap:6px;flex-wrap:wrap}
@@ -120,7 +166,7 @@ header.pb-header .nav{
 .pb-seg button.is-active{background:rgba(255,107,53,.18);border-color:rgba(255,107,53,.5);color:var(--tx)}
 
 /* Spacer so last form fields aren't hidden behind fixed bar */
-.pb-actions-spacer{height:24px}
+.pb-actions-spacer{height:28px}
 
 /* Fixed compact action bar at page bottom */
 .pb-actions-bar{
@@ -166,7 +212,6 @@ header.pb-header .nav{
   box-sizing:border-box;
 }
 .pb-deploy-btn{
-  /* same size as others — no full-width stretch */
   flex:0 0 auto !important;
   max-width:none;
 }
@@ -213,6 +258,16 @@ body.pb-has-preview-banner{padding-top:56px}
   .pb-gallery{grid-template-columns:1fr !important;gap:14px}
   .pb-card-actions{flex-direction:column}
   .pb-card-actions .btn{width:100%;min-width:0}
+  .pb-section{
+    margin-bottom:20px;
+    padding:16px 14px 18px;
+    border-radius:14px;
+  }
+  .pb-section h3{
+    margin-bottom:14px;
+    padding-bottom:10px;
+    font-size:1rem;
+  }
   .pb-actions-bar .pb-act{
     min-height:36px;
     height:36px;
