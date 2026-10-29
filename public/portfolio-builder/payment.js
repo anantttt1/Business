@@ -29,15 +29,6 @@
     img.src = '/api/qr?data=' + encodeURIComponent(upiUri);
     img.onerror = function () {
       container.textContent = '';
-      try {
-        if (typeof qrcode === 'function') {
-          var qr = qrcode(0, 'M');
-          qr.addData(upiUri);
-          qr.make();
-          container.innerHTML = qr.createImgTag(4, 8);
-          return;
-        }
-      } catch (e) {}
       var a = el('a', null, 'Open UPI payment link');
       a.href = upiUri;
       a.rel = 'noopener';
@@ -46,10 +37,6 @@
     container.appendChild(img);
   }
 
-  /**
-   * @param {string} templateId
-   * @param {{ onApproved?: function(order: object, downloadToken: string): void }} [options]
-   */
   function openPaymentModal(templateId, options) {
     options = options || {};
     var onApproved = typeof options.onApproved === 'function' ? options.onApproved : null;
@@ -105,6 +92,9 @@
           status.textContent = 'Price mismatch — please refresh.';
           return;
         }
+
+        // Keep durable token on the order object for later API calls
+        var currentToken = order.orderToken || '';
 
         var row = el('div', 'ap-pay-row');
         var left = el('div');
@@ -217,6 +207,23 @@
         submitRow.appendChild(cancel);
         body.appendChild(submitRow);
 
+        var tokenBox = el('div', 'ap-pay-field');
+        tokenBox.appendChild(
+          el(
+            'label',
+            null,
+            'Order token (share with admin if needed)'
+          )
+        );
+        var tokenInput = document.createElement('textarea');
+        tokenInput.rows = 3;
+        tokenInput.readOnly = true;
+        tokenInput.value = currentToken;
+        tokenInput.style.cssText =
+          'width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #2a3550;background:#121826;color:#9aa3bd;padding:8px;font-size:11px';
+        tokenBox.appendChild(tokenInput);
+        body.appendChild(tokenBox);
+
         var pollTimer = null;
 
         function pollStatus() {
@@ -224,12 +231,18 @@
             '/api/orders/status?orderId=' +
               encodeURIComponent(order.orderId) +
               '&claim=' +
-              encodeURIComponent(order.claimSecret || '')
+              encodeURIComponent(order.claimSecret || '') +
+              '&orderToken=' +
+              encodeURIComponent(currentToken || '')
           )
             .then(function (r) {
               return r.json();
             })
             .then(function (s) {
+              if (s.orderToken) {
+                currentToken = s.orderToken;
+                tokenInput.value = currentToken;
+              }
               if (s.status === 'APPROVED' && (s.downloadToken || onApproved)) {
                 status.className = 'ap-pay-status ok';
                 status.textContent = 'Approved — preparing your ZIP…';
@@ -273,6 +286,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               orderId: order.orderId,
+              orderToken: currentToken,
               utr: utrInput.value.trim(),
               screenshotDataUrl: fileDataUrl,
               filename: (fileInput.files[0] && fileInput.files[0].name) || 'screenshot.jpg'
@@ -285,9 +299,17 @@
               });
             })
             .then(function (j) {
+              if (j.orderToken) {
+                currentToken = j.orderToken;
+                tokenInput.value = currentToken;
+              }
               status.className = 'ap-pay-status ok';
               status.textContent =
-                j.message + ' Risk: ' + j.riskLevel + '. Keep order ID: ' + order.orderId;
+                j.message +
+                ' Risk: ' +
+                j.riskLevel +
+                '. Keep this tab open. Order: ' +
+                order.orderId;
               submit.disabled = true;
               if (!pollTimer) pollTimer = setInterval(pollStatus, 8000);
             })
