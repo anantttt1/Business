@@ -86,28 +86,6 @@
     actions.appendChild(view);
     actions.appendChild(customize);
 
-    var prices = window.PB_TEMPLATE_PRICES || {};
-    var priceMeta = prices[t.id] || (t.priceInr != null ? { priceInr: t.priceInr } : null);
-    if (priceMeta && priceMeta.priceInr != null) {
-      var priceTag = document.createElement('span');
-      priceTag.className = 'pb-tag';
-      priceTag.textContent = '₹' + priceMeta.priceInr;
-      tags.appendChild(priceTag);
-
-      var buy = document.createElement('button');
-      buy.type = 'button';
-      buy.className = 'btn p';
-      buy.textContent = 'Download ZIP · ₹' + priceMeta.priceInr;
-      buy.addEventListener('click', function () {
-        if (typeof window.PB_openPayment === 'function') {
-          window.PB_openPayment(t.id);
-        } else {
-          alert('Payment module failed to load. Hard refresh the page.');
-        }
-      });
-      actions.appendChild(buy);
-    }
-
     body.appendChild(h3);
     body.appendChild(p);
     body.appendChild(tags);
