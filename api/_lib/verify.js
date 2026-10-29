@@ -3,8 +3,9 @@
  *
  * Two paths:
  * 1. Trusted webhook / provider confirmation → real APPROVED (funds confirmed).
- * 2. Screenshot screening → optional AUTO_APPROVED_SCREENING_PASSED when
- *    SCREENING_AUTO_APPROVE=true and risk is LOW. This is NOT bank confirmation.
+ * 2. Screenshot screening → AUTO_APPROVED_SCREENING_PASSED when risk is LOW
+ *    (on by default; set SCREENING_AUTO_APPROVE=false to disable).
+ *    This is NOT bank confirmation.
  *
  * Screenshots alone never prove receipt of money.
  */
@@ -19,9 +20,11 @@ export function hasWebhookSecret() {
   );
 }
 
+/** On by default. Only off if explicitly set to false/0/no. */
 export function screeningAutoApproveEnabled() {
-  const v = String(process.env.SCREENING_AUTO_APPROVE || '').toLowerCase();
-  return v === '1' || v === 'true' || v === 'yes';
+  const v = String(process.env.SCREENING_AUTO_APPROVE ?? 'true').toLowerCase();
+  if (v === '0' || v === 'false' || v === 'no' || v === 'off') return false;
+  return true;
 }
 
 /**
@@ -185,7 +188,7 @@ export function decideFromScreening(order, risk) {
     at: Date.now(),
     source: 'screenshot_screening',
     reason:
-      'Evidence recorded. ZIP unlocks after trusted payment confirmation or when screening auto-approve is enabled and risk is LOW.',
+      'Evidence recorded. ZIP unlocks after trusted payment confirmation or when screening risk is LOW.',
     by: 'system'
   };
   return {
@@ -193,7 +196,7 @@ export function decideFromScreening(order, risk) {
     code: code || 'INSUFFICIENT_EVIDENCE',
     message: hasWebhookSecret()
       ? 'Evidence received. Waiting for trusted transaction confirmation. Screenshot alone is not bank proof.'
-      : 'Evidence received. Screening did not auto-approve (risk or SCREENING_AUTO_APPROVE off). Configure webhook or enable screening auto-approve for unlock.',
+      : 'Evidence received. Risk too high for auto-unlock, or checks incomplete. Submit a clearer screenshot/UTR or wait for confirmation.',
     autoUnlockReady: false,
     webhookConfigured: hasWebhookSecret()
   };
@@ -219,6 +222,6 @@ export function evidenceOnlyOutcome(risk) {
   return {
     status: 'VERIFYING',
     message:
-      'Evidence received. Automatic unlock requires trusted confirmation or LOW-risk screening with SCREENING_AUTO_APPROVE enabled. Screenshot alone cannot prove payment.'
+      'Evidence received. Automatic unlock needs LOW-risk screening or trusted confirmation. Screenshot alone cannot prove payment.'
   };
 }
