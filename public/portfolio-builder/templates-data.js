@@ -3,6 +3,7 @@ window.PB_TEMPLATES = [
   {
     id: 'color-pop',
     name: 'Color Pop',
+    priceInr: 19,
     category: 'creative',
     tagline: 'Colourful paper-style portfolio with live LeetCode heatmap, projects, skills, journey and certificates.',
     accent: '#5948ff',
@@ -13,6 +14,7 @@ window.PB_TEMPLATES = [
   {
     id: 'ideas-impact',
     name: 'Ideas Impact',
+    priceInr: 29,
     category: 'developer',
     tagline: 'Neon dark portfolio with 3D profile card, projects, skills, education, certificates and light/dark toggle.',
     accent: '#caff42',
@@ -23,6 +25,7 @@ window.PB_TEMPLATES = [
   {
     id: 'paper-atelier',
     name: 'Paper Atelier',
+    priceInr: 29,
     category: 'creative',
     tagline: 'Classy cream-paper portfolio with red & yellow accents, projects, skills, journey and certificates.',
     accent: '#ae2530',
@@ -33,6 +36,7 @@ window.PB_TEMPLATES = [
   {
     id: 'ember-editorial',
     name: 'Ember Editorial',
+    priceInr: 39,
     category: 'developer',
     tagline: 'Warm amber editorial portfolio with Playfair accents, projects, coding profiles and certificates.',
     accent: '#ff641e',
@@ -43,6 +47,7 @@ window.PB_TEMPLATES = [
   {
     id: 'signature-orange',
     name: 'Signature Orange',
+    priceInr: 39,
     category: 'developer',
     tagline: 'Bold orange-accent portfolio with LeetCode stats, activity heatmap, projects, skills and certificates.',
     accent: '#ff8a32',
@@ -53,6 +58,7 @@ window.PB_TEMPLATES = [
   {
     id: 'modern-dark-3d',
     name: 'Modern Dark 3D',
+    priceInr: 29,
     category: 'developer',
     tagline: 'Premium dark developer portfolio with 3D hover effects, projects, skills, and contact.',
     accent: '#7190ff',
