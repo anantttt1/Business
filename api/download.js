@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getOrder } from './_lib/store.js';
+import { getOrder, saveOrder } from './_lib/store.js';
 import { verifyDownloadToken } from './_lib/crypto.js';
 import { getTemplatePrice } from './_lib/pricing.js';
 import { json, cors, clientIp, rateLimit } from './_lib/http.js';
@@ -94,6 +94,12 @@ export default async function handler(req, res) {
   }
   const tpl = getTemplatePrice(order.templateId);
   if (!tpl) return json(res, 400, { error: 'Unknown template' });
+
+  try {
+    order.downloadedAt = Date.now();
+    order.downloadCount = (order.downloadCount || 0) + 1;
+    await saveOrder(order);
+  } catch (e) {}
 
   const files = collectTemplateFiles(order.templateId);
   if (!files || !files.length) {
