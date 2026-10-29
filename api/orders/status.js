@@ -20,7 +20,6 @@ export default async function handler(req, res) {
   }
   if (!order) return json(res, 404, { error: 'Order not found' });
 
-  // Prefer fresher store copy if available
   if (order.id) {
     try {
       const stored = await getOrder(order.id);
@@ -38,15 +37,22 @@ export default async function handler(req, res) {
     expiresAt: order.expiresAt,
     riskLevel: order.risk?.riskLevel || null,
     decision: order.decision
-      ? { status: order.decision.status, at: order.decision.at, reason: order.decision.reason || null }
+      ? {
+          status: order.decision.status,
+          code: order.decision.code || null,
+          at: order.decision.at,
+          reason: order.decision.reason || null,
+          screeningOnly: !!order.decision.screeningOnly
+        }
       : null,
     orderToken: signOrderToken(order)
   };
 
+  const claimOk =
+    claim && order.claimSecret && timingSafeEqualStr(claim, order.claimSecret);
+  const tokenOk = orderToken && verifyOrderToken(orderToken);
   if (
-    claim &&
-    order.claimSecret &&
-    timingSafeEqualStr(claim, order.claimSecret) &&
+    (claimOk || tokenOk) &&
     order.status === 'APPROVED' &&
     order.downloadToken
   ) {
