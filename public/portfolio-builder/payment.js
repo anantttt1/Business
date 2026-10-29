@@ -41,14 +41,15 @@
 
   function writeLock(templateId, data) {
     try {
+      var prev = readLock(templateId) || {};
       sessionStorage.setItem(
         lockKey(templateId),
         JSON.stringify({
-          orderId: data.orderId || '',
-          downloadToken: data.downloadToken || '',
-          claimSecret: data.claimSecret || '',
-          orderToken: data.orderToken || '',
-          downloaded: !!data.downloaded,
+          orderId: data.orderId || prev.orderId || '',
+          downloadToken: data.downloadToken || prev.downloadToken || '',
+          claimSecret: data.claimSecret || prev.claimSecret || '',
+          orderToken: data.orderToken || prev.orderToken || '',
+          downloaded: data.downloaded != null ? !!data.downloaded : !!prev.downloaded,
           at: Date.now()
         })
       );
@@ -72,11 +73,24 @@
   function triggerZipDownload(downloadToken) {
     if (!downloadToken) return false;
     var url = '/api/download?token=' + encodeURIComponent(downloadToken);
+    var ok = false;
+    try {
+      var a = document.createElement('a');
+      a.href = url;
+      a.rel = 'noopener';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () {
+        try {
+          a.remove();
+        } catch (e) {}
+      }, 2000);
+      ok = true;
+    } catch (e1) {}
     try {
       var iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.style.width = '0';
-      iframe.style.height = '0';
+      iframe.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px;border:0';
       iframe.setAttribute('aria-hidden', 'true');
       iframe.src = url;
       document.body.appendChild(iframe);
@@ -85,10 +99,13 @@
           iframe.remove();
         } catch (e) {}
       }, 60000);
-    } catch (e) {
+      ok = true;
+    } catch (e2) {}
+    if (!ok) {
       window.location.href = url;
+      ok = true;
     }
-    return true;
+    return ok;
   }
 
   function renderQr(container, upiUri) {
@@ -109,6 +126,21 @@
     container.appendChild(img);
   }
 
+  function fetchOrderStatus(lock) {
+    var url =
+      '/api/orders/status?orderId=' +
+      encodeURIComponent(lock.orderId || '') +
+      '&claim=' +
+      encodeURIComponent(lock.claimSecret || '') +
+      '&orderToken=' +
+      encodeURIComponent(lock.orderToken || '') +
+      '&_=' +
+      Date.now();
+    return fetch(url, { cache: 'no-store' }).then(function (r) {
+      return r.json();
+    });
+  }
+
   function openPaymentModal(templateId, options) {
     options = options || {};
     var onApproved = typeof options.onApproved === 'function' ? options.onApproved : null;
@@ -120,12 +152,8 @@
     }
 
     var existing = readLock(templateId);
-    if (existing && !existing.downloaded && existing.downloadToken) {
-      showResumeDownloadModal(templateId, meta, existing, onApproved);
-      return;
-    }
-    if (existing && !existing.downloaded && existing.orderId) {
-      showLockedModal(templateId, meta, existing);
+    if (existing && !existing.downloaded) {
+      showResumeOrWaitModal(templateId, meta, existing, onApproved);
       return;
     }
 
@@ -182,14 +210,13 @@
         orderId: (order && (order.orderId || order.id)) || orderId,
         downloadToken: downloadToken || '',
         claimSecret: claimSecret,
-        orderToken: currentToken,
+        orderToken: currentToken || (order && order.orderToken) || '',
         downloaded: false
       });
 
-      var started = false;
       if (downloadToken) {
-        started = triggerZipDownload(downloadToken);
-        if (started) markDownloaded(templateId);
+        triggerZipDownload(downloadToken);
+        markDownloaded(templateId);
       }
 
       if (onApproved) {
@@ -202,18 +229,15 @@
           unlocked = false;
           return;
         }
-      } else if (!started && downloadToken) {
-        window.location.href = '/api/download?token=' + encodeURIComponent(downloadToken);
-        markDownloaded(templateId);
-      } else if (!downloadToken && !onApproved) {
+      } else if (!downloadToken) {
         status.className = 'ap-pay-status err';
-        status.textContent = 'Verified but download token missing. Keep this tab open and retry in a moment.';
+        status.textContent = 'Verified but download token missing — retrying…';
         unlocked = false;
         startPolling();
         return;
       }
 
-      setTimeout(close, 1200);
+      setTimeout(close, 1500);
     }
 
     function setStatus(kind, text) {
@@ -289,7 +313,7 @@
     function startPolling() {
       if (pollTimer || stopped) return;
       pollOnce();
-      pollTimer = setInterval(pollOnce, 2000);
+      pollTimer = setInterval(pollOnce, 1500);
     }
 
     fetch('/api/orders/create', {
@@ -361,8 +385,8 @@
         [
           'Scan the QR (or Open UPI app) and pay exactly ₹' + order.amountInr + '.',
           'Upload the payment screenshot and enter the UTR / UPI reference.',
-          'Submit. After verification the ZIP downloads automatically — do not pay again for this template until then.',
-          'Screenshot screening is not bank proof.'
+          'Submit. After verification the ZIP downloads automatically.',
+          'Do not pay again for this template until the ZIP has downloaded.'
         ].forEach(function (t) {
           var li = document.createElement('li');
           li.textContent = t;
@@ -429,7 +453,7 @@
 
         var live = el('div', 'ap-pay-live');
         live.setAttribute('aria-live', 'polite');
-        live.textContent = 'After verify, ZIP downloads automatically. Do not pay again for this template until then.';
+        live.textContent = 'After verify, ZIP downloads automatically.';
         body.appendChild(live);
 
         submit.addEventListener('click', function () {
@@ -454,12 +478,23 @@
             })
             .then(function (j) {
               if (j.orderToken) currentToken = j.orderToken;
+              writeLock(templateId, {
+                orderId: orderId,
+                claimSecret: claimSecret,
+                orderToken: currentToken,
+                downloadToken: j.downloadToken || '',
+                downloaded: false
+              });
               submit.disabled = true;
               utrInput.disabled = true;
               fileInput.disabled = true;
+
+              var st = String(j.status || '').toUpperCase();
               if (
-                j.autoUnlockReady &&
-                (j.downloadToken || j.status === 'APPROVED' || j.status === 'PAYMENT_CONFIRMED')
+                j.downloadToken ||
+                j.autoUnlockReady ||
+                st === 'APPROVED' ||
+                st === 'PAYMENT_CONFIRMED'
               ) {
                 setStatus('ok', j.message || 'Verified — downloading ZIP now…');
                 finishApproved(j, j.downloadToken || '');
@@ -483,88 +518,135 @@
       });
   }
 
-  function showResumeDownloadModal(templateId, meta, lock, onApproved) {
+  function showResumeOrWaitModal(templateId, meta, lock, onApproved) {
     var overlay = el('div', 'ap-pay-overlay');
     var modal = el('div', 'ap-pay-modal');
-    modal.appendChild(el('h2', null, 'Download ready'));
+    modal.appendChild(el('h2', null, 'Checking your payment'));
     modal.appendChild(
-      el('p', 'sub', meta.name + ' — payment already verified. Do not pay again.')
+      el('p', 'sub', meta.name + ' — do not pay again. Fetching status…')
     );
-    var status = el('div', 'ap-pay-status ok', 'Your ZIP is ready.');
+    var status = el('div', 'ap-pay-status', 'Checking order ' + String(lock.orderId || '').slice(0, 12) + '…');
     modal.appendChild(status);
     var row = el('div', 'ap-pay-actions');
-    var dl = el('button', 'ap-pay-btn primary', 'Download ZIP now');
+    var dl = el('button', 'ap-pay-btn primary', 'Download ZIP');
     dl.type = 'button';
-    dl.addEventListener('click', function () {
-      if (lock.downloadToken) {
-        triggerZipDownload(lock.downloadToken);
-        markDownloaded(templateId);
-        status.textContent = 'Download started…';
-      }
-      if (onApproved) {
-        try {
-          onApproved({ orderId: lock.orderId }, lock.downloadToken || '');
-          markDownloaded(templateId);
-        } catch (e) {
-          status.className = 'ap-pay-status err';
-          status.textContent = e.message || 'Export failed';
-        }
-      }
-    });
-    var cancel = el('button', 'ap-pay-btn ghost', 'Close');
-    cancel.type = 'button';
-    cancel.addEventListener('click', function () {
-      overlay.remove();
-    });
-    row.appendChild(dl);
-    row.appendChild(cancel);
-    modal.appendChild(row);
-    overlay.appendChild(modal);
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) overlay.remove();
-    });
-    document.body.appendChild(overlay);
-  }
-
-  function showLockedModal(templateId, meta, lock) {
-    var overlay = el('div', 'ap-pay-overlay');
-    var modal = el('div', 'ap-pay-modal');
-    modal.appendChild(el('h2', null, 'Payment in progress'));
-    modal.appendChild(
-      el(
-        'p',
-        'sub',
-        meta.name +
-          ' — an order is already open for this template. Do not pay again until the ZIP downloads.'
-      )
-    );
-    var status = el(
-      'div',
-      'ap-pay-status',
-      'Order ' + String(lock.orderId || '').slice(0, 12) + '… — wait for verification or finish the previous payment tab.'
-    );
-    modal.appendChild(status);
-    var row = el('div', 'ap-pay-actions');
-    var closeBtn = el('button', 'ap-pay-btn primary', 'OK');
+    dl.hidden = true;
+    var closeBtn = el('button', 'ap-pay-btn ghost', 'Close');
     closeBtn.type = 'button';
-    closeBtn.addEventListener('click', function () {
-      overlay.remove();
-    });
     var reset = el('button', 'ap-pay-btn ghost', 'Start over');
     reset.type = 'button';
-    reset.addEventListener('click', function () {
-      clearLock(templateId);
-      overlay.remove();
-      openPaymentModal(templateId, {});
-    });
+    row.appendChild(dl);
     row.appendChild(closeBtn);
     row.appendChild(reset);
     modal.appendChild(row);
     overlay.appendChild(modal);
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) overlay.remove();
-    });
     document.body.appendChild(overlay);
+
+    var stopped = false;
+    var timer = null;
+
+    function stop() {
+      stopped = true;
+      if (timer) clearInterval(timer);
+    }
+
+    closeBtn.addEventListener('click', function () {
+      stop();
+      overlay.remove();
+    });
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) {
+        stop();
+        overlay.remove();
+      }
+    });
+    reset.addEventListener('click', function () {
+      stop();
+      clearLock(templateId);
+      overlay.remove();
+      openPaymentModal(templateId, { onApproved: onApproved });
+    });
+
+    function tryDownload(token) {
+      if (!token) return;
+      writeLock(templateId, {
+        orderId: lock.orderId,
+        claimSecret: lock.claimSecret,
+        orderToken: lock.orderToken,
+        downloadToken: token,
+        downloaded: false
+      });
+      triggerZipDownload(token);
+      markDownloaded(templateId);
+      status.className = 'ap-pay-status ok';
+      status.textContent = 'Payment verified — ZIP download started.';
+      dl.hidden = false;
+      if (onApproved) {
+        try {
+          onApproved({ orderId: lock.orderId }, token);
+        } catch (e) {}
+      }
+      stop();
+      setTimeout(function () {
+        overlay.remove();
+      }, 2000);
+    }
+
+    dl.addEventListener('click', function () {
+      var t = (readLock(templateId) || lock).downloadToken || lock.downloadToken;
+      if (t) tryDownload(t);
+    });
+
+    if (lock.downloadToken) {
+      tryDownload(lock.downloadToken);
+      return;
+    }
+
+    function poll() {
+      if (stopped) return;
+      fetchOrderStatus(lock)
+        .then(function (s) {
+          if (!s || s.error) {
+            status.textContent = s && s.error ? s.error : 'Could not reach server — retrying…';
+            return;
+          }
+          if (s.orderToken) {
+            lock.orderToken = s.orderToken;
+            writeLock(templateId, {
+              orderId: lock.orderId,
+              claimSecret: lock.claimSecret,
+              orderToken: s.orderToken,
+              downloadToken: s.downloadToken || lock.downloadToken || '',
+              downloaded: false
+            });
+          }
+          var st = String(s.status || '').toUpperCase();
+          if ((st === 'APPROVED' || st === 'PAYMENT_CONFIRMED') && s.downloadToken) {
+            tryDownload(s.downloadToken);
+            return;
+          }
+          if (st === 'APPROVED' || st === 'PAYMENT_CONFIRMED') {
+            status.className = 'ap-pay-status ok';
+            status.textContent = 'Verified — waiting for download token…';
+            return;
+          }
+          if (st === 'REJECTED' || st === 'EXPIRED') {
+            stop();
+            clearLock(templateId);
+            status.className = 'ap-pay-status err';
+            status.textContent = 'Order ' + st.toLowerCase() + '. You can Start over.';
+            return;
+          }
+          status.textContent =
+            'Status: ' + (st || 'pending') + ' — ZIP will download automatically when verified.';
+        })
+        .catch(function () {
+          status.textContent = 'Network error — retrying…';
+        });
+    }
+
+    poll();
+    timer = setInterval(poll, 1500);
   }
 
   window.PB_openPayment = openPaymentModal;
