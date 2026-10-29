@@ -30,13 +30,15 @@
 
     const thumb = document.createElement('div');
     thumb.className = 'pb-card-thumb';
-    if (t.preview) {
+    {
+      /* Thumbnail photo: public/portfolio-builder/previews/<id>.jpg (800x500). If it is missing, the name placeholder below is shown. */
       const img = document.createElement('img');
-      img.alt = t.name + ' preview';
+      img.alt = t.name + ' template preview';
       img.loading = 'lazy';
-      img.width = 640;
-      img.height = 400;
-      img.src = t.preview;
+      img.decoding = 'async';
+      img.width = 800;
+      img.height = 500;
+      img.src = t.thumb || ('/portfolio-builder/previews/' + t.id + '.jpg');
       img.addEventListener('error', function () {
         img.remove();
         const fb = document.createElement('div');
@@ -47,13 +49,6 @@
         thumb.appendChild(fb);
       });
       thumb.appendChild(img);
-    } else {
-      const fb = document.createElement('div');
-      fb.className = 'pb-thumb-fallback';
-      const s = document.createElement('span');
-      s.textContent = t.name;
-      fb.appendChild(s);
-      thumb.appendChild(fb);
     }
 
     const body = document.createElement('div');
