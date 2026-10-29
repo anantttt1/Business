@@ -23,7 +23,7 @@ header.pb-header .nav{
   gap:12px;
 }
 .pb-main{
-  padding:20px 0 72px !important;
+  padding:20px 0 88px !important;
   clear:both;
 }
 .pb-main > .wrap{
@@ -115,40 +115,84 @@ header.pb-header .nav{
 .pb-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .pb-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:99px;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.35);font-size:.82rem;line-height:1.2}
 .pb-chip button{border:0;background:transparent;color:var(--mu);cursor:pointer;font-size:1rem;line-height:1;padding:0}
+.pb-seg{display:flex;gap:6px;flex-wrap:wrap}
+.pb-seg button{min-height:36px;padding:6px 12px;border-radius:8px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--mu);font:600 .82rem inherit;cursor:pointer}
+.pb-seg button.is-active{background:rgba(255,107,53,.18);border-color:rgba(255,107,53,.5);color:var(--tx)}
+
+/* Spacer so last form fields aren't hidden behind fixed bar */
+.pb-actions-spacer{height:24px}
+
+/* Fixed compact action bar at page bottom */
 .pb-actions-bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-  margin-top:20px;
-  padding:16px 0 8px;
-  position:sticky;
+  position:fixed;
+  left:0;
+  right:0;
   bottom:0;
-  z-index:20;
-  background:linear-gradient(180deg,transparent 0%,rgba(12,12,16,.92) 28%,rgba(12,12,16,.98) 100%);
-  border-top:1px solid var(--bd);
+  z-index:100;
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
+  background:rgba(12,12,16,.96);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,.1);
+  box-shadow:0 -8px 28px rgba(0,0,0,.35);
 }
-.pb-actions-bar .btn{min-height:46px}
-.pb-actions-bar a.btn{
+.pb-actions-inner{
+  display:flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.pb-actions-inner::-webkit-scrollbar{display:none}
+
+.pb-actions-bar .pb-act{
+  flex:0 0 auto;
+  min-height:38px;
+  height:38px;
+  padding:0 14px;
+  font-size:.82rem;
+  font-weight:600;
+  border-radius:10px;
+  white-space:nowrap;
+  line-height:1;
+}
+.pb-actions-bar a.pb-act{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
   text-decoration:none;
   box-sizing:border-box;
 }
 .pb-deploy-btn{
-  flex:1 1 100%;
-  text-align:center;
-  line-height:1.35;
-  padding:12px 16px;
+  /* same size as others — no full-width stretch */
+  flex:0 0 auto !important;
+  max-width:none;
 }
-.pb-status{width:100%;font-size:.88rem;color:var(--mu);min-height:1.2em;margin:4px 0 0;line-height:1.4}
+.pb-status{
+  flex:1 1 auto;
+  min-width:0;
+  font-size:.78rem;
+  color:var(--mu);
+  margin:0;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 .pb-status.is-ok{color:#82e7bc}
 .pb-status.is-err{color:#ff8a8a}
-.pb-seg{display:flex;gap:6px;flex-wrap:wrap}
-.pb-seg button{min-height:36px;padding:6px 12px;border-radius:8px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--mu);font:600 .82rem inherit;cursor:pointer}
-.pb-seg button.is-active{background:rgba(255,107,53,.18);border-color:rgba(255,107,53,.5);color:var(--tx)}
+
+.pb-footer-slim{
+  padding:12px 0 80px;
+  border-top:1px solid var(--bd);
+}
+.pb-footer-slim .cp{
+  font-size:.8rem;
+  color:var(--mu);
+  margin:0;
+}
 
 /* Preview banner on template */
 .pb-preview-banner{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(12,12,16,.96);border-bottom:1px solid rgba(255,107,53,.4);color:#f4f6ff;font:600 .9rem system-ui,sans-serif}
@@ -163,13 +207,19 @@ body.pb-has-preview-banner{padding-top:56px}
 @media(max-width:620px){
   header.pb-header .nav{height:56px}
   .pb-nav{display:none}
-  .pb-main{padding:16px 0 56px !important}
+  .pb-main{padding:16px 0 96px !important}
   .pb-hero h1{font-size:1.4rem !important;max-width:100%}
   .pb-filter{min-height:38px;padding:6px 12px;font-size:.8rem}
   .pb-gallery{grid-template-columns:1fr !important;gap:14px}
   .pb-card-actions{flex-direction:column}
   .pb-card-actions .btn{width:100%;min-width:0}
-  .pb-actions-bar .btn{flex:1 1 100%}
+  .pb-actions-bar .pb-act{
+    min-height:36px;
+    height:36px;
+    padding:0 11px;
+    font-size:.75rem;
+  }
+  .pb-status{display:none}
 }
 @media(min-width:1100px){
   .pb-gallery{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
