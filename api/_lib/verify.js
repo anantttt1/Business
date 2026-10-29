@@ -1,14 +1,27 @@
 /**
  * Server-side payment decision engine.
- * Trusted confirmation only via signed webhook / configured provider.
- * Screenshots + UTR alone never grant APPROVED.
+ *
+ * Two paths:
+ * 1. Trusted webhook / provider confirmation → real APPROVED (funds confirmed).
+ * 2. Screenshot screening → optional AUTO_APPROVED_SCREENING_PASSED when
+ *    SCREENING_AUTO_APPROVE=true and risk is LOW. This is NOT bank confirmation.
+ *
+ * Screenshots alone never prove receipt of money.
  */
 import { getOrder, saveOrder, findByUtr } from './store.js';
 import { UPI_ID } from './pricing.js';
 import { signDownloadToken } from './crypto.js';
+import { screeningDecisionCode } from './fraud.js';
 
 export function hasWebhookSecret() {
-  return Boolean(process.env.PAYMENT_WEBHOOK_SECRET && process.env.PAYMENT_WEBHOOK_SECRET.length >= 12);
+  return Boolean(
+    process.env.PAYMENT_WEBHOOK_SECRET && process.env.PAYMENT_WEBHOOK_SECRET.length >= 12
+  );
+}
+
+export function screeningAutoApproveEnabled() {
+  const v = String(process.env.SCREENING_AUTO_APPROVE || '').toLowerCase();
+  return v === '1' || v === 'true' || v === 'yes';
 }
 
 /**
@@ -59,7 +72,11 @@ export async function applyTrustedCredit({
   const utrClean = String(utr || order.utr || '').trim().toUpperCase();
   if (utrClean) {
     const other = await findByUtr(utrClean);
-    if (other && other.id !== order.id && (other.status === 'APPROVED' || other.status === 'PAYMENT_CONFIRMED')) {
+    if (
+      other &&
+      other.id !== order.id &&
+      (other.status === 'APPROVED' || other.status === 'PAYMENT_CONFIRMED')
+    ) {
       return { ok: false, error: 'UTR already entitled another order' };
     }
   }
@@ -78,6 +95,7 @@ export async function applyTrustedCredit({
   };
   order.decision = {
     status: 'APPROVED',
+    code: 'TRUSTED_WEBHOOK',
     at: Date.now(),
     source: 'trusted_webhook',
     reason: 'Trusted transaction confirmation matched order amount and recipient',
@@ -94,18 +112,113 @@ export async function applyTrustedCredit({
   return { ok: true, order };
 }
 
-/** After evidence submit: never auto-approve from screenshot alone. */
+/**
+ * Decide from screenshot screening only.
+ * Returns structured outcome; may mutate order to APPROVED when auto-approve is on.
+ */
+export function decideFromScreening(order, risk) {
+  const code = screeningDecisionCode(risk);
+  const auto = screeningAutoApproveEnabled();
+
+  if (code === 'AUTO_APPROVED_SCREENING_PASSED' && auto) {
+    const exp = Date.now() + 1000 * 60 * 60 * 48;
+    order.status = 'APPROVED';
+    order.decision = {
+      status: 'APPROVED',
+      code: 'AUTO_APPROVED_SCREENING_PASSED',
+      at: Date.now(),
+      source: 'screenshot_screening',
+      reason:
+        'Automated screenshot screening passed (LOW risk, valid UTR + image, no duplicates). This is NOT bank-confirmed receipt of funds.',
+      by: 'system',
+      disclaimer: risk.disclaimer
+    };
+    order.downloadToken = signDownloadToken({
+      orderId: order.id,
+      templateId: order.templateId,
+      exp
+    });
+    order.downloadExpiresAt = exp;
+    return {
+      status: 'APPROVED',
+      code,
+      message:
+        'Screening passed — ZIP unlocked. Note: this is automated screenshot screening only, not bank confirmation of payment.',
+      autoUnlockReady: true
+    };
+  }
+
+  // Reject / insufficient paths
+  if (
+    [
+      'REJECTED_DUPLICATE_REFERENCE',
+      'REJECTED_INVALID_EVIDENCE',
+      'REJECTED_EXPIRED_ORDER',
+      'REJECTED_INCONSISTENT_DETAILS',
+      'REJECTED_AMOUNT_MISMATCH',
+      'REJECTED_RECIPIENT_MISMATCH',
+      'REJECTED_TRANSACTION_FAILURE'
+    ].includes(code)
+  ) {
+    order.status = 'REJECTED';
+    order.decision = {
+      status: 'REJECTED',
+      code,
+      at: Date.now(),
+      source: 'screenshot_screening',
+      reason: (risk.findings && risk.findings[0]) || code,
+      by: 'system'
+    };
+    return {
+      status: 'REJECTED',
+      code,
+      message: 'Evidence rejected: ' + ((risk.findings && risk.findings[0]) || code),
+      autoUnlockReady: false
+    };
+  }
+
+  // Default: stay in VERIFYING until trusted confirmation or better evidence
+  order.status = 'VERIFYING';
+  order.decision = {
+    status: 'VERIFYING',
+    code: code || 'INSUFFICIENT_EVIDENCE',
+    at: Date.now(),
+    source: 'screenshot_screening',
+    reason:
+      'Evidence recorded. ZIP unlocks after trusted payment confirmation or when screening auto-approve is enabled and risk is LOW.',
+    by: 'system'
+  };
+  return {
+    status: 'VERIFYING',
+    code: code || 'INSUFFICIENT_EVIDENCE',
+    message: hasWebhookSecret()
+      ? 'Evidence received. Waiting for trusted transaction confirmation. Screenshot alone is not bank proof.'
+      : 'Evidence received. Screening did not auto-approve (risk or SCREENING_AUTO_APPROVE off). Configure webhook or enable screening auto-approve for unlock.',
+    autoUnlockReady: false,
+    webhookConfigured: hasWebhookSecret()
+  };
+}
+
+/** Legacy helper kept for compatibility. */
 export function evidenceOnlyOutcome(risk) {
+  const code = screeningDecisionCode(risk);
+  if (code === 'AUTO_APPROVED_SCREENING_PASSED' && screeningAutoApproveEnabled()) {
+    return {
+      status: 'APPROVED',
+      message:
+        'Screening passed — ZIP unlocked (screenshot screening only, not bank confirmation).'
+    };
+  }
   if (risk && (risk.riskLevel === 'HIGH' || risk.riskLevel === 'INSUFFICIENT')) {
     return {
       status: 'VERIFYING',
       message:
-        'Evidence received but risk checks are incomplete or high-risk. ZIP stays locked until a trusted transaction confirmation arrives.'
+        'Evidence received but risk checks are incomplete or high-risk. ZIP stays locked until a trusted transaction confirmation arrives or corrected evidence is submitted.'
     };
   }
   return {
     status: 'VERIFYING',
     message:
-      'Evidence received. Automatic unlock requires a trusted confirmation of this UTR and amount. Screenshot alone cannot unlock the ZIP.'
+      'Evidence received. Automatic unlock requires trusted confirmation or LOW-risk screening with SCREENING_AUTO_APPROVE enabled. Screenshot alone cannot prove payment.'
   };
 }
