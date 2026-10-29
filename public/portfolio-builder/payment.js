@@ -19,30 +19,41 @@
     return n;
   }
 
-  function renderQr(container, text) {
+  function renderQr(container, upiUri) {
     container.textContent = '';
-    try {
-      if (typeof qrcode === 'function') {
-        var qr = qrcode(0, 'M');
-        qr.addData(text);
-        qr.make();
-        container.innerHTML = qr.createImgTag(4, 8);
-        var img = container.querySelector('img');
-        if (img) {
-          img.alt = 'UPI payment QR code';
-          img.width = 180;
-          img.height = 180;
+    var img = document.createElement('img');
+    img.alt = 'UPI payment QR code';
+    img.width = 180;
+    img.height = 180;
+    img.style.display = 'block';
+    img.src = '/api/qr?data=' + encodeURIComponent(upiUri);
+    img.onerror = function () {
+      container.textContent = '';
+      try {
+        if (typeof qrcode === 'function') {
+          var qr = qrcode(0, 'M');
+          qr.addData(upiUri);
+          qr.make();
+          container.innerHTML = qr.createImgTag(4, 8);
+          return;
         }
-        return;
-      }
-    } catch (e) {}
-    var a = el('a', null, 'Open UPI payment link');
-    a.href = text;
-    a.rel = 'noopener';
-    container.appendChild(a);
+      } catch (e) {}
+      var a = el('a', null, 'Open UPI payment link');
+      a.href = upiUri;
+      a.rel = 'noopener';
+      container.appendChild(a);
+    };
+    container.appendChild(img);
   }
 
-  function openPaymentModal(templateId) {
+  /**
+   * @param {string} templateId
+   * @param {{ onApproved?: function(order: object, downloadToken: string): void }} [options]
+   */
+  function openPaymentModal(templateId, options) {
+    options = options || {};
+    var onApproved = typeof options.onApproved === 'function' ? options.onApproved : null;
+
     var meta = PRICES[templateId];
     if (!meta) {
       alert('Unknown template');
@@ -54,7 +65,7 @@
     overlay.setAttribute('aria-modal', 'true');
     var modal = el('div', 'ap-pay-modal');
 
-    modal.appendChild(el('h2', null, 'Pay to download'));
+    modal.appendChild(el('h2', null, 'Pay to download ZIP'));
     modal.appendChild(el('p', 'sub', meta.name + ' · Exact amount ₹' + meta.priceInr));
 
     var status = el('div', 'ap-pay-status', 'Creating order…');
@@ -136,11 +147,11 @@
         var steps = document.createElement('ol');
         steps.className = 'ap-pay-steps';
         [
-          'Scan the QR with any UPI app (or open the UPI link).',
+          'Scan the QR with any UPI app (or Open UPI app).',
           'Verify recipient and amount ₹' + order.amountInr + ' before paying.',
           'Complete payment in the UPI app.',
           'Return here, upload the payment screenshot, and enter UTR/reference.',
-          'Submit for review — download unlocks only after admin approval.'
+          'Submit for review — ZIP downloads only after admin approval.'
         ].forEach(function (t) {
           var li = document.createElement('li');
           li.textContent = t;
@@ -219,15 +230,26 @@
               return r.json();
             })
             .then(function (s) {
-              if (s.status === 'APPROVED' && s.downloadToken) {
+              if (s.status === 'APPROVED' && (s.downloadToken || onApproved)) {
                 status.className = 'ap-pay-status ok';
-                status.textContent = 'Approved — starting download…';
-                window.location.href =
-                  '/api/download?token=' + encodeURIComponent(s.downloadToken);
+                status.textContent = 'Approved — preparing your ZIP…';
                 if (pollTimer) clearInterval(pollTimer);
+                if (onApproved) {
+                  try {
+                    onApproved(order, s.downloadToken || '');
+                  } catch (e) {
+                    status.className = 'ap-pay-status err';
+                    status.textContent = e.message || 'Download failed after approval';
+                    return;
+                  }
+                  setTimeout(close, 600);
+                } else if (s.downloadToken) {
+                  window.location.href =
+                    '/api/download?token=' + encodeURIComponent(s.downloadToken);
+                }
               } else if (s.status === 'APPROVED') {
                 status.className = 'ap-pay-status ok';
-                status.textContent = 'Approved. Preparing download token…';
+                status.textContent = 'Approved. Preparing download…';
               } else if (s.status === 'REJECTED') {
                 status.className = 'ap-pay-status err';
                 status.textContent =
