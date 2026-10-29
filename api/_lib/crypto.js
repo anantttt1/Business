@@ -18,6 +18,54 @@ export function hmacSign(payload) {
   return crypto.createHmac('sha256', secret).update(body).digest('hex');
 }
 
+export function timingSafeEqualStr(a, b) {
+  const ba = Buffer.from(String(a || ''));
+  const bb = Buffer.from(String(b || ''));
+  if (ba.length !== bb.length) return false;
+  return crypto.timingSafeEqual(ba, bb);
+}
+
+/** Signed, client-held order blob — survives serverless cold starts without Redis. */
+export function signOrderToken(order) {
+  const body = {
+    id: order.id,
+    templateId: order.templateId,
+    templateName: order.templateName,
+    amountInr: order.amountInr,
+    status: order.status,
+    createdAt: order.createdAt,
+    expiresAt: order.expiresAt,
+    claimSecret: order.claimSecret,
+    utr: order.utr || null,
+    screenshotHash: order.screenshotHash || null,
+    screenshotMime: order.screenshotMime || null,
+    screenshotSize: order.screenshotSize || null,
+    evidenceSubmittedAt: order.evidenceSubmittedAt || null,
+    risk: order.risk || null,
+    decision: order.decision || null,
+    downloadToken: order.downloadToken || null,
+    downloadExpiresAt: order.downloadExpiresAt || null
+  };
+  const payload = Buffer.from(JSON.stringify(body), 'utf8').toString('base64url');
+  const sig = hmacSign(payload);
+  return payload + '.' + sig;
+}
+
+export function verifyOrderToken(token) {
+  try {
+    const parts = String(token || '').split('.');
+    if (parts.length !== 2) return null;
+    const [payload, sig] = parts;
+    const expected = hmacSign(payload);
+    if (!timingSafeEqualStr(sig, expected)) return null;
+    const body = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    if (!body || !body.id || !body.templateId || body.amountInr == null) return null;
+    return body;
+  } catch {
+    return null;
+  }
+}
+
 export function signDownloadToken({ orderId, templateId, exp }) {
   const payload = `${orderId}.${templateId}.${exp}`;
   const sig = hmacSign(payload);
@@ -38,11 +86,4 @@ export function verifyDownloadToken(token) {
   } catch {
     return null;
   }
-}
-
-export function timingSafeEqualStr(a, b) {
-  const ba = Buffer.from(String(a || ''));
-  const bb = Buffer.from(String(b || ''));
-  if (ba.length !== bb.length) return false;
-  return crypto.timingSafeEqual(ba, bb);
 }

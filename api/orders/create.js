@@ -1,5 +1,5 @@
 import { getTemplatePrice, buildUpiUri, UPI_ID, UPI_PAYEE_NAME } from '../_lib/pricing.js';
-import { randomId } from '../_lib/crypto.js';
+import { randomId, signOrderToken } from '../_lib/crypto.js';
 import { saveOrder, storeMode } from '../_lib/store.js';
 import { json, readBody, cors, clientIp, rateLimit } from '../_lib/http.js';
 
@@ -51,11 +51,18 @@ export default async function handler(req, res) {
   order.upiId = UPI_ID;
   order.payeeName = UPI_PAYEE_NAME;
 
-  await saveOrder(order);
+  try {
+    await saveOrder(order);
+  } catch (e) {
+    // Store is best-effort; signed orderToken is source of truth
+  }
+
+  const orderToken = signOrderToken(order);
 
   return json(res, 201, {
     orderId: order.id,
     claimSecret: order.claimSecret,
+    orderToken,
     templateId: order.templateId,
     templateName: order.templateName,
     amountInr: order.amountInr,

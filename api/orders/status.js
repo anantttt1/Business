@@ -1,5 +1,5 @@
 import { getOrder } from '../_lib/store.js';
-import { timingSafeEqualStr } from '../_lib/crypto.js';
+import { timingSafeEqualStr, verifyOrderToken, signOrderToken } from '../_lib/crypto.js';
 import { json, cors, rateLimit, clientIp } from '../_lib/http.js';
 
 export default async function handler(req, res) {
@@ -12,8 +12,21 @@ export default async function handler(req, res) {
   const url = new URL(req.url, 'http://localhost');
   const orderId = url.searchParams.get('orderId') || '';
   const claim = url.searchParams.get('claim') || '';
-  const order = await getOrder(orderId);
+  const orderToken = url.searchParams.get('orderToken') || '';
+
+  let order = orderToken ? verifyOrderToken(orderToken) : null;
+  if (!order && orderId) {
+    order = await getOrder(orderId);
+  }
   if (!order) return json(res, 404, { error: 'Order not found' });
+
+  // Prefer fresher store copy if available
+  if (order.id) {
+    try {
+      const stored = await getOrder(order.id);
+      if (stored) order = stored;
+    } catch (e) {}
+  }
 
   const out = {
     orderId: order.id,
@@ -26,7 +39,8 @@ export default async function handler(req, res) {
     riskLevel: order.risk?.riskLevel || null,
     decision: order.decision
       ? { status: order.decision.status, at: order.decision.at, reason: order.decision.reason || null }
-      : null
+      : null,
+    orderToken: signOrderToken(order)
   };
 
   if (

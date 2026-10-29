@@ -1,5 +1,5 @@
 import { getOrder, saveOrder } from '../_lib/store.js';
-import { timingSafeEqualStr, signDownloadToken } from '../_lib/crypto.js';
+import { timingSafeEqualStr, signDownloadToken, verifyOrderToken, signOrderToken } from '../_lib/crypto.js';
 import { json, readBody, cors, clientIp, rateLimit } from '../_lib/http.js';
 
 function adminOk(req) {
@@ -25,15 +25,25 @@ export default async function handler(req, res) {
   }
 
   const orderId = String(body.orderId || '').trim();
+  const orderToken = String(body.orderToken || '').trim();
   const action = String(body.action || '').toLowerCase();
   const reason = String(body.reason || '').slice(0, 300);
 
-  const order = await getOrder(orderId);
-  if (!order) return json(res, 404, { error: 'Order not found' });
+  let order = orderToken ? verifyOrderToken(orderToken) : null;
+  if (!order && orderId) {
+    order = await getOrder(orderId);
+  }
+  if (!order) return json(res, 404, { error: 'Order not found — paste the buyer orderToken if store is ephemeral' });
 
   if (action === 'approve') {
-    if (order.status === 'APPROVED') {
-      return json(res, 200, { ok: true, status: 'APPROVED', message: 'Already approved' });
+    if (order.status === 'APPROVED' && order.downloadToken) {
+      return json(res, 200, {
+        ok: true,
+        status: 'APPROVED',
+        message: 'Already approved',
+        downloadToken: order.downloadToken,
+        orderToken: signOrderToken(order)
+      });
     }
     if (!['PENDING_REVIEW', 'EVIDENCE_SUBMITTED', 'CREATED'].includes(order.status)) {
       return json(res, 400, { error: 'Cannot approve from status ' + order.status });
@@ -53,7 +63,10 @@ export default async function handler(req, res) {
       exp
     });
     order.downloadExpiresAt = exp;
-    await saveOrder(order);
+    try {
+      await saveOrder(order);
+    } catch (e) {}
+    const token = signOrderToken(order);
     return json(res, 200, {
       ok: true,
       status: 'APPROVED',
@@ -61,7 +74,8 @@ export default async function handler(req, res) {
       templateId: order.templateId,
       downloadToken: order.downloadToken,
       downloadExpiresAt: exp,
-      notice: 'Manual admin approval — not an automatic bank confirmation.'
+      orderToken: token,
+      notice: 'Manual admin approval — not an automatic bank confirmation. Buyer needs updated orderToken or must poll while store holds the order.'
     });
   }
 
@@ -75,8 +89,15 @@ export default async function handler(req, res) {
       by: 'admin'
     };
     order.downloadToken = null;
-    await saveOrder(order);
-    return json(res, 200, { ok: true, status: 'REJECTED', orderId: order.id });
+    try {
+      await saveOrder(order);
+    } catch (e) {}
+    return json(res, 200, {
+      ok: true,
+      status: 'REJECTED',
+      orderId: order.id,
+      orderToken: signOrderToken(order)
+    });
   }
 
   return json(res, 400, { error: 'action must be approve or reject' });
