@@ -31,7 +31,6 @@
     const thumb = document.createElement('div');
     thumb.className = 'pb-card-thumb';
     {
-      /* Thumbnail photo: public/portfolio-builder/previews/<id>.jpg (800x500). If it is missing, the name placeholder below is shown. */
       const img = document.createElement('img');
       img.alt = t.name + ' template preview';
       img.loading = 'lazy';
@@ -75,7 +74,7 @@
     const view = document.createElement('a');
     view.className = 'btn o';
     view.textContent = 'View Template';
-    view.href = (t.preview || ('/portfolio-builder/templates/' + t.id + '/'));
+    view.href = t.preview || '/portfolio-builder/templates/' + t.id + '/';
     view.target = '_blank';
     view.rel = 'noopener noreferrer';
 
@@ -86,6 +85,28 @@
 
     actions.appendChild(view);
     actions.appendChild(customize);
+
+    var prices = window.PB_TEMPLATE_PRICES || {};
+    var priceMeta = prices[t.id] || (t.priceInr != null ? { priceInr: t.priceInr } : null);
+    if (priceMeta && priceMeta.priceInr != null) {
+      var priceTag = document.createElement('span');
+      priceTag.className = 'pb-tag';
+      priceTag.textContent = '₹' + priceMeta.priceInr;
+      tags.appendChild(priceTag);
+
+      var buy = document.createElement('button');
+      buy.type = 'button';
+      buy.className = 'btn p';
+      buy.textContent = 'Download ZIP · ₹' + priceMeta.priceInr;
+      buy.addEventListener('click', function () {
+        if (typeof window.PB_openPayment === 'function') {
+          window.PB_openPayment(t.id);
+        } else {
+          alert('Payment module failed to load. Hard refresh the page.');
+        }
+      });
+      actions.appendChild(buy);
+    }
 
     body.appendChild(h3);
     body.appendChild(p);
