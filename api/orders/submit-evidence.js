@@ -1,7 +1,8 @@
 import { getOrder, saveOrder, findByUtr, findByHash } from '../_lib/store.js';
+import { UPI_ID } from '../_lib/pricing.js';
 import { sha256Hex, signOrderToken, verifyOrderToken } from '../_lib/crypto.js';
 import { analyzeEvidence } from '../_lib/fraud.js';
-import { UPI_ID } from '../_lib/pricing.js';
+import { evidenceOnlyOutcome, hasWebhookSecret } from '../_lib/verify.js';
 import { json, readBody, cors, clientIp, rateLimit } from '../_lib/http.js';
 
 const MAX_BYTES = 4 * 1024 * 1024;
@@ -11,8 +12,8 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
 
   const ip = clientIp(req);
-  if (!rateLimit('evidence:' + ip, 10, 60_000)) {
-    return json(res, 429, { error: 'Too many submissions. Slow down.' });
+  if (!rateLimit('evidence:' + ip, 15, 60_000)) {
+    return json(res, 429, { error: 'Too many requests' });
   }
 
   let body;
@@ -27,24 +28,37 @@ export default async function handler(req, res) {
   const utr = String(body.utr || '').trim().toUpperCase();
   const dataUrl = String(body.screenshotDataUrl || '');
 
-  // Prefer signed token (durable across serverless instances), fallback to store
   let order = orderToken ? verifyOrderToken(orderToken) : null;
-  if (!order && orderId) {
-    order = await getOrder(orderId);
-  }
+  if (!order && orderId) order = await getOrder(orderId);
   if (!order) {
     return json(res, 404, {
       error:
         'Order not found. Keep this browser tab open after creating the order, or set Upstash KV for durable storage.'
     });
   }
+
+  if (order.id) {
+    try {
+      const stored = await getOrder(order.id);
+      if (stored) order = stored;
+    } catch (e) {}
+  }
+
   if (orderId && order.id !== orderId) {
     return json(res, 400, { error: 'orderId does not match orderToken' });
   }
 
-  if (order.status === 'APPROVED') return json(res, 400, { error: 'Order already approved' });
+  if (order.status === 'APPROVED' || order.status === 'PAYMENT_CONFIRMED') {
+    return json(res, 200, {
+      orderId: order.id,
+      orderToken: signOrderToken(order),
+      status: order.status,
+      message: 'Payment already confirmed'
+    });
+  }
   if (order.status === 'REJECTED') return json(res, 400, { error: 'Order was rejected' });
-  if (order.expiresAt && Date.now() > order.expiresAt && order.status === 'CREATED') {
+  if (order.status === 'REFUNDED') return json(res, 400, { error: 'Order was refunded' });
+  if (order.expiresAt && Date.now() > order.expiresAt) {
     order.status = 'EXPIRED';
     try {
       await saveOrder(order);
@@ -78,6 +92,14 @@ export default async function handler(req, res) {
     byHash = await findByHash(hash);
   } catch (e) {}
 
+  if (
+    byUtr &&
+    byUtr.id !== order.id &&
+    (byUtr.status === 'APPROVED' || byUtr.status === 'PAYMENT_CONFIRMED')
+  ) {
+    return json(res, 409, { error: 'This UTR was already used for another purchase' });
+  }
+
   const risk = analyzeEvidence({
     expectedAmountInr: order.amountInr,
     expectedUpiId: UPI_ID,
@@ -96,28 +118,28 @@ export default async function handler(req, res) {
   order.screenshotSize = bytes.length;
   order.evidenceSubmittedAt = Date.now();
   order.risk = risk;
-  order.status = 'PENDING_REVIEW';
+
+  const outcome = evidenceOnlyOutcome(risk);
+  order.status = outcome.status;
 
   try {
     await saveOrder(order);
-  } catch (e) {}
-
-  const newToken = signOrderToken(order);
+  } catch (e) {
+    return json(res, 503, {
+      error: 'Could not persist order. Configure durable storage (Upstash KV).',
+      storeError: true
+    });
+  }
 
   return json(res, 200, {
     orderId: order.id,
-    orderToken: newToken,
+    orderToken: signOrderToken(order),
     status: order.status,
     riskLevel: risk.riskLevel,
     findings: risk.findings,
     disclaimer: risk.disclaimer,
-    reviewHint:
-      'Share order ID ' +
-      order.id +
-      ' and UTR ' +
-      utr +
-      ' with AP Creative Studio for approval. Or open /admin-payments/ and paste the order token.',
-    message:
-      'Evidence received. Status is PENDING_REVIEW. An administrator must confirm payment before ZIP unlock. This is not automatic bank verification.'
+    autoUnlockReady: false,
+    webhookConfigured: hasWebhookSecret(),
+    message: outcome.message
   });
 }
