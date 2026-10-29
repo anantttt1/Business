@@ -43,6 +43,63 @@
     };
   }
 
+  /** Snapshot of form state that templates can read without localStorage (file:// ZIP). */
+  function buildExportPayload(state) {
+    var payload = {
+      fullName: state.fullName || '',
+      title: state.title || '',
+      tagline: state.tagline || '',
+      about: state.about || '',
+      location: state.location || '',
+      email: state.email || '',
+      phone: state.phone || '',
+      resumeUrl: state.resumeUrl || '',
+      github: state.github || '',
+      linkedin: state.linkedin || '',
+      website: state.website || '',
+      leetcode: state.leetcode || '',
+      leetcodeUsername: state.leetcodeUsername || '',
+      hackerrank: state.hackerrank || '',
+      skills: state.skills || [],
+      education: state.education || [],
+      experience: state.experience || [],
+      projects: state.projects || [],
+      certifications: state.certifications || [],
+      accent: state.accent || '',
+      themeMode: state.themeMode || '',
+      templateId: state.templateId || '',
+      photoData: state.photoData || ''
+    };
+    // Prefer explicit leetcode username field; fall back to URL-ish value
+    if (!payload.leetcodeUsername && payload.leetcode) {
+      payload.leetcodeUsername = String(payload.leetcode)
+        .replace(/^@/, '')
+        .replace(/.*leetcode\.com\/(u\/)?/i, '')
+        .replace(/\/$/, '');
+    }
+    return payload;
+  }
+
+  function injectExportData(jsSource, state) {
+    var payload = buildExportPayload(state);
+    var json;
+    try {
+      json = JSON.stringify(payload);
+    } catch (e) {
+      // photoData can be huge; if stringify fails, drop photo from payload
+      var copy = Object.assign({}, payload);
+      delete copy.photoData;
+      json = JSON.stringify(copy);
+    }
+    var bootstrap =
+      '/* AP Creative Studio — embedded portfolio data from builder */\n' +
+      'window.__PB_EXPORT_DATA__ = ' + json + ';\n' +
+      '(function(){try{if(window.__PB_EXPORT_DATA__){localStorage.setItem("ap-pb-v1",JSON.stringify(window.__PB_EXPORT_DATA__));' +
+      'if(window.__PB_EXPORT_DATA__.photoData){localStorage.setItem("ap-pb-photo",window.__PB_EXPORT_DATA__.photoData);sessionStorage.setItem("ap-pb-photo",window.__PB_EXPORT_DATA__.photoData);}}}' +
+      'catch(e){}})();\n';
+    return bootstrap + jsSource;
+  }
+
   function prepareHtml(html, cfg) {
     html = html.replace(/href="\/portfolio-builder\/templates\/[^"]+\/(template[^\"]*\.css)"/g, 'href="$1"');
     html = html.replace(/src="\/portfolio-builder\/templates\/[^"]+\/template\.js"/g, 'src="template.js"');
@@ -52,7 +109,11 @@
   }
 
   function readmeFor(state) {
-    return '# ' + (state.fullName || 'My') + ' Portfolio\n\nGenerated with AP Creative Studio Portfolio Builder.\n';
+    return (
+      '# ' + (state.fullName || 'My') + ' Portfolio\n\n' +
+      'Generated with AP Creative Studio Portfolio Builder.\n\n' +
+      'Your details are already filled in. Open `index.html` in a browser to view.\n'
+    );
   }
 
   async function makeZip(files) {
@@ -66,7 +127,6 @@
   }
 
   var SUPPORTED = ['modern-dark-3d', 'signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact', 'color-pop'];
-  var OWN_JS = ['signature-orange', 'ember-editorial', 'paper-atelier', 'ideas-impact', 'color-pop'];
   var EXTRA_CSS = {
     'ideas-impact': ['template-b.css', 'template-c.css', 'template-d.css']
   };
@@ -96,6 +156,8 @@
       }
 
       html = prepareHtml(html, cfg);
+      // Embed user form data so the ZIP works offline / on any device without builder localStorage
+      js = injectExportData(js, state);
 
       var files = [
         { name: 'my-portfolio/index.html', data: html },
