@@ -1,6 +1,7 @@
 /**
  * Heuristic risk analysis on user-submitted payment evidence.
  * This is NOT bank confirmation. OCR is optional; without OCR we still score structure/duplicates.
+ * Never use this alone to unlock a ZIP.
  */
 
 export function analyzeEvidence({
@@ -73,6 +74,6 @@ export function analyzeEvidence({
     riskScore: score,
     findings,
     disclaimer:
-      'Heuristic risk only. A valid-looking screenshot or UTR does not prove funds were received. Manual review required before approval.'
+      'Heuristic risk only. A valid-looking screenshot or UTR does not prove funds were received. ZIP unlock requires trusted transaction confirmation (webhook/provider), not screenshot OCR alone.'
   };
 }
