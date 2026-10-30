@@ -279,3 +279,102 @@ body.pb-has-preview-banner{padding-top:56px}
 @media(min-width:1100px){
   .pb-gallery{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 }
+
+/* How It Works panel (editor right side) — all templates */
+.pb-editor-shell{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:22px;
+  align-items:start;
+}
+@media(min-width:960px){
+  .pb-editor-shell{
+    grid-template-columns:minmax(0,1fr) minmax(260px,340px);
+  }
+  .pb-howto{
+    position:sticky;
+    top:88px;
+  }
+}
+.pb-howto-card{
+  padding:18px 16px 16px;
+  border-radius:16px;
+  border:1px solid var(--bd);
+  background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  box-shadow:0 16px 40px -24px rgba(0,0,0,.5);
+}
+.pb-howto-badge{
+  display:inline-block;
+  margin:0 0 8px;
+  padding:4px 10px;
+  border-radius:99px;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#c4b5fd;
+  background:rgba(139,92,246,.18);
+  border:1px solid rgba(139,92,246,.35);
+}
+.pb-howto-title{
+  margin:0 0 6px;
+  font-size:1.35rem;
+  font-weight:700;
+  letter-spacing:-.02em;
+  color:var(--tx);
+}
+.pb-howto-sub{
+  margin:0 0 14px;
+  font-size:.86rem;
+  line-height:1.45;
+  color:var(--mu);
+}
+.pb-howto-steps{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.pb-howto-step{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:12px 12px 11px;
+  border-radius:12px;
+  border:1px solid var(--bd);
+  background:rgba(0,0,0,.22);
+}
+.pb-howto-num{
+  flex:none;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font:700 .85rem/1 var(--hf);
+  color:#0c0c10;
+}
+.pb-howto-1 .pb-howto-num{background:#3b82f6;color:#fff}
+.pb-howto-2 .pb-howto-num{background:#a855f7;color:#fff}
+.pb-howto-3 .pb-howto-num{background:#22c55e;color:#05210f}
+.pb-howto-4 .pb-howto-num{background:#f59e0b;color:#17100f}
+.pb-howto-5 .pb-howto-num{background:#38bdf8;color:#0c0c10}
+.pb-howto-step strong{
+  display:block;
+  font-size:.88rem;
+  margin:0 0 4px;
+  color:var(--tx);
+}
+.pb-howto-step p{
+  margin:0;
+  font-size:.8rem;
+  line-height:1.45;
+  color:var(--mu);
+}
+.pb-howto-step em{font-style:normal;color:var(--tx);font-weight:600}
+@media(max-width:959px){
+  .pb-howto{order:-1}
+  .pb-howto-card{margin-bottom:4px}
+}
