@@ -1,0 +1,6 @@
+.sg .card a.btn.p:hover,.btn.p:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--wa)!important}
+@media (prefers-reduced-motion:reduce){.sg .card a.btn.p,.btn.p{animation:none!important}}
+
+/* Team mentor circular photo */
+.ph-circle{border-radius:50%!important;max-width:150px!important;width:150px;height:150px;aspect-ratio:1;margin-inline:auto}
+.ph-circle img{border-radius:50%;object-fit:cover;object-position:center 20%}
