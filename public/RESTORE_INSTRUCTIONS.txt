@@ -1,0 +1,11 @@
+RESTORE FULL UI CSS (30 seconds)
+
+1. Open: https://github.com/anantttt1/Business/blob/71345806d64bbab6a04a0178220b1cd197ce5031/public/ap-styles.css
+2. Click Raw
+3. Select all (Ctrl+A) and copy
+4. Open: https://github.com/anantttt1/Business/edit/main/public/ap-styles.css
+5. Paste and Commit
+
+This restores the full stylesheet from before the accidental overwrite.
+Abhinav mentor card stays via public/ap-app.js inject.
+Upload photo to public/team/abhinav-pachauri.jpg
