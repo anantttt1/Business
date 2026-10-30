@@ -1,3 +1,2 @@
-/* Self-hosted fonts (no Google Fonts: no third-party requests, nothing for the CSP to allow) */
-@font-face{font-family:'Inter';font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/inter-var.woff) format('woff')}
-@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:500 700;font-display:swap;src:url(/fonts/space-grotesk-var.woff) format('woff')}
+/* placeholder will be replaced */
+body{background:#0c0c10;color:#fff}
