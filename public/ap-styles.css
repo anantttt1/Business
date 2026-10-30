@@ -81,3 +81,18 @@ html:not(.js) .splash{display:none}
 .sg .card a.btn.p,.btn.p{background:var(--wa)!important;background-image:none!important;color:#05210f!important;box-shadow:0 12px 34px -12px var(--wa)!important;animation:pGlow 2.4s ease-in-out infinite}
 .sg .card a.btn.p:hover,.btn.p:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--wa)!important}
 @media (prefers-reduced-motion:reduce){.sg .card a.btn.p,.btn.p{animation:none!important}}
+
+/* Mentor card (Abhinav Pachauri): circular photo, full-width row under the three team cards */
+.ph-circle{border-radius:50%;width:150px;height:150px;max-width:none;margin:0 auto 16px;flex:none}
+.ph-circle img{border-radius:50%;object-position:center 20%}
+.tm-mentor{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:center;gap:28px;text-align:left;padding:22px 28px}
+.tm-mentor .ph-circle{width:168px;height:168px;margin:0}
+.tm-mentor .tm-body{flex:0 1 560px;min-width:0}
+.tm-mentor h3,.tm-mentor p,.tm-mentor .role{padding-inline:0}
+.tm-mentor p{flex:none;margin:8px 0 0}
+@media(max-width:620px){
+  .tm-mentor{flex-direction:column;text-align:center;gap:0;padding:14px 14px 22px}
+  .tm-mentor .ph-circle{width:150px;height:150px;margin:0 auto 16px}
+  .tm-mentor .tm-body{flex:none;width:100%}
+  .tm-mentor h3,.tm-mentor p,.tm-mentor .role{padding-inline:6px}
+}
