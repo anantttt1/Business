@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#fdf8ee"/>
+  <rect x="0" y="0" width="800" height="48" fill="#fdf8ee" stroke="#111" stroke-width="2"/>
+  <text x="24" y="32" font-family="Arial Black, sans-serif" font-size="14" fill="#111">✱ B.Tech CSE</text>
+  <text x="520" y="30" font-family="Arial, sans-serif" font-size="12" fill="#111">About  Projects  LeetCode  Contact</text>
+  <line x1="0" y1="48" x2="800" y2="48" stroke="#111" stroke-width="2"/>
+  <text x="48" y="140" font-family="Georgia, serif" font-size="28" fill="#ff5a36" font-style="italic">HELLO!</text>
+  <text x="48" y="220" font-family="Arial Black, sans-serif" font-size="72" fill="#111">I'M</text>
+  <text x="48" y="300" font-family="Arial Black, sans-serif" font-size="72" fill="#111">NAME</text>
+  <text x="48" y="350" font-family="Georgia, serif" font-size="20" fill="#3f7be0" font-style="italic">I build websites and solve problems.</text>
+  <rect x="48" y="380" width="160" height="40" rx="20" fill="#ff5a36"/>
+  <text x="68" y="406" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#fff">Let's work together!</text>
+  <circle cx="620" cy="260" r="100" fill="url(#blob)"/>
+  <defs>
+    <linearGradient id="blob" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffe03a"/>
+      <stop offset="50%" style="stop-color:#ff5a36"/>
+      <stop offset="100%" style="stop-color:#8ebcf7"/>
+    </linearGradient>
+  </defs>
+  <circle cx="620" cy="260" r="70" fill="#111"/>
+  <text x="595" y="275" font-family="Arial Black, sans-serif" font-size="32" fill="#ffe03a">YN</text>
+  <rect x="680" y="340" width="100" height="28" rx="4" fill="#ffe03a" transform="rotate(-8 730 354)"/>
+  <text x="690" y="358" font-family="Georgia, serif" font-size="11" fill="#111" transform="rotate(-8 730 354)">CODE POWER</text>
+</svg>

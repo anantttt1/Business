@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#07070c"/>
+  <circle cx="100" cy="80" r="120" fill="#7c5cff" opacity="0.2"/>
+  <circle cx="700" cy="420" r="140" fill="#00d4aa" opacity="0.15"/>
+  <text x="40" y="36" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#f0f0f5">YN</text>
+  <text x="58" y="36" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#7c5cff">.</text>
+  <text x="40" y="100" font-family="Arial, sans-serif" font-size="12" fill="#00d4aa" letter-spacing="2">B.TECH STUDENT · DEVELOPER</text>
+  <text x="40" y="170" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#f0f0f5">BUILDING</text>
+  <text x="40" y="220" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#7c5cff">IDEAS</text>
+  <text x="160" y="220" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#f0f0f5"> INTO</text>
+  <text x="40" y="270" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#f0f0f5">REALITY</text>
+  <text x="230" y="270" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#00d4aa">.</text>
+  <text x="40" y="320" font-family="Arial, sans-serif" font-size="14" fill="#8b8b9a">Hey, I'm Your Name — modern glow portfolio.</text>
+  <rect x="40" y="350" width="120" height="36" rx="18" fill="#7c5cff"/>
+  <text x="58" y="373" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#fff">See projects</text>
+  <rect x="175" y="350" width="110" height="36" rx="18" fill="none" stroke="#ffffff33" stroke-width="1"/>
+  <text x="192" y="373" font-family="Arial, sans-serif" font-size="13" fill="#f0f0f5">Get in touch</text>
+</svg>

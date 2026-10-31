@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#fdf1ea"/>
+  <text x="40" y="36" font-family="Georgia, serif" font-size="16" font-weight="700" fill="#0d4745">● B.Tech CSE</text>
+  <text x="520" y="34" font-family="Arial, sans-serif" font-size="13" fill="#0d4745">About  Projects  LeetCode  Contact</text>
+  <text x="48" y="150" font-family="Arial, sans-serif" font-size="16" fill="#0d4745" opacity="0.7">Hello, I'm</text>
+  <text x="48" y="220" font-family="Georgia, serif" font-size="64" font-weight="800" fill="#0d4745">Your</text>
+  <text x="48" y="290" font-family="Georgia, serif" font-size="64" font-weight="800" fill="#0d4745">Name</text>
+  <text x="48" y="340" font-family="Georgia, serif" font-size="26" fill="#f9a98b" font-style="italic">Student Developer</text>
+  <text x="48" y="380" font-family="Arial, sans-serif" font-size="14" fill="#0d4745" opacity="0.75">Clean portfolio with elegant typography.</text>
+  <rect x="48" y="410" width="110" height="36" rx="18" fill="#0d4745"/>
+  <text x="68" y="433" font-family="Arial, sans-serif" font-size="13" font-weight="600" fill="#fdf1ea">View Work</text>
+  <circle cx="620" cy="270" r="110" fill="#f9a98b" opacity="0.5"/>
+  <circle cx="620" cy="270" r="110" fill="#f8d27a" opacity="0.35"/>
+  <circle cx="620" cy="270" r="72" fill="#0d4745"/>
+  <text x="595" y="285" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#fdf1ea">YN</text>
+</svg>
