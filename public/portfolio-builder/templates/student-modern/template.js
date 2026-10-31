@@ -55,7 +55,6 @@
       if (s.github) cfg.github = extractUser(s.github, 'github') || s.github;
       if (s.linkedin) cfg.linkedin = s.linkedin;
       if (s.leetcode) cfg.leetcode = extractUser(s.leetcode, 'leetcode') || s.leetcode;
-      if (s.hackerrank) cfg.hackerrank = s.hackerrank;
       if (s.skills && s.skills.length) cfg.skills = s.skills;
       if (s.education && s.education.length) cfg.education = s.education;
       if (s.experience && s.experience.length) cfg.experience = s.experience;
@@ -94,17 +93,6 @@
     }
   }
 
-  function applyPhoto(cfg) {
-    if (!cfg.photoData) return;
-    var av = document.querySelector('.avatar');
-    if (av) {
-      av.style.backgroundImage = 'url(' + cfg.photoData + ')';
-      av.style.backgroundSize = 'cover';
-      av.style.backgroundPosition = 'center';
-      av.textContent = '';
-    }
-  }
-
   function renderList(id, items, mapper) {
     var box = $(id);
     if (!box || !items || !items.length) return;
@@ -121,10 +109,8 @@
     if ($('lcLink') && cfg.leetcode) $('lcLink').href = 'https://leetcode.com/u/' + cfg.leetcode;
     if ($('liLink') && cfg.linkedin) $('liLink').href = cfg.linkedin;
     if ($('ghLink') && cfg.github) $('ghLink').href = 'https://github.com/' + cfg.github;
-    if ($('mailLink') && cfg.email) { $('mailLink').href = 'mailto:' + cfg.email; $('mailLink').textContent = cfg.email; }
-    if ($('resumeLink') && cfg.resumeUrl) { $('resumeLink').href = cfg.resumeUrl; $('resumeLink').style.display = ''; }
-    if ($('phoneLink') && cfg.phone) { $('phoneLink').href = 'tel:' + cfg.phone; $('phoneLink').textContent = cfg.phone; }
-    if ($('webLink') && cfg.website) { $('webLink').href = cfg.website; $('webLink').textContent = cfg.website.replace(/^https?:\/\//, ''); }
+    if ($('ghLink2') && cfg.github) $('ghLink2').href = 'https://github.com/' + cfg.github;
+    if ($('mailLink') && cfg.email) { $('mailLink').href = 'mailto:' + cfg.email; }
 
     var grid = $('projectCards');
     if (grid) {
@@ -132,37 +118,35 @@
       (cfg.projects.length ? cfg.projects : [{ name: 'Sample Project', type: 'Web', desc: 'Add projects in the editor.', tech: 'HTML, CSS, JS', live: '#', code: '#' }]).forEach(function (p) {
         var card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = '<h3>' + escapeHtml(p.name) + '</h3><b>' + escapeHtml(p.type || '') + '</b><p>' + escapeHtml(p.desc || '') +
+        card.innerHTML = '<h3>' + escapeHtml(p.name) + '</h3><p>' + escapeHtml(p.desc || '') +
           '</p><p class="tech">' + escapeHtml(p.tech || '') + '</p><div class="links">' +
-          '<a href="' + escapeHtml(p.live || '#') + '" target="_blank" rel="noopener">Live</a>' +
+          '<a href="' + escapeHtml(p.live || '#') + '" target="_blank" rel="noopener">Live</a> ' +
           '<a href="' + escapeHtml(p.code || '#') + '" target="_blank" rel="noopener">Code</a></div>';
         grid.appendChild(card);
       });
     }
 
-    var skillsEl = $('skillList') || $('skillTags');
+    var skillsEl = $('skillTags');
     if (skillsEl && cfg.skills.length) {
       skillsEl.innerHTML = '';
       cfg.skills.forEach(function (s) {
-        var span = document.createElement('span');
-        span.textContent = s;
-        skillsEl.appendChild(span);
+        var art = document.createElement('article');
+        art.className = 'skill-card';
+        art.innerHTML = '<div class="skill-symbol">⌘</div><h3>' + escapeHtml(s) + '</h3><p>Skill from your profile</p><span class="skill-level">IN PROGRESS</span>';
+        skillsEl.appendChild(art);
       });
     }
 
     renderList('eduList', cfg.education, function (ed) {
-      return '<h3>' + escapeHtml(ed.degree || '') + (ed.field ? ' · ' + escapeHtml(ed.field) : '') + '</h3><b>' +
-        escapeHtml(ed.institution || '') + '</b><p>' + escapeHtml([ed.start, ed.end].filter(Boolean).join(' – ')) +
-        '</p><p>' + escapeHtml(ed.description || '') + '</p>';
+      return '<h3>' + escapeHtml(ed.degree || '') + (ed.field ? ' · ' + escapeHtml(ed.field) : '') + '</h3><p>' +
+        escapeHtml(ed.institution || '') + '</p><p>' + escapeHtml([ed.start, ed.end].filter(Boolean).join(' – ')) + '</p>';
     });
     renderList('expList', cfg.experience, function (ex) {
-      return '<h3>' + escapeHtml(ex.role || '') + '</h3><b>' + escapeHtml(ex.company || '') + '</b><p>' +
-        escapeHtml([ex.start, ex.end].filter(Boolean).join(' – ')) + '</p><p>' + escapeHtml(ex.description || '') + '</p>';
+      return '<h3>' + escapeHtml(ex.role || '') + '</h3><p>' + escapeHtml(ex.company || '') + '</p><p>' +
+        escapeHtml([ex.start, ex.end].filter(Boolean).join(' – ')) + '</p>';
     });
     renderList('certList', cfg.certifications, function (c) {
-      var t = escapeHtml(c.name || '');
-      if (c.url) t = '<a href="' + escapeHtml(c.url) + '" target="_blank" rel="noopener">' + t + '</a>';
-      return '<h3>' + t + '</h3><b>' + escapeHtml(c.org || '') + '</b><p>' + escapeHtml(c.year || '') + '</p>';
+      return '<h3>' + escapeHtml(c.name || '') + '</h3><p>' + escapeHtml(c.org || '') + '</p><p>' + escapeHtml(c.year || '') + '</p>';
     });
 
     if (cfg.leetcode) {
@@ -171,10 +155,13 @@
         .then(function (d) {
           if (d.status !== 'success') { if ($('lcMsg')) $('lcMsg').textContent = 'Stats unavailable'; return; }
           if ($('lcTotal')) $('lcTotal').textContent = d.totalSolved;
+          if ($('lcEasy')) $('lcEasy').textContent = d.easySolved;
+          if ($('lcMedium')) $('lcMedium').textContent = d.mediumSolved;
+          if ($('lcHard')) $('lcHard').textContent = d.hardSolved;
           if ($('lcMsg')) $('lcMsg').textContent = 'Ranking: ' + d.ranking;
         })
         .catch(function () { if ($('lcMsg')) $('lcMsg').textContent = 'Stats unavailable'; });
-    } else if ($('lcMsg')) $('lcMsg').textContent = 'Add LeetCode in the editor';
+    }
 
     if (cfg.github) {
       fetch('https://api.github.com/users/' + cfg.github)
@@ -191,14 +178,56 @@
   var cfg = loadState();
   showPreviewBanner('student-modern');
   document.title = (cfg.name || 'Portfolio') + ' | Student Developer';
+
   var brand = document.querySelector('.brand');
   if (brand) brand.innerHTML = initials(cfg.name) + '<span>.</span>';
+  var mono = document.querySelector('.monogram');
+  if (mono) mono.innerHTML = initials(cfg.name) + '<span>.</span>';
+  var heroName = document.getElementById('heroName');
+  if (heroName) heroName.textContent = cfg.name || 'Your Name';
   var intro = document.querySelector('.hero-intro');
-  if (intro) {
-    intro.innerHTML = "Hey, I'm <strong>" + escapeHtml(cfg.name || 'Your Name') +
+  if (intro && cfg.tagline) {
+    intro.innerHTML = "Hey, I'm <strong id=\"heroName\">" + escapeHtml(cfg.name || 'Your Name') +
       "</strong> — " + escapeHtml(cfg.tagline || cfg.about || 'a student who builds useful web experiences.');
   }
-  var aboutP = document.querySelector('#about > p');
-  if (aboutP && cfg.about) aboutP.textContent = cfg.about;
+  var aboutText = document.getElementById('aboutText');
+  if (aboutText && cfg.about) aboutText.textContent = cfg.about;
+  if ($('ghLink2') && cfg.github) $('ghLink2').href = 'https://github.com/' + cfg.github;
+
   bindCommon(cfg);
+
+  (function () {
+    var nodes = document.querySelectorAll('.section, .stats-strip, .card, .skill-card, .tracker-card, .hero');
+    nodes.forEach(function (n) { n.classList.add('reveal'); });
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach(function (n) { n.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    nodes.forEach(function (n) { io.observe(n); });
+  })();
+
+  (function () {
+    var menuToggle = document.getElementById('menuToggle');
+    var nav = document.getElementById('nav');
+    if (menuToggle && nav) {
+      menuToggle.addEventListener('click', function () { nav.classList.toggle('open'); });
+      nav.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { nav.classList.remove('open'); });
+      });
+    }
+    var back = document.getElementById('backTop');
+    if (back) {
+      window.addEventListener('scroll', function () {
+        back.classList.toggle('show', window.scrollY > 450);
+      });
+      back.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  })();
 })();
