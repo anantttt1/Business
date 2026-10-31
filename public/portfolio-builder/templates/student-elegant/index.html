@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ujjwal Yadav | B.Tech CSE Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Pinyon+Script&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="template.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="#home" class="logo"><span class="mark"></span>B.Tech CSE</a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#leetcode">LeetCode</a>
+    <a href="#github">GitHub</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="home" class="hero">
+  <div class="hero-text">
+    <p class="hello">Hello, I'm</p>
+    <h1>Ujjwal<br>Yadav</h1>
+    <p class="script">Developer & Problem Solver</p>
+    <p class="intro">I build clean, useful websites and practise DSA every day. 2nd-year CSE student at GLA University, Mathura.</p>
+    <div class="btns">
+      <a class="btn dark" href="#projects">View Work</a>
+      <a class="btn outline" href="#contact">Contact</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="circle"></div>
+    <div class="avatar">UY</div>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <h2>About</h2>
+  <p>I am a B.Tech CSE student who loves building things that work. Currently focusing on web development, data structures and algorithms, and the basics of data science.</p>
+  <div class="skill-list" id="skillList"></div>
+</section>
+
+<section id="projects" class="section">
+  <h2>Projects</h2>
+  <div class="project-grid" id="projectCards"></div>
+</section>
+
+<section id="leetcode" class="section track">
+  <h2>LeetCode</h2>
+  <div class="stats-row">
+    <div><b id="lcTotal">0</b><span>Solved</span></div>
+    <div><b id="lcEasy">0</b><span>Easy</span></div>
+    <div><b id="lcMedium">0</b><span>Medium</span></div>
+    <div><b id="lcHard">0</b><span>Hard</span></div>
+  </div>
+  <p id="lcMsg">Loading...</p>
+  <a id="lcLink" class="btn dark" target="_blank" rel="noopener">Open LeetCode</a>
+</section>
+
+<section id="github" class="section track">
+  <h2>GitHub</h2>
+  <div class="stats-row">
+    <div><b id="ghRepos">0</b><span>Repos</span></div>
+    <div><b id="ghFollowers">0</b><span>Followers</span></div>
+  </div>
+  <p id="ghMsg">Loading...</p>
+  <ul id="repoList"></ul>
+</section>
+
+<section id="contact" class="section">
+  <h2>Contact</h2>
+  <p>Let's connect for internships or collaboration.</p>
+  <div class="contact-row">
+    <a id="mailLink" href="#">Email</a>
+    <a id="ghLink" href="#" target="_blank">GitHub</a>
+    <a id="liLink" href="#" target="_blank">LinkedIn</a>
+  </div>
+</section>
+
+<footer><p>© 2025 · Student Portfolio Template</p></footer>
+<script src="template.js"></script>
+</body>
+</html>
