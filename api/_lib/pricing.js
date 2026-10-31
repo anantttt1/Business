@@ -8,7 +8,11 @@ export const TEMPLATE_PRICES = {
   'paper-atelier': { name: 'Paper Atelier', priceInr: 29, order: 3 },
   'ember-editorial': { name: 'Ember Editorial', priceInr: 39, order: 4 },
   'signature-orange': { name: 'Signature Orange', priceInr: 39, order: 5 },
-  'modern-dark-3d': { name: 'Modern Dark 3D', priceInr: 29, order: 6 }
+  'modern-dark-3d': { name: 'Modern Dark 3D', priceInr: 29, order: 6 },
+  'student-bold': { name: 'Student Bold', priceInr: 19, order: 7 },
+  'student-elegant': { name: 'Student Elegant', priceInr: 19, order: 8 },
+  'student-modern': { name: 'Student Modern', priceInr: 19, order: 9 },
+  'student-portfolio': { name: 'Student Portfolio', priceInr: 19, order: 10 }
 };
 
 export function getTemplatePrice(templateId) {
