@@ -26,37 +26,55 @@ const CONFIG = {
 
 function $(id) { return document.getElementById(id); }
 
-$("lcLink").href = "https://leetcode.com/u/" + CONFIG.leetcode;
-$("liLink").href = CONFIG.linkedin;
-$("ghLink").href = "https://github.com/" + CONFIG.github;
-$("mailLink").href = "mailto:" + CONFIG.email;
-$("mailLink").textContent = CONFIG.email;
+if ($("lcLink")) $("lcLink").href = "https://leetcode.com/u/" + CONFIG.leetcode;
+if ($("liLink")) $("liLink").href = CONFIG.linkedin;
+if ($("ghLink")) $("ghLink").href = "https://github.com/" + CONFIG.github;
+if ($("mailLink")) {
+  $("mailLink").href = "mailto:" + CONFIG.email;
+  $("mailLink").textContent = CONFIG.email;
+}
 
 CONFIG.projects.forEach(function (p) {
   const card = document.createElement("div");
   card.className = "card";
-  card.innerHTML = "<h3>" + p.name + "</h3><b>" + p.type + "</b><p>" + p.desc + "</p><p class='tech'>" + p.tech + "</p><div class='links'><a href='" + p.live + "' target='_blank' rel='noopener'>Live</a><a href='" + p.code + "' target='_blank' rel='noopener'>Code</a></div>";
-  $("projectCards").appendChild(card);
+  card.innerHTML =
+    "<h3>" + p.name + "</h3>" +
+    "<b>" + p.type + "</b>" +
+    "<p>" + p.desc + "</p>" +
+    "<p class='tech'>" + p.tech + "</p>" +
+    "<div class='links'><a href='" + p.live + "' target='_blank' rel='noopener'>Live</a>" +
+    "<a href='" + p.code + "' target='_blank' rel='noopener'>Code</a></div>";
+  if ($("projectCards")) $("projectCards").appendChild(card);
 });
 
 fetch("https://leetcode-stats-api.herokuapp.com/" + CONFIG.leetcode)
   .then(function (res) { return res.json(); })
   .then(function (d) {
-    if (d.status !== "success") { $("lcMsg").textContent = "Could not load stats."; return; }
-    $("lcTotal").textContent = d.totalSolved;
-    $("lcEasy").textContent = d.easySolved;
-    $("lcMedium").textContent = d.mediumSolved;
-    $("lcHard").textContent = d.hardSolved;
-    $("lcMsg").textContent = "Ranking: " + d.ranking;
+    if (d.status !== "success") {
+      if ($("lcMsg")) $("lcMsg").textContent = "Could not load stats.";
+      return;
+    }
+    if ($("lcTotal")) $("lcTotal").textContent = d.totalSolved;
+    if ($("lcEasy")) $("lcEasy").textContent = d.easySolved;
+    if ($("lcMedium")) $("lcMedium").textContent = d.mediumSolved;
+    if ($("lcHard")) $("lcHard").textContent = d.hardSolved;
+    if ($("lcMsg")) $("lcMsg").textContent = "Ranking: " + d.ranking;
   })
-  .catch(function () { $("lcMsg").textContent = "Stats unavailable."; });
+  .catch(function () {
+    if ($("lcMsg")) $("lcMsg").textContent = "Stats unavailable.";
+  });
 
 fetch("https://api.github.com/users/" + CONFIG.github)
   .then(function (res) { return res.json(); })
   .then(function (u) {
-    if (u.message) { $("ghMsg").textContent = "Could not load GitHub."; return; }
-    $("ghRepos").textContent = u.public_repos;
-    $("ghFollowers").textContent = u.followers;
-    $("ghMsg").textContent = u.bio || "Loaded";
+    if (u.message) {
+      if ($("ghMsg")) $("ghMsg").textContent = "Could not load GitHub.";
+      return;
+    }
+    if ($("ghRepos")) $("ghRepos").textContent = u.public_repos;
+    if ($("ghFollowers")) $("ghFollowers").textContent = u.followers;
+    if ($("ghMsg")) $("ghMsg").textContent = u.bio || "Loaded";
   })
-  .catch(function () { $("ghMsg").textContent = "GitHub unavailable."; });
+  .catch(function () {
+    if ($("ghMsg")) $("ghMsg").textContent = "GitHub unavailable.";
+  });
