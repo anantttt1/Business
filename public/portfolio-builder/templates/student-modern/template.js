@@ -1,52 +1,158 @@
-const CONFIG = {
-  leetcode: "your-leetcode-username",
-  github: "your-github-username",
-  linkedin: "https://www.linkedin.com/in/your-linkedin-id",
-  email: "your-email@gmail.com",
-  projects: [
-    { name: "GLA ExamPrep", type: "Quiz Website", desc: "Free quiz platform for GLA University students.", tech: "HTML, CSS, JavaScript, Firebase", live: "#", code: "#" },
-    { name: "Wallora", type: "Wallpaper Website", desc: "Discover and upload wallpapers.", tech: "HTML, CSS, JavaScript", live: "#", code: "#" }
-  ],
-  skills: ["HTML", "CSS", "JavaScript", "React", "Java", "Python", "Git", "DSA"]
-};
+(function () {
+  'use strict';
 
-function $(id) { return document.getElementById(id); }
+  var DEFAULT = {
+    name: 'Your Name',
+    role: 'Student Developer',
+    tagline: 'I build websites and solve problems with code.',
+    about: 'Write a short intro about yourself.',
+    email: '',
+    github: '',
+    linkedin: '',
+    leetcode: '',
+    projects: [],
+    skills: []
+  };
 
-if ($("lcLink")) $("lcLink").href = "https://leetcode.com/u/" + CONFIG.leetcode;
-if ($("liLink")) $("liLink").href = CONFIG.linkedin;
-if ($("ghLink")) $("ghLink").href = "https://github.com/" + CONFIG.github;
-if ($("mailLink")) {
-  $("mailLink").href = "mailto:" + CONFIG.email;
-  $("mailLink").textContent = CONFIG.email;
-}
+  function $(id) { return document.getElementById(id); }
+  function initials(name) {
+    var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return 'YN';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  function extractUser(urlOrName, host) {
+    if (!urlOrName) return '';
+    var s = String(urlOrName).trim();
+    if (host === 'leetcode') {
+      var m = s.match(/leetcode\.com\/(?:u\/)?([A-Za-z0-9_-]+)/i);
+      if (m) return m[1];
+    }
+    if (host === 'github') {
+      var g = s.match(/github\.com\/([A-Za-z0-9_-]+)/i);
+      if (g) return g[1];
+    }
+    if (/^[A-Za-z0-9_-]+$/.test(s)) return s;
+    return s.replace(/^@/, '');
+  }
 
-CONFIG.projects.forEach(function (p) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = "<h3>" + p.name + "</h3><b>" + p.type + "</b><p>" + p.desc + "</p><p class='tech'>" + p.tech + "</p><div class='links'><a href='" + p.live + "' target='_blank' rel='noopener'>Live</a><a href='" + p.code + "' target='_blank' rel='noopener'>Code</a></div>";
-  if ($("projectCards")) $("projectCards").appendChild(card);
-});
+  function loadState() {
+    var cfg = Object.assign({}, DEFAULT);
+    var params = new URLSearchParams(location.search);
+    var isPreview = params.get('preview') === '1' || params.get('from') === 'builder';
+    try {
+      var raw = localStorage.getItem('ap-pb-v1');
+      if (!raw && !isPreview) return cfg;
+      var s = raw ? JSON.parse(raw) : {};
+      if (!s || typeof s !== 'object') return cfg;
+      if (s.fullName) cfg.name = s.fullName;
+      if (s.title) cfg.role = s.title;
+      if (s.tagline) cfg.tagline = s.tagline;
+      else if (s.about) cfg.tagline = String(s.about).slice(0, 160);
+      if (s.about) cfg.about = s.about;
+      if (s.email) cfg.email = s.email;
+      if (s.github) cfg.github = extractUser(s.github, 'github') || s.github;
+      if (s.linkedin) cfg.linkedin = s.linkedin;
+      if (s.leetcode) cfg.leetcode = extractUser(s.leetcode, 'leetcode') || s.leetcode;
+      if (s.skills && s.skills.length) cfg.skills = s.skills;
+      if (s.projects && s.projects.length) {
+        cfg.projects = s.projects.map(function (p) {
+          return {
+            name: p.name || 'Project',
+            type: p.category || p.type || 'Project',
+            desc: p.description || p.desc || '',
+            tech: typeof p.tech === 'string' ? p.tech : (p.tech || []).join(', '),
+            live: p.liveUrl || p.live || '#',
+            code: p.githubUrl || p.code || '#'
+          };
+        });
+      }
+    } catch (e) { console.warn(e); }
+    return cfg;
+  }
 
-if ($("skillTags")) {
-  CONFIG.skills.forEach(function (s) {
-    const span = document.createElement("span");
-    span.textContent = s;
-    $("skillTags").appendChild(span);
-  });
-}
+  function showPreviewBanner(templateId) {
+    var params = new URLSearchParams(location.search);
+    if (params.get('preview') !== '1' && params.get('from') !== 'builder') return;
+    document.body.classList.add('pb-has-preview-banner');
+    var bar = document.createElement('div');
+    bar.className = 'pb-preview-banner';
+    bar.innerHTML = '<span>Previewing your portfolio</span><span style="display:flex;gap:8px;flex-wrap:wrap"><a href="/portfolio-builder/editor/?template=' + templateId + '">← Back to editor</a><a class="pb-preview-primary" href="/portfolio-builder/editor/?template=' + templateId + '">Edit details</a></span>';
+    document.body.insertBefore(bar, document.body.firstChild);
+    if (!document.querySelector('link[href*="builder.css"]')) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/portfolio-builder/builder.css';
+      document.head.appendChild(link);
+    }
+  }
 
-fetch("https://leetcode-stats-api.herokuapp.com/" + CONFIG.leetcode)
-  .then(function (res) { return res.json(); })
-  .then(function (d) {
-    if (d.status === "success") {
-      if ($("lcTotal")) $("lcTotal").textContent = d.totalSolved;
-      if ($("lcMsg")) $("lcMsg").textContent = "Ranking: " + d.ranking;
-    } else if ($("lcMsg")) $("lcMsg").textContent = "Stats unavailable";
-  })
-  .catch(function () { if ($("lcMsg")) $("lcMsg").textContent = "Stats unavailable"; });
+  var cfg = loadState();
+  showPreviewBanner('student-modern');
+  document.title = (cfg.name || 'Portfolio') + ' | Student Developer';
 
-fetch("https://api.github.com/users/" + CONFIG.github)
-  .then(function (res) { return res.json(); })
-  .then(function (u) {
-    if (!u.message && $("ghRepos")) $("ghRepos").textContent = u.public_repos;
-  });
+  var brand = document.querySelector('.brand');
+  if (brand) brand.innerHTML = initials(cfg.name) + '<span>.</span>';
+
+  var intro = document.querySelector('.hero-intro');
+  if (intro) {
+    intro.innerHTML = "Hey, I'm <strong>" + (cfg.name || 'Your Name') +
+      "</strong> — " + (cfg.tagline || cfg.about || 'a student who builds useful web experiences.');
+  }
+
+  var aboutP = document.querySelector('#about > p');
+  if (aboutP && cfg.about) aboutP.textContent = cfg.about;
+
+  if ($('lcLink') && cfg.leetcode) $('lcLink').href = 'https://leetcode.com/u/' + cfg.leetcode;
+  if ($('liLink') && cfg.linkedin) $('liLink').href = cfg.linkedin;
+  if ($('ghLink') && cfg.github) $('ghLink').href = 'https://github.com/' + cfg.github;
+  if ($('mailLink') && cfg.email) {
+    $('mailLink').href = 'mailto:' + cfg.email;
+    $('mailLink').textContent = cfg.email;
+  }
+
+  if ($('skillTags')) {
+    $('skillTags').innerHTML = '';
+    (cfg.skills.length ? cfg.skills : ['HTML', 'CSS', 'JavaScript']).forEach(function (s) {
+      var span = document.createElement('span');
+      span.textContent = s;
+      $('skillTags').appendChild(span);
+    });
+  }
+
+  var grid = $('projectCards');
+  if (grid) {
+    grid.innerHTML = '';
+    (cfg.projects.length ? cfg.projects : [
+      { name: 'Sample Project', type: 'Web', desc: 'Add projects in the editor.', tech: 'HTML, CSS', live: '#', code: '#' }
+    ]).forEach(function (p) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = '<h3>' + p.name + '</h3><b>' + (p.type || '') + '</b><p>' + (p.desc || '') +
+        '</p><p class="tech">' + (p.tech || '') + '</p><div class="links">' +
+        '<a href="' + (p.live || '#') + '" target="_blank" rel="noopener">Live</a>' +
+        '<a href="' + (p.code || '#') + '" target="_blank" rel="noopener">Code</a></div>';
+      grid.appendChild(card);
+    });
+  }
+
+  if (cfg.leetcode) {
+    fetch('https://leetcode-stats-api.herokuapp.com/' + cfg.leetcode)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.status === 'success') {
+          if ($('lcTotal')) $('lcTotal').textContent = d.totalSolved;
+          if ($('lcMsg')) $('lcMsg').textContent = 'Ranking: ' + d.ranking;
+        } else if ($('lcMsg')) $('lcMsg').textContent = 'Stats unavailable';
+      })
+      .catch(function () { if ($('lcMsg')) $('lcMsg').textContent = 'Stats unavailable'; });
+  } else if ($('lcMsg')) $('lcMsg').textContent = 'Add LeetCode in the editor';
+
+  if (cfg.github) {
+    fetch('https://api.github.com/users/' + cfg.github)
+      .then(function (r) { return r.json(); })
+      .then(function (u) {
+        if (!u.message && $('ghRepos')) $('ghRepos').textContent = u.public_repos;
+      });
+  }
+})();
