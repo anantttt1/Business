@@ -33,7 +33,7 @@ img { max-width: 100%; display: block; }
 }
 .logo { font-family: var(--display); letter-spacing: 0.04em; font-size: 1.15rem; }
 .nav nav { display: flex; gap: 22px; flex-wrap: wrap; }
-.nav nav a { font-size: 0.85rem; font-weight: 500; }
+.nav nav a { font-size: 0.85rem; font-weight: 500; transition: color .2s; }
 .nav nav a:hover { color: var(--red); }
 
 .btn {
@@ -45,6 +45,7 @@ img { max-width: 100%; display: block; }
   padding: 12px 22px;
   font-weight: 600;
   cursor: pointer;
+  transition: transform .2s, background .2s;
 }
 .btn:hover { background: var(--red); }
 .small-btn { padding: 8px 14px; font-size: 0.85rem; }
@@ -133,6 +134,7 @@ img { max-width: 100%; display: block; }
   border: 2px solid var(--black);
   border-radius: 18px;
   padding: 18px;
+  transition: transform .25s, box-shadow .25s;
 }
 .dot {
   display: inline-grid; place-items: center;
@@ -160,6 +162,7 @@ img { max-width: 100%; display: block; }
   border: 2px solid var(--black);
   border-radius: 18px;
   padding: 20px;
+  transition: transform .25s, box-shadow .25s;
 }
 .card h3 { font-family: var(--display); letter-spacing: 0.03em; margin-bottom: 6px; }
 .card b { color: var(--red); font-size: 0.85rem; }
@@ -237,52 +240,61 @@ footer {
   .skills { grid-template-columns: 1fr; }
 }
 
-/* === Extra polish & animations === */
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+/* Extra polish */
+.card:hover, .skill:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
+.hero-text, .hero-img, .avatar { animation: fadeUp 0.7s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.hero-img .blob { animation: floatY 4s ease-in-out infinite; }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* === Attractive extras — Bold === */
+#pb-scroll-progress { background: linear-gradient(90deg, #ff5a36, #ffe03a, #8ebcf7); }
+nav a.active { color: var(--red) !important; font-weight: 700; }
+.hero h1 {
+  background: linear-gradient(135deg, #111 30%, #ff5a36 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-.card, .skill, .skill-card, .tracker-card, .project-card, .contact-item {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+.blob {
+  animation: blobMorph 8s ease-in-out infinite, floatY 5s ease-in-out infinite;
 }
-.card:hover, .skill:hover, .skill-card:hover, .tracker-card:hover, .project-card:hover, .contact-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+@keyframes blobMorph {
+  0%, 100% { border-radius: 40% 60% 55% 45% / 45% 40% 60% 55%; }
+  50% { border-radius: 55% 45% 40% 60% / 50% 55% 45% 50%; }
 }
-.btn, .button, .btn-primary, a.btn {
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+.avatar { transition: transform .35s ease, box-shadow .35s ease; }
+.avatar:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 28px 60px rgba(255, 90, 54, 0.35);
 }
-.btn:hover, .button:hover, .button-primary:hover {
-  transform: translateY(-2px);
+.card, .skill { position: relative; overflow: hidden; }
+.card::after, .skill::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,224,58,0.15) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform .6s ease;
+  pointer-events: none;
 }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+.card:hover::after, .skill:hover::after { transform: translateX(100%); }
+.sticker {
+  animation: floatY 3.5s ease-in-out infinite;
+  box-shadow: 0 8px 20px rgba(63, 123, 224, 0.35);
 }
-@keyframes floatY {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-@keyframes pulseSoft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-.hero-text, .hero-copy, .hero-img, .hero-art, .avatar, .portrait {
-  animation: fadeUp 0.7s ease both;
-}
-.hero-img .blob, .orbit, .float-chip {
-  animation: floatY 4s ease-in-out infinite;
-}
-.live-dot, .eyebrow-dot {
-  animation: pulseSoft 2s ease-in-out infinite;
-}
-.reveal {
+.btn { position: relative; overflow: hidden; z-index: 1; }
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--red), #ff8a5c);
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transition: opacity .25s;
+  z-index: -1;
 }
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.btn:hover::before { opacity: 1; }
+.stats div { transition: transform .25s, border-color .25s; }
+.stats div:hover { transform: scale(1.05); border-color: var(--red); }
+.nav { transition: box-shadow .3s; }
+.nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
