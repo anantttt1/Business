@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Your Name | B.Tech CSE Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500&family=Barlow+Condensed:wght@500;600&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="template.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name | B.Tech CSE Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="template.css" />
 </head>
 <body>
-
 <header class="nav">
   <a href="#home" class="logo">B.Tech CSE<br>Student Developer</a>
   <nav>
-    <a href="#projects">Projects</a>
     <a href="#about">About</a>
-    <a href="#education">Education</a>
-    <a href="#leetcode">LeetCode</a>
+    <a href="#projects">Projects</a>
+    <a href="#leetcode">Coding</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
@@ -23,72 +23,66 @@
 <section id="home" class="hero">
   <h1>PORTFOLIO</h1>
   <div class="hero-row">
-    <p class="script">Code that<br>solves real<br>problems.</p>
+    <p class="script">Hello, I'm</p>
     <div class="portrait"><div class="avatar" id="avatarInit">YN</div></div>
     <div class="intro">
-      <h2>YOUR NAME ✱</h2>
-      <p>Add your tagline in the portfolio builder editor.</p>
+      <h2 id="displayName">YOUR NAME ✱</h2>
+      <p id="aboutText">I build websites and solve problems with code.</p>
     </div>
   </div>
 </section>
 
 <section id="about" class="section">
   <h2>About</h2>
-  <p>Write about yourself in the editor form.</p>
+  <p>Skills and tools I work with.</p>
+  <div class="cards" id="skillBox"></div>
 </section>
 
 <section id="projects" class="section">
   <h2>Projects</h2>
-  <div id="projectCards" class="cards"></div>
+  <div class="cards" id="projectCards"></div>
 </section>
 
 <section id="education" class="section">
   <h2>Education</h2>
-  <div id="eduList" class="cards"></div>
+  <div class="cards" id="eduList"></div>
 </section>
-
 <section id="experience" class="section">
   <h2>Experience</h2>
-  <div id="expList" class="cards"></div>
+  <div class="cards" id="expList"></div>
 </section>
-
 <section id="certificates" class="section">
   <h2>Certificates</h2>
-  <div id="certList" class="cards"></div>
+  <div class="cards" id="certList"></div>
 </section>
 
 <section id="leetcode" class="section">
-  <h2>LeetCode</h2>
+  <h2>Coding Progress</h2>
   <div class="stats">
     <div><b id="lcTotal">0</b><span>Solved</span></div>
     <div><b id="lcEasy">0</b><span>Easy</span></div>
     <div><b id="lcMedium">0</b><span>Medium</span></div>
     <div><b id="lcHard">0</b><span>Hard</span></div>
   </div>
-  <p id="lcMsg">Loading...</p>
-  <a id="lcLink" class="btn" target="_blank" rel="noopener">Open LeetCode</a>
-</section>
-
-<section id="github" class="section">
-  <h2>GitHub</h2>
-  <div class="stats">
+  <p id="lcMsg">Add LeetCode in form.</p>
+  <a class="btn" id="lcLink" href="#" target="_blank" rel="noopener">LeetCode</a>
+  <div class="stats" style="margin-top:16px">
     <div><b id="ghRepos">0</b><span>Repos</span></div>
     <div><b id="ghFollowers">0</b><span>Followers</span></div>
   </div>
-  <p id="ghMsg">Loading...</p>
+  <p id="ghMsg">Add GitHub in form.</p>
+  <a class="btn" id="ghLink" href="#" target="_blank" rel="noopener">GitHub</a>
 </section>
 
 <section id="contact" class="section">
   <h2>Contact</h2>
   <a id="mailLink" href="#">Email</a>
-  <a id="ghLink" href="#" target="_blank">GitHub</a>
-  <a id="liLink" href="#" target="_blank">LinkedIn</a>
-  <a id="resumeLink" href="#" style="display:none" target="_blank" rel="noopener">Resume</a>
-  <a id="phoneLink" href="#"></a>
-  <a id="webLink" href="#" target="_blank" rel="noopener"></a>
+  <a id="liLink" href="#" target="_blank" rel="noopener">LinkedIn</a>
+  <a id="ghLink2" href="#" target="_blank" rel="noopener">GitHub</a>
 </section>
 
 <footer><p>Student portfolio · 2025</p></footer>
 <script src="template.js"></script>
+<script src="extra.js"></script>
 </body>
 </html>

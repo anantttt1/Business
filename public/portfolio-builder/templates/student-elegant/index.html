@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Your Name | Student Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Pinyon+Script&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="template.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name | B.Tech CSE Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="template.css" />
 </head>
 <body>
-
 <header class="nav">
   <a href="#home" class="logo"><span class="mark"></span>B.Tech CSE</a>
   <nav>
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
-    <a href="#education">Education</a>
-    <a href="#leetcode">LeetCode</a>
-    <a href="#github">GitHub</a>
+    <a href="#leetcode">Coding</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
@@ -24,11 +23,11 @@
 <section id="home" class="hero">
   <div class="hero-text">
     <p class="hello">Hello, I'm</p>
-    <h1 id="heroName">Your<br>Name</h1>
+    <h1>Your<br>Name</h1>
     <p class="script">Student Developer</p>
-    <p class="intro">Add your tagline in the portfolio builder editor.</p>
+    <p class="intro">I enjoy building useful web experiences and solving problems with code.</p>
     <div class="btns">
-      <a class="btn dark" href="#projects">View Work</a>
+      <a class="btn dark" href="#projects">View projects</a>
       <a class="btn outline" href="#contact">Contact</a>
     </div>
   </div>
@@ -40,7 +39,7 @@
 
 <section id="about" class="section">
   <h2>About</h2>
-  <p>Write about yourself in the editor form.</p>
+  <p id="aboutText">Write a short intro about yourself.</p>
   <div class="skill-list" id="skillList"></div>
 </section>
 
@@ -53,52 +52,44 @@
   <h2>Education</h2>
   <div class="project-grid" id="eduList"></div>
 </section>
-
 <section id="experience" class="section">
   <h2>Experience</h2>
   <div class="project-grid" id="expList"></div>
 </section>
-
 <section id="certificates" class="section">
   <h2>Certificates</h2>
   <div class="project-grid" id="certList"></div>
 </section>
 
 <section id="leetcode" class="section track">
-  <h2>LeetCode</h2>
+  <h2>Coding Progress</h2>
   <div class="stats-row">
     <div><b id="lcTotal">0</b><span>Solved</span></div>
     <div><b id="lcEasy">0</b><span>Easy</span></div>
     <div><b id="lcMedium">0</b><span>Medium</span></div>
     <div><b id="lcHard">0</b><span>Hard</span></div>
   </div>
-  <p id="lcMsg">Loading...</p>
-  <a id="lcLink" class="btn dark" target="_blank" rel="noopener">Open LeetCode</a>
-</section>
-
-<section id="github" class="section track">
-  <h2>GitHub</h2>
-  <div class="stats-row">
+  <p id="lcMsg">Add LeetCode username in form.</p>
+  <a id="lcLink" class="btn outline" href="#" target="_blank" rel="noopener">LeetCode</a>
+  <div class="stats-row" style="margin-top:20px">
     <div><b id="ghRepos">0</b><span>Repos</span></div>
     <div><b id="ghFollowers">0</b><span>Followers</span></div>
   </div>
-  <p id="ghMsg">Loading...</p>
+  <p id="ghMsg">Add GitHub username in form.</p>
+  <a id="ghLink" class="btn outline" href="#" target="_blank" rel="noopener">GitHub</a>
 </section>
 
 <section id="contact" class="section">
   <h2>Contact</h2>
-  <p>Let's connect for internships or collaboration.</p>
   <div class="contact-row">
     <a id="mailLink" href="#">Email</a>
-    <a id="ghLink" href="#" target="_blank">GitHub</a>
-    <a id="liLink" href="#" target="_blank">LinkedIn</a>
-    <a id="resumeLink" href="#" style="display:none" target="_blank" rel="noopener">Resume</a>
-    <a id="phoneLink" href="#"></a>
-    <a id="webLink" href="#" target="_blank" rel="noopener"></a>
+    <a id="liLink" href="#" target="_blank" rel="noopener">LinkedIn</a>
+    <a id="ghLink2" href="#" target="_blank" rel="noopener">GitHub</a>
   </div>
 </section>
 
-<footer><p>© 2025 · Student Portfolio Template</p></footer>
+<footer><p>Student portfolio · 2025</p></footer>
 <script src="template.js"></script>
+<script src="extra.js"></script>
 </body>
 </html>
