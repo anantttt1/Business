@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ujjwal | B.Tech CSE Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="template.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="#home" class="logo">✱ B.Tech CSE</a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#leetcode">LeetCode</a>
+    <a href="#github">GitHub</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="home" class="hero">
+  <div class="hero-text">
+    <h2 class="hello">HELLO!</h2>
+    <h1>I'M<br>UJJWAL</h1>
+    <p class="marker">I build websites and solve problems with code.</p>
+    <p class="small">2nd-year CSE student at GLA University, Mathura. Learning DSA and Data Science.</p>
+    <a class="btn" href="#contact">Let's work together!</a>
+  </div>
+  <div class="hero-img">
+    <div class="blob"></div>
+    <div class="avatar">UP</div>
+    <img src="profile.jpg" alt="Profile photo" onerror="this.style.display='none'">
+    <span class="sticker">CODE IS MY SUPERPOWER</span>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <h2 class="title">WHAT I DO</h2>
+  <div class="skills">
+    <div class="skill"><span class="dot yellow">&lt;/&gt;</span><b>Web Development</b><p>HTML, CSS, JavaScript, React, Node.js, Firebase.</p></div>
+    <div class="skill"><span class="dot blue">DS</span><b>DSA</b><p>Java, C and Python. Practising LeetCode and recursion.</p></div>
+    <div class="skill"><span class="dot red">ML</span><b>Data Science</b><p>NumPy, Pandas, visualization and statistics.</p></div>
+    <div class="skill"><span class="dot yellow">Git</span><b>Tools</b><p>Git, GitHub, VS Code, Jupyter, Linux (WSL).</p></div>
+  </div>
+  <p class="about-text">I am a serious beginner who learns by building. My goal is a strong foundation in DSA and CS fundamentals, plus real projects I can show.</p>
+</section>
+
+<section id="projects" class="projects">
+  <h2 class="title">SELECTED WORK</h2>
+  <span class="note">A few projects I'm proud of</span>
+  <div class="cards" id="projectCards"></div>
+</section>
+
+<section id="leetcode" class="track">
+  <h2 class="title">LEETCODE TRACKER</h2>
+  <div class="panel">
+    <div class="stats">
+      <div><b id="lcTotal">0</b><span>Solved</span></div>
+      <div><b id="lcEasy">0</b><span>Easy</span></div>
+      <div><b id="lcMedium">0</b><span>Medium</span></div>
+      <div><b id="lcHard">0</b><span>Hard</span></div>
+    </div>
+    <p id="lcMsg" class="msg">Loading stats...</p>
+    <a id="lcLink" class="btn small-btn" target="_blank" rel="noopener">Open my LeetCode</a>
+  </div>
+  <div class="panel">
+    <h3>Daily practice streak</h3>
+    <p class="msg">Solved a problem today? Tap the button. It is saved in your browser.</p>
+    <div class="dots" id="streakDots"></div>
+    <p><b id="streakNum">0</b> day streak</p>
+    <button class="btn small-btn" id="solvedBtn">I solved one today</button>
+  </div>
+</section>
+
+<section id="github" class="track alt">
+  <h2 class="title">GITHUB TRACKER</h2>
+  <div class="panel">
+    <div class="stats">
+      <div><b id="ghRepos">0</b><span>Repos</span></div>
+      <div><b id="ghFollowers">0</b><span>Followers</span></div>
+      <div><b id="ghStars">0</b><span>Stars</span></div>
+    </div>
+    <p id="ghMsg" class="msg">Loading stats...</p>
+    <div class="graph"><img id="ghGraph" alt="GitHub contribution graph"></div>
+  </div>
+  <div class="panel">
+    <h3>Latest repositories</h3>
+    <ul id="repoList" class="repos"></ul>
+  </div>
+</section>
+
+<section id="linkedin" class="linkedin">
+  <div>
+    <h2 class="title">LET'S CONNECT</h2>
+    <p>Follow my learning journey, internships and achievements on LinkedIn.</p>
+  </div>
+  <a id="liLink" class="btn" target="_blank" rel="noopener">View LinkedIn</a>
+</section>
+
+<section id="contact" class="contact">
+  <h2 class="title">GET IN TOUCH</h2>
+  <p class="contact-text">Open to internships, freelance and collaboration. Drop a message.</p>
+  <div class="contact-links">
+    <a id="mailLink" href="#">email</a>
+    <a id="ghLink" href="#" target="_blank" rel="noopener">github</a>
+    <a id="liLink2" href="#" target="_blank" rel="noopener">linkedin</a>
+  </div>
+</section>
+
+<footer>
+  <p>Built with HTML, CSS &amp; JavaScript · 2025</p>
+</footer>
+
+<script src="template.js"></script>
+</body>
+</html>
