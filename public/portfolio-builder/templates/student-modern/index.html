@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A B.Tech student's portfolio — projects, coding progress, skills and contact details." />
+  <title>Ujjwal Pratap | Student Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="template.css" />
+</head>
+<body>
+  <div class="page-glow glow-one"></div><div class="page-glow glow-two"></div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Go to home">UP<span>.</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    <nav id="nav">
+      <a href="#about">About</a><a href="#skills">Skills</a><a href="#coding">Coding</a>
+      <a href="#projects">Projects</a><a href="#contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="#contact">Let's connect <span>↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero section" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> B.TECH STUDENT · DEVELOPER IN PROGRESS</p>
+        <h1>BUILDING<br><span>IDEAS</span> INTO<br>REALITY<span class="period">.</span></h1>
+        <p class="hero-intro">Hey, I'm <strong>Ujjwal Pratap</strong> — a Computer Science student who enjoys building useful web experiences, solving problems and learning something new every day.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#projects">See projects</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <h2>About</h2>
+      <p>I am a B.Tech CSE student focused on web development, DSA and practical projects. I learn by building and iterating.</p>
+    </section>
+
+    <section class="section" id="skills">
+      <h2>Skills</h2>
+      <div class="skill-tags" id="skillTags"></div>
+    </section>
+
+    <section class="section" id="coding">
+      <h2>Coding Progress</h2>
+      <div class="stats-grid">
+        <div class="stat"><b id="lcTotal">0</b><span>LeetCode</span></div>
+        <div class="stat"><b id="ghRepos">0</b><span>Repos</span></div>
+      </div>
+      <p id="lcMsg">Loading stats...</p>
+      <a id="lcLink" class="btn primary" target="_blank" rel="noopener">Open LeetCode</a>
+    </section>
+
+    <section class="section" id="projects">
+      <h2>Projects</h2>
+      <div class="project-list" id="projectCards"></div>
+    </section>
+
+    <section class="section" id="contact">
+      <h2>Contact</h2>
+      <p>Open to internships and collaboration.</p>
+      <div class="contact-links">
+        <a id="mailLink" href="#">Email</a>
+        <a id="ghLink" href="#" target="_blank">GitHub</a>
+        <a id="liLink" href="#" target="_blank">LinkedIn</a>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>Student portfolio template · 2025</p></footer>
+  <script src="template.js"></script>
+</body>
+</html>
