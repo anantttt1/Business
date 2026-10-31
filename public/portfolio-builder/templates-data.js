@@ -65,6 +65,50 @@ window.PB_TEMPLATES = [
     theme: 'dark',
     features: ['3D Effects', 'Projects', 'Skills', 'Education', 'Contact'],
     preview: '/portfolio-builder/templates/modern-dark-3d/'
+  },
+  {
+    id: 'student-bold',
+    name: 'Student Bold',
+    priceInr: 19,
+    category: 'developer',
+    tagline: 'Bold student portfolio with LeetCode & GitHub trackers, projects, skills and contact. Perfect for CSE students.',
+    accent: '#ff3b5c',
+    theme: 'dark',
+    features: ['LeetCode', 'GitHub Tracker', 'Projects', 'Skills', 'Streak'],
+    preview: '/portfolio-builder/templates/student-bold/'
+  },
+  {
+    id: 'student-elegant',
+    name: 'Student Elegant',
+    priceInr: 19,
+    category: 'developer',
+    tagline: 'Elegant serif + script student portfolio with coding trackers, projects and clean typography.',
+    accent: '#1a1a2e',
+    theme: 'light',
+    features: ['LeetCode', 'GitHub', 'Projects', 'Elegant Type', 'Responsive'],
+    preview: '/portfolio-builder/templates/student-elegant/'
+  },
+  {
+    id: 'student-modern',
+    name: 'Student Modern',
+    priceInr: 25,
+    category: 'developer',
+    tagline: 'Modern glow student portfolio with coding stats, skills, projects and polished dark UI.',
+    accent: '#7c5cff',
+    theme: 'dark',
+    features: ['Coding Stats', 'Projects', 'Skills', 'Modern UI', 'Responsive'],
+    preview: '/portfolio-builder/templates/student-modern/'
+  },
+  {
+    id: 'student-portfolio',
+    name: 'Student Portfolio',
+    priceInr: 19,
+    category: 'developer',
+    tagline: 'Striking full-bleed PORTFOLIO header student template with trackers and project cards.',
+    accent: '#e63946',
+    theme: 'dark',
+    features: ['LeetCode', 'GitHub', 'Projects', 'Bold Header', 'Contact'],
+    preview: '/portfolio-builder/templates/student-portfolio/'
   }
 ];
 
