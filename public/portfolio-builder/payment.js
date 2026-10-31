@@ -7,7 +7,11 @@
     'paper-atelier': { name: 'Paper Atelier', priceInr: 29 },
     'ember-editorial': { name: 'Ember Editorial', priceInr: 39 },
     'signature-orange': { name: 'Signature Orange', priceInr: 39 },
-    'modern-dark-3d': { name: 'Modern Dark 3D', priceInr: 29 }
+    'modern-dark-3d': { name: 'Modern Dark 3D', priceInr: 29 },
+    'student-bold': { name: 'Student Bold', priceInr: 19 },
+    'student-elegant': { name: 'Student Elegant', priceInr: 19 },
+    'student-modern': { name: 'Student Modern', priceInr: 19 },
+    'student-portfolio': { name: 'Student Portfolio', priceInr: 19 }
   };
 
   var LOCK_PREFIX = 'pb_pay_lock_';
