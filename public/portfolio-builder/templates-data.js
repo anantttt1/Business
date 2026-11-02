@@ -12,61 +12,6 @@ window.PB_TEMPLATES = [
     preview: '/portfolio-builder/templates/color-pop/'
   },
   {
-    id: 'ideas-impact',
-    name: 'Ideas Impact',
-    priceInr: 29,
-    category: 'developer',
-    tagline: 'Neon dark portfolio with 3D profile card, projects, skills, education, certificates and light/dark toggle.',
-    accent: '#caff42',
-    theme: 'dark',
-    features: ['3D Card', 'Projects', 'Theme Toggle', 'Certificates', 'Responsive'],
-    preview: '/portfolio-builder/templates/ideas-impact/'
-  },
-  {
-    id: 'paper-atelier',
-    name: 'Paper Atelier',
-    priceInr: 29,
-    category: 'creative',
-    tagline: 'Classy cream-paper portfolio with red & yellow accents, projects, skills, journey and certificates.',
-    accent: '#ae2530',
-    theme: 'light',
-    features: ['Light Theme', 'Projects', 'Skills', 'Journey', 'Certificates'],
-    preview: '/portfolio-builder/templates/paper-atelier/'
-  },
-  {
-    id: 'ember-editorial',
-    name: 'Ember Editorial',
-    priceInr: 39,
-    category: 'developer',
-    tagline: 'Warm amber editorial portfolio with Playfair accents, projects, coding profiles and certificates.',
-    accent: '#ff641e',
-    theme: 'dark',
-    features: ['Editorial', 'Projects', 'Profiles', 'Certificates', 'Responsive'],
-    preview: '/portfolio-builder/templates/ember-editorial/'
-  },
-  {
-    id: 'signature-orange',
-    name: 'Signature Orange',
-    priceInr: 39,
-    category: 'developer',
-    tagline: 'Bold orange-accent portfolio with LeetCode stats, activity heatmap, projects, skills and certificates.',
-    accent: '#ff8a32',
-    theme: 'dark',
-    features: ['Heatmap', 'LeetCode', 'Projects', 'Certificates', 'Skills'],
-    preview: '/portfolio-builder/templates/signature-orange/'
-  },
-  {
-    id: 'modern-dark-3d',
-    name: 'Modern Dark 3D',
-    priceInr: 29,
-    category: 'developer',
-    tagline: 'Premium dark developer portfolio with 3D hover effects, projects, skills, and contact.',
-    accent: '#7190ff',
-    theme: 'dark',
-    features: ['3D Effects', 'Projects', 'Skills', 'Education', 'Contact'],
-    preview: '/portfolio-builder/templates/modern-dark-3d/'
-  },
-  {
     id: 'student-bold',
     name: 'Student Bold',
     priceInr: 19,
@@ -113,6 +58,61 @@ window.PB_TEMPLATES = [
     theme: 'dark',
     features: ['LeetCode', 'GitHub', 'Projects', 'Bold Header', 'Contact'],
     preview: '/portfolio-builder/templates/student-portfolio/'
+  },
+  {
+    id: 'ideas-impact',
+    name: 'Ideas Impact',
+    priceInr: 29,
+    category: 'developer',
+    tagline: 'Neon dark portfolio with 3D profile card, projects, skills, education, certificates and light/dark toggle.',
+    accent: '#caff42',
+    theme: 'dark',
+    features: ['3D Card', 'Projects', 'Theme Toggle', 'Certificates', 'Responsive'],
+    preview: '/portfolio-builder/templates/ideas-impact/'
+  },
+  {
+    id: 'paper-atelier',
+    name: 'Paper Atelier',
+    priceInr: 29,
+    category: 'creative',
+    tagline: 'Classy cream-paper portfolio with red & yellow accents, projects, skills, journey and certificates.',
+    accent: '#ae2530',
+    theme: 'light',
+    features: ['Light Theme', 'Projects', 'Skills', 'Journey', 'Certificates'],
+    preview: '/portfolio-builder/templates/paper-atelier/'
+  },
+  {
+    id: 'modern-dark-3d',
+    name: 'Modern Dark 3D',
+    priceInr: 29,
+    category: 'developer',
+    tagline: 'Premium dark developer portfolio with 3D hover effects, projects, skills, and contact.',
+    accent: '#7190ff',
+    theme: 'dark',
+    features: ['3D Effects', 'Projects', 'Skills', 'Education', 'Contact'],
+    preview: '/portfolio-builder/templates/modern-dark-3d/'
+  },
+  {
+    id: 'ember-editorial',
+    name: 'Ember Editorial',
+    priceInr: 39,
+    category: 'developer',
+    tagline: 'Warm amber editorial portfolio with Playfair accents, projects, coding profiles and certificates.',
+    accent: '#ff641e',
+    theme: 'dark',
+    features: ['Editorial', 'Projects', 'Profiles', 'Certificates', 'Responsive'],
+    preview: '/portfolio-builder/templates/ember-editorial/'
+  },
+  {
+    id: 'signature-orange',
+    name: 'Signature Orange',
+    priceInr: 39,
+    category: 'developer',
+    tagline: 'Bold orange-accent portfolio with LeetCode stats, activity heatmap, projects, skills and certificates.',
+    accent: '#ff8a32',
+    theme: 'dark',
+    features: ['Heatmap', 'LeetCode', 'Projects', 'Certificates', 'Skills'],
+    preview: '/portfolio-builder/templates/signature-orange/'
   }
 ];
 
