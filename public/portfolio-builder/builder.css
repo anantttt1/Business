@@ -1,4 +1,4 @@
-/* Portfolio Builder – dark glass UI */
+/* Portfolio Builder – dark glass UI (preserved + price badge) */
 :root{
   --bg:#0a0a0f;
   --tx:#f2f2f7;
@@ -149,7 +149,6 @@ img{max-width:100%;display:block}
   color:var(--mu);
 }
 
-/* How-to section (kept from existing) */
 .pb-howto{margin-top:36px}
 .pb-howto-card{
   border:1px solid var(--bd);
@@ -204,7 +203,6 @@ img{max-width:100%;display:block}
   color:var(--mu);
 }
 .pb-howto-step em{font-style:normal;color:var(--tx);font-weight:600}
-
 @media(max-width:959px){
   .pb-howto{order:-1}
   .pb-howto-card{margin-bottom:4px}
