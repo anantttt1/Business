@@ -8,6 +8,16 @@
   let activeCat = 'all';
   let query = '';
 
+  /** Original (MRP) price to strike through for each sale price */
+  function originalPrice(price) {
+    var p = Number(price) || 0;
+    if (p === 19) return 49;
+    if (p === 29) return 69;
+    if (p === 39) return 99;
+    if (p > 0) return Math.round(p * 2.5);
+    return 0;
+  }
+
   function matches(t) {
     if (activeCat !== 'all' && t.category !== activeCat) return false;
     if (!query) return true;
@@ -53,8 +63,33 @@
     const body = document.createElement('div');
     body.className = 'pb-card-body';
 
+    const titleRow = document.createElement('div');
+    titleRow.className = 'pb-card-title-row';
+
     const h3 = document.createElement('h3');
     h3.textContent = t.name;
+
+    const price = Number(t.priceInr) || 0;
+    const was = originalPrice(price);
+    if (price > 0) {
+      const priceEl = document.createElement('div');
+      priceEl.className = 'pb-card-price';
+      priceEl.setAttribute('aria-label', 'Price ₹' + price);
+      if (was > price) {
+        const old = document.createElement('span');
+        old.className = 'pb-price-was';
+        old.textContent = '₹' + was;
+        priceEl.appendChild(old);
+      }
+      const now = document.createElement('span');
+      now.className = 'pb-price-now';
+      now.textContent = '₹' + price;
+      priceEl.appendChild(now);
+      titleRow.appendChild(h3);
+      titleRow.appendChild(priceEl);
+    } else {
+      titleRow.appendChild(h3);
+    }
 
     const p = document.createElement('p');
     p.textContent = t.tagline;
@@ -86,7 +121,7 @@
     actions.appendChild(view);
     actions.appendChild(customize);
 
-    body.appendChild(h3);
+    body.appendChild(titleRow);
     body.appendChild(p);
     body.appendChild(tags);
     body.appendChild(actions);
