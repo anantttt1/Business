@@ -3,6 +3,7 @@
 
   const STORAGE_KEY = 'ap-pb-v1';
   const PHOTO_KEY = 'ap-pb-photo';
+  const STEP_KEY = 'ap-pb-step';
   const params = new URLSearchParams(location.search);
   const templateId = params.get('template') || 'modern-dark-3d';
   const templates = window.PB_TEMPLATES || [];
@@ -12,8 +13,18 @@
     accent: '#7190ff'
   };
 
+  const TOTAL_STEPS = 5;
+  const STEP_LABELS = [
+    'Personal details',
+    'Links',
+    'Skills',
+    'Education & Experience',
+    'Projects & Certifications'
+  ];
+
   const $ = (s) => document.querySelector(s);
   const state = loadState();
+  let currentStep = loadStep();
 
   function defaultState() {
     const demo = JSON.parse(JSON.stringify(window.PB_DEMO || {}));
@@ -40,6 +51,18 @@
     } catch (e) {
       return defaultState();
     }
+  }
+
+  function loadStep() {
+    try {
+      const s = parseInt(localStorage.getItem(STEP_KEY) || '1', 10);
+      if (s >= 1 && s <= TOTAL_STEPS) return s;
+    } catch (e) {}
+    return 1;
+  }
+
+  function saveStep(n) {
+    try { localStorage.setItem(STEP_KEY, String(n)); } catch (e) {}
   }
 
   function saveState() {
@@ -69,6 +92,43 @@
     el.textContent = msg || '';
     el.classList.toggle('is-err', !!isErr);
     el.classList.toggle('is-ok', !!msg && !isErr);
+  }
+
+  function goToStep(n) {
+    if (n < 1 || n > TOTAL_STEPS) return;
+    currentStep = n;
+    saveStep(n);
+
+    document.querySelectorAll('.pb-step-panel').forEach(function (panel) {
+      const step = parseInt(panel.getAttribute('data-step'), 10);
+      const active = step === n;
+      panel.hidden = !active;
+      panel.classList.toggle('is-active', active);
+    });
+
+    document.querySelectorAll('.pb-step').forEach(function (el) {
+      const step = parseInt(el.getAttribute('data-step'), 10);
+      el.classList.toggle('is-active', step === n);
+      el.classList.toggle('is-done', step < n);
+    });
+
+    const hint = $('#pb-step-hint');
+    if (hint) {
+      hint.textContent = 'Step ' + n + ' of ' + TOTAL_STEPS + ' · ' + STEP_LABELS[n - 1];
+    }
+
+    const prevBtn = $('#btn-prev');
+    const nextBtn = $('#btn-next');
+    if (prevBtn) prevBtn.hidden = n === 1;
+    if (nextBtn) {
+      nextBtn.textContent = n === TOTAL_STEPS ? 'Done \u2713' : 'Next \u2192';
+      nextBtn.hidden = false;
+    }
+
+    const panel = document.querySelector('.pb-step-panel.is-active');
+    if (panel) {
+      try { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+    }
   }
 
   function bindField(id, key) {
@@ -280,6 +340,7 @@
     const err = $('#err-email');
     if (!name || !title) {
       setStatus('Name and professional title are required.', true);
+      goToStep(1);
       return false;
     }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -288,6 +349,7 @@
         err.textContent = 'Enter a valid email address.';
       }
       setStatus('Please fix the highlighted fields.', true);
+      goToStep(1);
       return false;
     }
     if (err) err.hidden = true;
@@ -302,7 +364,7 @@
       } catch (e) {}
     }
     saveState();
-    setStatus('Opening full template preview…');
+    setStatus('Opening full template preview\u2026');
     const tpl = templateId || 'modern-dark-3d';
     const url =
       '/portfolio-builder/templates/' + tpl + '/?preview=1&from=builder&t=' +
@@ -313,7 +375,7 @@
   async function runExport() {
     if (typeof window.PB_exportModernDark !== 'function') throw new Error('Exporter missing');
     if (typeof window.PB_simpleZip !== 'function' && typeof JSZip === 'undefined') {
-      throw new Error('ZIP library failed to load — hard refresh the page');
+      throw new Error('ZIP library failed to load \u2014 hard refresh the page');
     }
     if (!state.photoData) {
       try {
@@ -329,17 +391,17 @@
     saveState();
 
     if (typeof window.PB_openPayment !== 'function') {
-      setStatus('Payment module missing — hard refresh the page.', true);
+      setStatus('Payment module missing \u2014 hard refresh the page.', true);
       return;
     }
 
-    setStatus('Open payment to unlock ZIP download…');
+    setStatus('Open payment to unlock ZIP download\u2026');
     window.PB_openPayment(templateId, {
       onApproved: function () {
-        setStatus('Payment approved — generating your portfolio ZIP…');
+        setStatus('Payment approved \u2014 generating your portfolio ZIP\u2026');
         runExport()
           .then(function () {
-            setStatus('Download started — extract the ZIP and open index.html.');
+            setStatus('Download started \u2014 extract the ZIP and open index.html.');
           })
           .catch(function (e) {
             console.error(e);
@@ -350,7 +412,7 @@
   }
 
   const titleEl = $('#pb-editor-title');
-  if (titleEl) titleEl.textContent = 'Customize · ' + (tplMeta.name || 'Template');
+  if (titleEl) titleEl.textContent = 'Customize \u00b7 ' + (tplMeta.name || 'Template');
 
   bindField('f-name', 'fullName');
   bindField('f-title', 'title');
@@ -441,6 +503,7 @@
       try {
         localStorage.removeItem(PHOTO_KEY);
         sessionStorage.removeItem(PHOTO_KEY);
+        localStorage.removeItem(STEP_KEY);
       } catch (e) {}
       const demo = defaultState();
       Object.keys(state).forEach(function (k) { delete state[k]; });
@@ -449,6 +512,34 @@
       location.reload();
     });
   }
+
+  if ($('#btn-next')) {
+    $('#btn-next').addEventListener('click', function () {
+      saveState();
+      if (currentStep < TOTAL_STEPS) {
+        goToStep(currentStep + 1);
+      } else {
+        setStatus('All steps done. Click Preview or Download ZIP.');
+      }
+    });
+  }
+  if ($('#btn-prev')) {
+    $('#btn-prev').addEventListener('click', function () {
+      saveState();
+      if (currentStep > 1) goToStep(currentStep - 1);
+    });
+  }
+
+  document.querySelectorAll('.pb-step').forEach(function (el) {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function () {
+      const s = parseInt(el.getAttribute('data-step'), 10);
+      if (s >= 1 && s <= TOTAL_STEPS) {
+        saveState();
+        goToStep(s);
+      }
+    });
+  });
 
   const photo = $('#f-photo');
   if (photo) {
@@ -460,13 +551,13 @@
         photo.value = '';
         return;
       }
-      setStatus('Processing photo…');
+      setStatus('Processing photo\u2026');
       compressImage(file, 720, 0.72)
         .then(function (dataUrl) {
           state.photoData = dataUrl;
           saveState();
           showPhotoThumb(dataUrl);
-          setStatus('Photo saved — open Preview to see it on the template.');
+          setStatus('Photo saved \u2014 open Preview to see it on the template.');
         })
         .catch(function (err) {
           console.error(err);
@@ -483,4 +574,5 @@
   renderProjects();
   renderCerts();
   saveState();
+  goToStep(currentStep);
 })();
