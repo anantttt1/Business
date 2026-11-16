@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, ClipboardList, FileText, GraduationCap, Globe, Image as ImageIcon, ListChecks, Menu, MessageCircle, Monitor, ScanText, School, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { Analytics } from '@vercel/analytics/react'
 import { config } from './config'
 
 type OrderForm = { name: string; email: string; whatsapp: string; service: string; budget: string; deadline: string; requirements: string }
@@ -539,6 +540,7 @@ function App() {
           </div>
         </div>
       )}
+      <Analytics />
     </div>
   )
 }
