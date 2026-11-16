@@ -34,64 +34,94 @@
     <header class="pb-hero">
       <span class="ey">Portfolio Builder</span>
       <h1 id="pb-editor-title">Customize · Modern Dark 3D</h1>
-      <p class="lead" id="pb-editor-sub">Fill your details, then Preview. Download ZIP opens UPI payment first.</p>
+      <p class="lead" id="pb-editor-sub">5 short steps · data saves automatically · Download ZIP opens UPI payment.</p>
     </header>
+
+    <!-- Step progress -->
+    <div class="pb-steps" id="pb-steps" aria-label="Form steps">
+      <div class="pb-step is-active" data-step="1"><span class="pb-step-num">1</span><span class="pb-step-label">Personal</span></div>
+      <div class="pb-step" data-step="2"><span class="pb-step-num">2</span><span class="pb-step-label">Links</span></div>
+      <div class="pb-step" data-step="3"><span class="pb-step-num">3</span><span class="pb-step-label">Skills</span></div>
+      <div class="pb-step" data-step="4"><span class="pb-step-num">4</span><span class="pb-step-label">Education</span></div>
+      <div class="pb-step" data-step="5"><span class="pb-step-num">5</span><span class="pb-step-label">Projects</span></div>
+    </div>
+    <p class="pb-step-hint" id="pb-step-hint">Step 1 of 5 · Personal details</p>
 
     <div class="pb-editor-shell">
       <div class="pb-editor-panel" aria-label="Portfolio form">
-        <div class="pb-section">
-          <h3>1 · Personal details</h3>
-          <div class="pb-field"><label for="f-name">Full name *</label><input id="f-name" name="fullName" autocomplete="name" required></div>
-          <div class="pb-field"><label for="f-title">Professional title *</label><input id="f-title" name="title" placeholder="e.g. Full-Stack Developer" required></div>
-          <div class="pb-field"><label for="f-tagline">Short tagline</label><input id="f-tagline" name="tagline" placeholder="One-line introduction"></div>
-          <div class="pb-field"><label for="f-about">About</label><textarea id="f-about" name="about" rows="4" placeholder="A few sentences about you"></textarea></div>
-          <div class="pb-field"><label for="f-location">Location</label><input id="f-location" name="location" placeholder="City, Country"></div>
-          <div class="pb-field"><label for="f-email">Email *</label><input id="f-email" name="email" type="email" autocomplete="email" required><p class="err" id="err-email" hidden></p></div>
-          <div class="pb-field"><label for="f-phone">Phone <span class="hint">(optional)</span></label><input id="f-phone" name="phone" type="tel"></div>
-          <div class="pb-field"><label for="f-resume">Resume URL <span class="hint">(optional)</span></label><input id="f-resume" name="resumeUrl" type="url" placeholder="https://…"></div>
-          <div class="pb-field"><label for="f-photo">Profile photo</label><input id="f-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"><p class="hint">Max 1.5 MB · JPEG/PNG/WebP</p></div>
-        </div>
 
-        <div class="pb-section">
-          <h3>2 · Links</h3>
-          <div class="pb-field"><label for="f-github">GitHub</label><input id="f-github" name="github" type="url" placeholder="https://github.com/…"></div>
-          <div class="pb-field"><label for="f-linkedin">LinkedIn</label><input id="f-linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/…"></div>
-          <div class="pb-field"><label for="f-website">Website</label><input id="f-website" name="website" type="url"></div>
-          <div class="pb-field"><label for="f-leetcode">LeetCode</label><input id="f-leetcode" name="leetcode" type="url"></div>
-          <div class="pb-field"><label for="f-hackerrank">HackerRank</label><input id="f-hackerrank" name="hackerrank" type="url"></div>
-        </div>
-
-        <div class="pb-section">
-          <h3>3 · Skills</h3>
-          <div class="pb-chip-row" id="skills-chips"></div>
-          <div class="pb-field pb-skill-add">
-            <div class="pb-skill-input"><label for="f-skill">Add skill</label><input id="f-skill" placeholder="e.g. React"></div>
-            <button type="button" class="btn o" id="btn-add-skill">Add</button>
+        <!-- STEP 1: Personal -->
+        <div class="pb-step-panel is-active" data-step="1">
+          <div class="pb-section">
+            <h3>1 · Personal details</h3>
+            <div class="pb-field"><label for="f-name">Full name *</label><input id="f-name" name="fullName" autocomplete="name" required></div>
+            <div class="pb-field"><label for="f-title">Professional title *</label><input id="f-title" name="title" placeholder="e.g. Full-Stack Developer" required></div>
+            <div class="pb-field"><label for="f-tagline">Short tagline</label><input id="f-tagline" name="tagline" placeholder="One-line introduction"></div>
+            <div class="pb-field"><label for="f-about">About</label><textarea id="f-about" name="about" rows="4" placeholder="A few sentences about you"></textarea></div>
+            <div class="pb-field"><label for="f-location">Location</label><input id="f-location" name="location" placeholder="City, Country"></div>
+            <div class="pb-field"><label for="f-email">Email *</label><input id="f-email" name="email" type="email" autocomplete="email" required><p class="err" id="err-email" hidden></p></div>
+            <div class="pb-field"><label for="f-phone">Phone <span class="hint">(optional)</span></label><input id="f-phone" name="phone" type="tel"></div>
+            <div class="pb-field"><label for="f-resume">Resume URL <span class="hint">(optional)</span></label><input id="f-resume" name="resumeUrl" type="url" placeholder="https://…"></div>
+            <div class="pb-field"><label for="f-photo">Profile photo</label><input id="f-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"><p class="hint">Max 1.5 MB · JPEG/PNG/WebP</p></div>
           </div>
         </div>
 
-        <div class="pb-section">
-          <h3>4 · Education</h3>
-          <div id="edu-list"></div>
-          <button type="button" class="btn o" id="btn-add-edu">+ Add education</button>
+        <!-- STEP 2: Links -->
+        <div class="pb-step-panel" data-step="2" hidden>
+          <div class="pb-section">
+            <h3>2 · Links</h3>
+            <div class="pb-field"><label for="f-github">GitHub</label><input id="f-github" name="github" type="url" placeholder="https://github.com/…"></div>
+            <div class="pb-field"><label for="f-linkedin">LinkedIn</label><input id="f-linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/…"></div>
+            <div class="pb-field"><label for="f-website">Website</label><input id="f-website" name="website" type="url"></div>
+            <div class="pb-field"><label for="f-leetcode">LeetCode</label><input id="f-leetcode" name="leetcode" type="url"></div>
+            <div class="pb-field"><label for="f-hackerrank">HackerRank</label><input id="f-hackerrank" name="hackerrank" type="url"></div>
+          </div>
         </div>
 
-        <div class="pb-section">
-          <h3>5 · Experience</h3>
-          <div id="exp-list"></div>
-          <button type="button" class="btn o" id="btn-add-exp">+ Add experience</button>
+        <!-- STEP 3: Skills -->
+        <div class="pb-step-panel" data-step="3" hidden>
+          <div class="pb-section">
+            <h3>3 · Skills</h3>
+            <div class="pb-chip-row" id="skills-chips"></div>
+            <div class="pb-field pb-skill-add">
+              <div class="pb-skill-input"><label for="f-skill">Add skill</label><input id="f-skill" placeholder="e.g. React"></div>
+              <button type="button" class="btn o" id="btn-add-skill">Add</button>
+            </div>
+          </div>
         </div>
 
-        <div class="pb-section">
-          <h3>6 · Projects</h3>
-          <div id="proj-list"></div>
-          <button type="button" class="btn o" id="btn-add-proj">+ Add project</button>
+        <!-- STEP 4: Education + Experience -->
+        <div class="pb-step-panel" data-step="4" hidden>
+          <div class="pb-section">
+            <h3>4 · Education</h3>
+            <div id="edu-list"></div>
+            <button type="button" class="btn o" id="btn-add-edu">+ Add education</button>
+          </div>
+          <div class="pb-section">
+            <h3>Experience</h3>
+            <div id="exp-list"></div>
+            <button type="button" class="btn o" id="btn-add-exp">+ Add experience</button>
+          </div>
         </div>
 
-        <div class="pb-section">
-          <h3>7 · Certifications</h3>
-          <div id="cert-list"></div>
-          <button type="button" class="btn o" id="btn-add-cert">+ Add certification</button>
+        <!-- STEP 5: Projects + Certifications -->
+        <div class="pb-step-panel" data-step="5" hidden>
+          <div class="pb-section">
+            <h3>5 · Projects</h3>
+            <div id="proj-list"></div>
+            <button type="button" class="btn o" id="btn-add-proj">+ Add project</button>
+          </div>
+          <div class="pb-section">
+            <h3>Certifications</h3>
+            <div id="cert-list"></div>
+            <button type="button" class="btn o" id="btn-add-cert">+ Add certification</button>
+          </div>
+        </div>
+
+        <!-- Step navigation -->
+        <div class="pb-step-nav">
+          <button type="button" class="btn o" id="btn-prev" hidden>← Back</button>
+          <button type="button" class="btn p" id="btn-next">Next →</button>
         </div>
 
         <div class="pb-actions-spacer" aria-hidden="true"></div>
@@ -106,8 +136,8 @@
             <li class="pb-howto-step pb-howto-1">
               <span class="pb-howto-num">1</span>
               <div>
-                <strong>Fill Your Details in the Template</strong>
-                <p>Choose a portfolio template you like and enter your details in the form on this page.</p>
+                <strong>Fill 5 short steps</strong>
+                <p>Personal → Links → Skills → Education → Projects. Each step saves automatically.</p>
               </div>
             </li>
             <li class="pb-howto-step pb-howto-2">
