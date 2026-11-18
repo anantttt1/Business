@@ -386,9 +386,29 @@
     await window.PB_exportModernDark(state);
   }
 
+  /* window.PB_CONFIG.paymentRequired (config.js): false = 1-month free trial, ZIP downloads straight away */
+  const PAYMENT_REQUIRED = !!(window.PB_CONFIG && window.PB_CONFIG.paymentRequired);
+
+  function exportNow(startMsg) {
+    setStatus(startMsg);
+    runExport()
+      .then(function () {
+        setStatus('Download started \u2014 extract the ZIP and open index.html.');
+      })
+      .catch(function (e) {
+        console.error(e);
+        setStatus('Export failed: ' + (e && e.message ? e.message : 'unknown error'), true);
+      });
+  }
+
   function downloadZip() {
     if (!validate()) return;
     saveState();
+
+    if (!PAYMENT_REQUIRED) {
+      exportNow('Generating your portfolio ZIP\u2026');
+      return;
+    }
 
     if (typeof window.PB_openPayment !== 'function') {
       setStatus('Payment module missing \u2014 hard refresh the page.', true);
@@ -398,17 +418,20 @@
     setStatus('Open payment to unlock ZIP download\u2026');
     window.PB_openPayment(templateId, {
       onApproved: function () {
-        setStatus('Payment approved \u2014 generating your portfolio ZIP\u2026');
-        runExport()
-          .then(function () {
-            setStatus('Download started \u2014 extract the ZIP and open index.html.');
-          })
-          .catch(function (e) {
-            console.error(e);
-            setStatus('Export failed: ' + (e && e.message ? e.message : 'unknown error'), true);
-          });
+        exportNow('Payment approved \u2014 generating your portfolio ZIP\u2026');
       }
     });
+  }
+
+  if (PAYMENT_REQUIRED) {
+    /* payment is back on: restore the original wording on the page */
+    const setText = function (id, text) {
+      const n = document.getElementById(id);
+      if (n) n.textContent = text;
+    };
+    setText('pb-editor-sub', '5 short steps \u00b7 data saves automatically \u00b7 Download ZIP opens UPI payment.');
+    setText('pb-how-3-title', 'Pay the Amount');
+    setText('pb-how-3-text', 'Complete payment via UPI. Once successful, your ZIP downloads automatically.');
   }
 
   const titleEl = $('#pb-editor-title');

@@ -409,6 +409,20 @@ body.pb-has-preview-banner{padding-top:56px}
   font:700 1.05rem/1 var(--hf);
   color:#4ade80;
 }
+/* 1-month free trial badge */
+.pb-card-trial{flex-direction:column;align-items:flex-end;gap:4px}
+.pb-price-free{
+  font:700 .76rem/1 var(--hf);
+  color:#05210f;
+  background:#4ade80;
+  padding:5px 9px;
+  border-radius:999px;
+}
+.pb-price-then{font-size:.78rem;color:var(--mu)}
+@media(max-width:400px){
+  .pb-card-title-row{flex-wrap:wrap}
+  .pb-card-trial{flex-direction:row;align-items:center;gap:8px}
+}
 
 /* ===== Multi-step wizard ===== */
 .pb-steps{

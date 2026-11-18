@@ -43,6 +43,21 @@
     };
   }
 
+  function saveBlob(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    a.hidden = true;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      a.remove();
+      URL.revokeObjectURL(url);
+    }, 4000);
+  }
+
   function buildExportPayload(state) {
     return {
       fullName: state.fullName || '',
@@ -122,7 +137,12 @@
       }
 
       var extrasMap = {
-        'ideas-impact': ['template-b.css', 'template-c.css', 'template-d.css']
+        'ideas-impact': ['template-b.css', 'template-c.css', 'template-d.css'],
+        /* student templates load an extra.js next to index.html */
+        'student-bold': ['extra.js'],
+        'student-elegant': ['extra.js'],
+        'student-modern': ['extra.js'],
+        'student-portfolio': ['extra.js']
       };
       var extras = extrasMap[tid] || [];
       for (var i = 0; i < extras.length; i++) {
@@ -139,20 +159,14 @@
       var zipName = slug + '-portfolio.zip';
 
       if (typeof window.PB_simpleZip === 'function') {
-        window.PB_simpleZip(files, zipName);
+        /* PB_simpleZip only BUILDS the zip and returns a Blob: it has to be saved here */
+        saveBlob(window.PB_simpleZip(files, zipName), zipName);
       } else if (typeof JSZip !== 'undefined') {
         var zip = new JSZip();
         files.forEach(function (f) {
           zip.file(f.name, f.data);
         });
-        var blob = await zip.generateAsync({ type: 'blob' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = zipName;
-        a.click();
-        setTimeout(function () {
-          URL.revokeObjectURL(a.href);
-        }, 2000);
+        saveBlob(await zip.generateAsync({ type: 'blob' }), zipName);
       } else {
         throw new Error('ZIP library failed to load');
       }
