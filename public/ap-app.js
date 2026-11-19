@@ -66,3 +66,22 @@ if(!rm&&hv){
   art.innerHTML='<div class="ph ph-circle"><img src="/team/abhinav-pachauri.jpg" alt="Abhinav Pachauri" width="280" height="280" loading="lazy"></div><h3>Abhinav Pachauri</h3><div class="role">Mentor & Communication Trainer</div><p>Guides the team on communication, presentation skills, and mentoring for clear client interactions.</p>';
   grid.appendChild(art);
 })();
+/* Nav: Join Our WhatsApp Community */
+(function(){
+  const ul=document.querySelector('#nv ul');
+  if(!ul||ul.querySelector('[data-nav="wa-community"]')) return;
+  const li=document.createElement('li');
+  li.setAttribute('data-nav','wa-community');
+  const a=document.createElement('a');
+  a.href='https://chat.whatsapp.com/JUftY40Z16D6E7mEQKGftu';
+  a.target='_blank';
+  a.rel='noopener noreferrer';
+  a.textContent='Join Our WhatsApp Community';
+  li.appendChild(a);
+  const getStarted=ul.querySelector('a.btn.p');
+  if(getStarted&&getStarted.parentElement){
+    ul.insertBefore(li,getStarted.parentElement);
+  }else{
+    ul.appendChild(li);
+  }
+})();
