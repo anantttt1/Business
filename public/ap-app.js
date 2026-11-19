@@ -3,7 +3,7 @@ const rm=matchMedia('(prefers-reduced-motion: reduce)').matches,hv=matchMedia('(
 /* Portfolio Builder button: same green as WhatsApp + soft self-glow (no hover needed) */
 (function(){
   const s=document.createElement('style');
-  s.textContent='.sg .card .btn.p{background:var(--wa)!important;background-image:none!important;color:#05210f!important;box-shadow:0 12px 34px -12px var(--wa),0 0 0 0 rgba(37,211,102,.35);animation:apPGlow 2.4s ease-in-out infinite}.sg .card .btn.p:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--wa),0 0 0 6px rgba(37,211,102,.15)}@keyframes apPGlow{0%,100%{box-shadow:0 12px 34px -12px var(--wa),0 0 0 0 rgba(37,211,102,.4)}50%{box-shadow:0 12px 34px -12px var(--wa),0 0 0 10px rgba(37,211,102,.1)}}@media (prefers-reduced-motion:reduce){.sg .card .btn.p{animation:none}}';
+  s.textContent='.sg .card .btn.p{background:var(--wa)!important;background-image:none!important;color:#05210f!important;box-shadow:0 12px 34px -12px var(--wa),0 0 0 0 rgba(37,211,102,.35);animation:apPGlow 2.4s ease-in-out infinite}.sg .card .btn.p:hover{box-shadow:0 14px 36px -10px var(--wa),0 0 0 6px rgba(37,211,102,.15)}@keyframes apPGlow{0%,100%{box-shadow:0 12px 34px -12px var(--wa),0 0 0 0 rgba(37,211,102,.4)}50%{box-shadow:0 12px 34px -12px var(--wa),0 0 0 10px rgba(37,211,102,.1)}}@media (prefers-reduced-motion:reduce){.sg .card .btn.p{animation:none}}';
   document.head.appendChild(s);
 })();
 const WA='https://wa.me/919286034026?text=';

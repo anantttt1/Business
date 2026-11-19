@@ -80,7 +80,12 @@ html:not(.js) .splash{display:none}
 
 /* Portfolio Builder button: green + soft self-glow */
 .sg .card a.btn.p,.btn.p{background:var(--wa)!important;background-image:none!important;color:#05210f!important;box-shadow:0 12px 34px -12px var(--wa),0 0 0 0 rgba(37,211,102,.35)!important;animation:pGlow 2.4s ease-in-out infinite!important}
-.sg .card a.btn.p:hover,.btn.p:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--wa),0 0 0 8px rgba(37,211,102,.12)!important}
+.sg .card a.btn.p:hover,.btn.p:hover{box-shadow:0 14px 36px -10px var(--wa),0 0 0 8px rgba(37,211,102,.12)!important}
+.btn.p:hover{transform:translateY(-2px)}
+/* Service cards: the button's ::after is the click area of the whole card. Any transform on the button
+   (even translate) makes it the containing block of ::after, so the area shrinks on hover and the hover
+   flickers on/off while the pointer is over the card text. Keep the glow, no movement. */
+.sg .card a.btn.p:hover{transform:none}
 
 /* Mentor card (Abhinav Pachauri): circular photo, full-width row under the three team cards */
 .ph-circle{border-radius:50%!important;max-width:200px!important;margin-inline:auto}
