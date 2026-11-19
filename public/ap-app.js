@@ -17,6 +17,12 @@ $$('.ph img').forEach(i=>{const bad=()=>i.remove();if(i.complete&&!i.naturalWidt
 $$('#services .card').forEach(c=>{
   const h=c.querySelector('h4');if(!h)return;
   const name=h.textContent.trim();
+  if(c.hasAttribute('data-tools')){
+    const a=document.createElement('a');
+    a.className='btn p';a.href='https://apcreativetools.vercel.app/';a.target='_blank';a.rel='noopener noreferrer';
+    a.setAttribute('aria-label','Open Tools (opens in a new tab)');a.textContent='Open Tools';
+    c.appendChild(a);return;
+  }
   if(c.hasAttribute('data-builder')){
     const a=document.createElement('a');
     a.className='btn p';a.href='/portfolio-builder/';a.textContent='Open Portfolio Builder';
