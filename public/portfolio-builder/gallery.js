@@ -73,18 +73,14 @@
     const was = originalPrice(price);
     const trial = !(window.PB_CONFIG && window.PB_CONFIG.paymentRequired);
     if (price > 0 && trial) {
-      /* 1-month free trial: show "Free for 1 month" and the regular price that applies afterwards */
+      /* 1-month free trial: only show Free for 1 month */
       const priceEl = document.createElement('div');
       priceEl.className = 'pb-card-price pb-card-trial';
-      priceEl.setAttribute('aria-label', 'Free for 1 month, then ₹' + price);
+      priceEl.setAttribute('aria-label', 'Free for 1 month');
       const free = document.createElement('span');
       free.className = 'pb-price-free';
       free.textContent = 'Free for 1 month';
-      const then = document.createElement('span');
-      then.className = 'pb-price-then';
-      then.textContent = 'then ₹' + price;
       priceEl.appendChild(free);
-      priceEl.appendChild(then);
       titleRow.appendChild(h3);
       titleRow.appendChild(priceEl);
     } else if (price > 0) {
