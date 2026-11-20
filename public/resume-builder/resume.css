@@ -1,0 +1,177 @@
+/* Resume Builder — AP Creative Studio */
+
+.rb-price-line{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  margin:10px 0 0 !important;
+}
+.rb-price-was{
+  font-size:1.05rem;
+  color:var(--mu);
+  text-decoration:line-through;
+  opacity:.8;
+}
+.rb-price-free{
+  font:700 .85rem/1 var(--hf);
+  color:#05210f;
+  background:#4ade80;
+  padding:6px 12px;
+  border-radius:999px;
+}
+.rb-price-note{color:var(--mu);font-size:.9rem}
+.rb-inline-was{text-decoration:line-through;opacity:.7;margin-right:4px}
+.rb-inline-free{
+  font-weight:700;
+  color:#05210f;
+  background:#4ade80;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:.75rem;
+}
+
+.rb-sec-head{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 0 14px;
+  padding:0 0 12px;
+  border-bottom:1px solid var(--bd);
+}
+.rb-sec-head h3{
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+}
+.rb-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:.82rem;
+  color:var(--mu);
+  cursor:pointer;
+  user-select:none;
+}
+.rb-toggle input{accent-color:#4ade80;width:16px;height:16px}
+
+/* Printable resume (screen preview + print) */
+.rb-print-root{
+  position:fixed;
+  left:-9999px;
+  top:0;
+  width:210mm;
+  background:#fff;
+  color:#111;
+  z-index:-1;
+  pointer-events:none;
+}
+.rb-print-root.is-preview{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:10000;
+  pointer-events:auto;
+  max-height:90vh;
+  overflow:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  border-radius:8px;
+}
+.rb-preview-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  z-index:9999;
+}
+.rb-preview-close{
+  position:fixed;
+  top:16px;
+  right:16px;
+  z-index:10001;
+  min-height:40px;
+  padding:8px 16px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.2);
+  background:#1a1a22;
+  color:#fff;
+  font:600 .9rem inherit;
+  cursor:pointer;
+}
+
+.rb-sheet{
+  font-family:Georgia,"Times New Roman",Times,serif;
+  font-size:11pt;
+  line-height:1.35;
+  color:#1a1a1a;
+  padding:18mm 16mm;
+  box-sizing:border-box;
+  background:#fff;
+}
+.rb-sheet *{box-sizing:border-box}
+.rb-name{
+  text-align:center;
+  font-size:20pt;
+  font-weight:700;
+  letter-spacing:.04em;
+  margin:0 0 6px;
+  color:#1e3a5f;
+  text-transform:uppercase;
+}
+.rb-contact{
+  text-align:center;
+  font-size:9.5pt;
+  color:#333;
+  margin:0 0 4px;
+}
+.rb-links{
+  text-align:center;
+  font-size:9.5pt;
+  margin:0 0 12px;
+  color:#1e3a5f;
+}
+.rb-links a{color:#1e3a5f;text-decoration:none}
+.rb-links a:hover{text-decoration:underline}
+.rb-sec-title{
+  font-size:11pt;
+  font-weight:700;
+  color:#1e3a5f;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  border-bottom:1.5px solid #1e3a5f;
+  margin:14px 0 8px;
+  padding-bottom:2px;
+}
+.rb-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:baseline;
+  margin:0 0 2px;
+}
+.rb-row strong{font-weight:700}
+.rb-muted{color:#444;font-size:9.5pt}
+.rb-bullets{margin:2px 0 8px;padding-left:18px}
+.rb-bullets li{margin:0 0 2px}
+.rb-skills-line{margin:0 0 4px;font-size:10pt}
+.rb-skills-line b{font-weight:700}
+
+@media print{
+  body *{visibility:hidden !important}
+  .rb-print-root,.rb-print-root *{visibility:visible !important}
+  .rb-print-root{
+    position:absolute !important;
+    left:0 !important;
+    top:0 !important;
+    transform:none !important;
+    width:100% !important;
+    max-height:none !important;
+    overflow:visible !important;
+    box-shadow:none !important;
+    z-index:1 !important;
+  }
+  .rb-preview-overlay,.rb-preview-close{display:none !important}
+  .rb-sheet{padding:12mm 14mm}
+}
