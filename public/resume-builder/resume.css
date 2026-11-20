@@ -379,3 +379,16 @@
   .rb-preview-sticky { position: relative; top: auto; max-height: none; }
   .rb-live-preview { max-height: 70vh; }
 }
+
+/* ---- Sticky fix: live preview stays pinned, only the details (left) scroll ----
+   1) ap-styles.css has body{overflow-x:hidden}. That makes <body> a scroll container, which silently disables
+      position:sticky for the header and the preview. "clip" hides sideways overflow without a scroll container.
+   2) .rb-layout uses align-items:start, so .rb-preview-col was only as tall as the preview and the sticky box
+      had no room to travel. Stretch the column to the full height of the form. */
+body.rb-body { overflow-x: visible; }
+@supports (overflow: clip) {
+  body.rb-body { overflow-x: clip; }
+}
+@media (min-width: 1024px) {
+  .rb-preview-col { align-self: stretch; }
+}
