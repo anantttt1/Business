@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Resume Builder | AP Creative Studio</title>
+<meta name="description" content="Build a professional resume free — fill 5 short steps, add or remove sections, and download as PDF.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ap-creativestudio.vercel.app/resume-builder/">
+<meta name="theme-color" content="#0c0c10">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/space-grotesk-var.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="/ap-styles.css">
+<link rel="stylesheet" href="/portfolio-builder/builder.css">
+<link rel="stylesheet" href="/resume-builder/resume.css">
+</head>
+<body class="pb-body rb-body">
+<header class="pb-header">
+  <div class="wrap nav">
+    <a class="logo" href="/" aria-label="AP Creative Studio home">AP <b>Creative</b> Studio</a>
+    <nav class="pb-nav" aria-label="Builder">
+      <a href="/">Home</a>
+      <a href="/#services">Services</a>
+      <a href="/portfolio-builder/">Portfolio Builder</a>
+    </nav>
+  </div>
+</header>
+
+<main class="pb-main">
+  <div class="wrap pb-form-wrap">
+    <a class="pb-back" href="/#services">← Back to services</a>
+    <header class="pb-hero">
+      <span class="ey">Resume Builder</span>
+      <h1>Build Your Resume</h1>
+      <p class="lead rb-price-line">
+        <span class="rb-price-was">₹59</span>
+        <span class="rb-price-free">Free</span>
+        <span class="rb-price-note">· 5 steps · add or remove sections · download PDF</span>
+      </p>
+    </header>
+
+    <div class="pb-steps" id="rb-steps" aria-label="Form steps">
+      <div class="pb-step is-active" data-step="1"><span class="pb-step-num">1</span><span class="pb-step-label">Personal</span></div>
+      <div class="pb-step" data-step="2"><span class="pb-step-num">2</span><span class="pb-step-label">Education</span></div>
+      <div class="pb-step" data-step="3"><span class="pb-step-num">3</span><span class="pb-step-label">Experience</span></div>
+      <div class="pb-step" data-step="4"><span class="pb-step-num">4</span><span class="pb-step-label">Projects</span></div>
+      <div class="pb-step" data-step="5"><span class="pb-step-num">5</span><span class="pb-step-label">Skills &amp; More</span></div>
+    </div>
+    <p class="pb-step-hint" id="rb-step-hint">Step 1 of 5 · Personal details</p>
+
+    <div class="pb-editor-shell">
+      <div class="pb-editor-panel" aria-label="Resume form">
+
+        <div class="pb-step-panel is-active" data-step="1">
+          <div class="pb-section">
+            <h3>1 · Personal details</h3>
+            <div class="pb-field"><label for="f-name">Full name *</label><input id="f-name" autocomplete="name" required placeholder="Your full name"></div>
+            <div class="pb-field"><label for="f-email">Email *</label><input id="f-email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+            <div class="pb-field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" placeholder="+91 …"></div>
+            <div class="pb-field"><label for="f-location">Location</label><input id="f-location" placeholder="City, PIN"></div>
+            <div class="pb-field"><label for="f-portfolio">Portfolio URL</label><input id="f-portfolio" type="url" placeholder="https://…"></div>
+            <div class="pb-field"><label for="f-linkedin">LinkedIn</label><input id="f-linkedin" type="url" placeholder="https://linkedin.com/in/…"></div>
+            <div class="pb-field"><label for="f-github">GitHub</label><input id="f-github" type="url" placeholder="https://github.com/…"></div>
+            <div class="pb-field"><label for="f-leetcode">LeetCode</label><input id="f-leetcode" type="url" placeholder="https://leetcode.com/…"></div>
+          </div>
+        </div>
+
+        <div class="pb-step-panel" data-step="2" hidden>
+          <div class="pb-section">
+            <div class="rb-sec-head">
+              <h3>2 · Education</h3>
+              <label class="rb-toggle"><input type="checkbox" id="sec-edu" checked> Include section</label>
+            </div>
+            <div id="edu-list"></div>
+            <button type="button" class="btn o" id="btn-add-edu">+ Add education</button>
+          </div>
+        </div>
+
+        <div class="pb-step-panel" data-step="3" hidden>
+          <div class="pb-section">
+            <div class="rb-sec-head">
+              <h3>3 · Experience</h3>
+              <label class="rb-toggle"><input type="checkbox" id="sec-exp" checked> Include section</label>
+            </div>
+            <div id="exp-list"></div>
+            <button type="button" class="btn o" id="btn-add-exp">+ Add experience</button>
+          </div>
+        </div>
+
+        <div class="pb-step-panel" data-step="4" hidden>
+          <div class="pb-section">
+            <div class="rb-sec-head">
+              <h3>4 · Projects</h3>
+              <label class="rb-toggle"><input type="checkbox" id="sec-proj" checked> Include section</label>
+            </div>
+            <div id="proj-list"></div>
+            <button type="button" class="btn o" id="btn-add-proj">+ Add project</button>
+          </div>
+        </div>
+
+        <div class="pb-step-panel" data-step="5" hidden>
+          <div class="pb-section">
+            <div class="rb-sec-head">
+              <h3>5 · Skills</h3>
+              <label class="rb-toggle"><input type="checkbox" id="sec-skills" checked> Include section</label>
+            </div>
+            <div class="pb-field"><label for="f-skills-fs">Full-Stack / Web</label><input id="f-skills-fs" placeholder="HTML, CSS, JavaScript, React…"></div>
+            <div class="pb-field"><label for="f-skills-lang">Programming languages</label><input id="f-skills-lang" placeholder="Java, Python, C…"></div>
+            <div class="pb-field"><label for="f-skills-core">Core CS</label><input id="f-skills-core" placeholder="DSA, SQL, ML…"></div>
+            <div class="pb-field"><label for="f-skills-tools">Tools</label><input id="f-skills-tools" placeholder="Git, VS Code, Docker…"></div>
+            <div class="pb-field"><label for="f-skills-soft">Soft skills</label><input id="f-skills-soft" placeholder="Problem solving, teamwork…"></div>
+          </div>
+          <div class="pb-section">
+            <div class="rb-sec-head">
+              <h3>Certifications</h3>
+              <label class="rb-toggle"><input type="checkbox" id="sec-cert" checked> Include section</label>
+            </div>
+            <div id="cert-list"></div>
+            <button type="button" class="btn o" id="btn-add-cert">+ Add certification</button>
+          </div>
+          <div class="pb-section">
+            <div class="rb-sec-head">
+              <h3>Achievements</h3>
+              <label class="rb-toggle"><input type="checkbox" id="sec-ach" checked> Include section</label>
+            </div>
+            <div id="ach-list"></div>
+            <button type="button" class="btn o" id="btn-add-ach">+ Add achievement</button>
+          </div>
+        </div>
+
+        <div class="pb-step-nav">
+          <button type="button" class="btn o" id="btn-prev" hidden>← Back</button>
+          <button type="button" class="btn p" id="btn-next">Next →</button>
+        </div>
+        <div class="pb-actions-spacer" aria-hidden="true"></div>
+      </div>
+
+      <aside class="pb-howto" aria-label="How it works">
+        <div class="pb-howto-card">
+          <p class="pb-howto-badge">Free forever</p>
+          <h2 class="pb-howto-title">How It Works</h2>
+          <p class="pb-howto-sub">Build a clean one-page resume in five steps. No account needed.</p>
+          <ol class="pb-howto-steps">
+            <li class="pb-howto-step pb-howto-1">
+              <span class="pb-howto-num">1</span>
+              <div><strong>Fill your details</strong><p>Personal → Education → Experience → Projects → Skills.</p></div>
+            </li>
+            <li class="pb-howto-step pb-howto-2">
+              <span class="pb-howto-num">2</span>
+              <div><strong>Add or remove sections</strong><p>Turn off any section you don’t need. Add extra rows as required.</p></div>
+            </li>
+            <li class="pb-howto-step pb-howto-3">
+              <span class="pb-howto-num">3</span>
+              <div><strong>Preview</strong><p>See a live layout of your resume before downloading.</p></div>
+            </li>
+            <li class="pb-howto-step pb-howto-4">
+              <span class="pb-howto-num">4</span>
+              <div><strong>Download PDF</strong><p>Print-ready PDF — free. <span class="rb-inline-was">₹59</span> <span class="rb-inline-free">Free</span></p></div>
+            </li>
+            <li class="pb-howto-step pb-howto-5">
+              <span class="pb-howto-num">5</span>
+              <div><strong>Data stays local</strong><p>Everything is saved only in your browser.</p></div>
+            </li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<div class="pb-actions-bar" role="toolbar" aria-label="Resume actions">
+  <div class="wrap pb-actions-inner">
+    <button type="button" class="btn p pb-act" id="btn-preview">Preview</button>
+    <button type="button" class="btn p pb-act" id="btn-download">Download PDF</button>
+    <button type="button" class="btn o pb-act" id="btn-reset">Reset</button>
+    <p class="pb-status" id="rb-status" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<div id="rb-print-root" class="rb-print-root" aria-hidden="true"></div>
+
+<footer class="pb-footer-slim">
+  <div class="wrap">
+    <p class="cp">© <span id="yr">2026</span> AP Creative Studio · Resume data stays in your browser only.</p>
+  </div>
+</footer>
+
+<script src="/ap-app.js"></script>
+<script src="/resume-builder/app.js"></script>
+</body>
+</html>
