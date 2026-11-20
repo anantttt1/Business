@@ -1,15 +1,15 @@
 (function () {
   'use strict';
 
-  const STORAGE = 'ap-rb-v3';
+  const STORAGE = 'ap-rb-v4';
   const $ = (s) => document.querySelector(s);
 
   function demoState() {
     return {
-      fullName: 'Abhinav Pachauri',
-      email: 'abc.@gmail.com',
-      phone: '+91-900000000',
-      location: 'Mathura, 281001',
+      fullName: 'Adam Deo',
+      email: 'adam.deo@email.com',
+      phone: '+91-98765-43210',
+      location: 'New Delhi, 110001',
       portfolio: 'https://portfolio.example.com',
       linkedin: 'https://linkedin.com/in/sample',
       github: 'https://github.com/sample',
@@ -90,16 +90,15 @@
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE);
-      if (!raw) return demoState();
-      const parsed = JSON.parse(raw);
-      if (!parsed.fullName && !parsed.email) return demoState();
-      return Object.assign(emptyState(), parsed);
+      if (!raw) return emptyState();
+      return Object.assign(emptyState(), JSON.parse(raw));
     } catch (e) {
-      return demoState();
+      return emptyState();
     }
   }
 
   const state = load();
+  const hasUserData = !!(state.fullName || state.email);
 
   function save() {
     try { localStorage.setItem(STORAGE, JSON.stringify(state)); } catch (e) {}
@@ -134,7 +133,7 @@
   }
 
   function buildResumeHtml() {
-    const s = state;
+    const s = (state.fullName || state.email) ? state : demoState();
     const name = (s.fullName || '').trim();
     if (!name && !s.email) {
       return '<div class="rb-a4"><div class="rb-empty">Start typing on the left — your resume appears here live.</div></div>';
@@ -311,10 +310,10 @@
     list.textContent = '';
     (state.experience || []).forEach(function (ex, i) {
       list.appendChild(entryCard('Experience ' + (i + 1), [
-        { label: 'Role / title', value: ex.role, placeholder: 'Infosys Springboard Internship', onChange: function (v) { ex.role = v; } },
-        { label: 'Organisation / subtitle', value: ex.org, placeholder: 'Coding Question Bank', onChange: function (v) { ex.org = v; } },
-        { label: 'Period', value: ex.period, placeholder: 'January 2023 - May 2023', onChange: function (v) { ex.period = v; } },
-        { label: 'Skills Used', value: ex.skillsUsed, placeholder: 'Java, Python and DSA', onChange: function (v) { ex.skillsUsed = v; } },
+        { label: 'Role / title', value: ex.role, placeholder: 'Internship title', onChange: function (v) { ex.role = v; } },
+        { label: 'Organisation / subtitle', value: ex.org, placeholder: 'Company or project', onChange: function (v) { ex.org = v; } },
+        { label: 'Period', value: ex.period, placeholder: 'Jan 2023 - May 2023', onChange: function (v) { ex.period = v; } },
+        { label: 'Skills Used', value: ex.skillsUsed, placeholder: 'Java, Python, DSA', onChange: function (v) { ex.skillsUsed = v; } },
         { label: 'Points (one per line)', value: ex.bullets, multiline: true, placeholder: 'What you built…', onChange: function (v) { ex.bullets = v; } }
       ], function () { state.experience.splice(i, 1); save(); renderExp(); updateLive(); }));
     });
@@ -326,7 +325,7 @@
     list.textContent = '';
     (state.projects || []).forEach(function (pr, i) {
       list.appendChild(entryCard('Project ' + (i + 1), [
-        { label: 'Project name', value: pr.name, placeholder: 'Health Care System', onChange: function (v) { pr.name = v; } },
+        { label: 'Project name', value: pr.name, placeholder: 'Project name', onChange: function (v) { pr.name = v; } },
         { label: 'Your role', value: pr.role, placeholder: 'Full Stack Developer', onChange: function (v) { pr.role = v; } },
         { label: 'Period', value: pr.period, placeholder: 'Aug 2023 - Dec 2023', onChange: function (v) { pr.period = v; } },
         { label: 'Link', value: pr.link, type: 'url', placeholder: 'https://…', onChange: function (v) { pr.link = v; } },
@@ -343,7 +342,7 @@
     list.textContent = '';
     (state.certifications || []).forEach(function (c, i) {
       list.appendChild(entryCard('Certification ' + (i + 1), [
-        { label: 'Description', value: c.text, placeholder: 'Gold badges on HackerRank', onChange: function (v) { c.text = v; } },
+        { label: 'Description', value: c.text, placeholder: 'Certification name', onChange: function (v) { c.text = v; } },
         { label: 'Link (optional)', value: c.link, type: 'url', onChange: function (v) { c.link = v; } }
       ], function () { state.certifications.splice(i, 1); save(); renderCert(); updateLive(); }));
     });
@@ -355,7 +354,7 @@
     list.textContent = '';
     (state.achievements || []).forEach(function (a, i) {
       list.appendChild(entryCard('Achievement ' + (i + 1), [
-        { label: 'Description', value: a.text, placeholder: 'Knight on LeetCode', onChange: function (v) { a.text = v; } },
+        { label: 'Description', value: a.text, placeholder: 'Achievement', onChange: function (v) { a.text = v; } },
         { label: 'Link (optional)', value: a.link, type: 'url', onChange: function (v) { a.link = v; } }
       ], function () { state.achievements.splice(i, 1); save(); renderAch(); updateLive(); }));
     });
@@ -363,7 +362,7 @@
 
   function downloadPdf() {
     if (!(state.fullName || '').trim() || !(state.email || '').trim()) {
-      setStatus('Name and email are required.', true);
+      setStatus('Name and email are required to download.', true);
       return;
     }
     updateLive();
@@ -415,7 +414,7 @@
   if ($('#btn-download')) $('#btn-download').addEventListener('click', downloadPdf);
   if ($('#btn-reset')) {
     $('#btn-reset').addEventListener('click', function () {
-      if (!confirm('Clear all and restore demo resume?')) return;
+      if (!confirm('Clear all fields? Preview will show demo resume again.')) return;
       try { localStorage.removeItem(STORAGE); } catch (e) {}
       location.reload();
     });
