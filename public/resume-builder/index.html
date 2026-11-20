@@ -14,7 +14,7 @@
 <link rel="preload" href="/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="/fonts/space-grotesk-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="/ap-styles.css">
-<link rel="stylesheet" href="/resume-builder/resume.css?v=3">
+<link rel="stylesheet" href="/resume-builder/resume.css?v=4">
 </head>
 <body class="rb-body">
 <header class="rb-header">
@@ -44,7 +44,7 @@
       </div>
       <div class="rb-top-actions">
         <button type="button" class="btn p" id="btn-download">Download PDF</button>
-        <button type="button" class="btn o" id="btn-reset">Reset to Demo</button>
+        <button type="button" class="btn o" id="btn-reset">Clear form</button>
       </div>
     </div>
 
@@ -57,7 +57,7 @@
             <div class="rb-field"><label for="f-name">Full name *</label><input id="f-name" autocomplete="name" placeholder="Your full name"></div>
             <div class="rb-field"><label for="f-email">Email *</label><input id="f-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
             <div class="rb-field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" placeholder="+91 …"></div>
-            <div class="rb-field"><label for="f-location">Location</label><input id="f-location" type="text" placeholder="City, PIN"></div>
+            <div class="rb-field"><label for="f-location">Location</label><input id="f-location" placeholder="City, PIN"></div>
           </div>
           <div class="rb-grid2" style="margin-top:10px">
             <div class="rb-field"><label for="f-portfolio">Portfolio URL</label><input id="f-portfolio" type="url" placeholder="https://…"></div>
@@ -131,7 +131,7 @@
         <div class="rb-preview-sticky">
           <div class="rb-preview-label">
             <span>Live A4 Preview</span>
-            <span class="rb-preview-hint">Stays visible while you scroll</span>
+            <span class="rb-preview-hint">Demo until you type</span>
           </div>
           <div id="rb-live-preview" class="rb-live-preview" aria-label="Live resume preview"></div>
         </div>
@@ -148,6 +148,6 @@
   </div>
 </footer>
 
-<script src="/resume-builder/app.js?v=3"></script>
+<script src="/resume-builder/app.js?v=4"></script>
 </body>
 </html>
