@@ -13,7 +13,7 @@ const WAI='<svg class="wi2" viewBox="0 0 24 24" fill="none" stroke="currentColor
 const ic=d=>`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg></span>`;
 $$('[data-i]').forEach(e=>{const d=P[e.dataset.i];if(d)e.insertAdjacentHTML('afterbegin',ic(d))});
 $$('.ph img').forEach(i=>{const bad=()=>i.remove();if(i.complete&&!i.naturalWidth)bad();else i.addEventListener('error',bad,{once:true})});
-/* Service cards: WhatsApp CTA */
+/* Service cards: CTAs */
 $$('#services .card').forEach(c=>{
   const h=c.querySelector('h4');if(!h)return;
   const name=h.textContent.trim();
@@ -26,6 +26,11 @@ $$('#services .card').forEach(c=>{
   if(c.hasAttribute('data-builder')){
     const a=document.createElement('a');
     a.className='btn p';a.href='/portfolio-builder/';a.textContent='Open Portfolio Builder';
+    c.appendChild(a);return;
+  }
+  if(c.hasAttribute('data-resume') || /Professional Resume/i.test(name)){
+    const a=document.createElement('a');
+    a.className='btn p';a.href='/resume-builder/';a.textContent='Open Resume Builder';
     c.appendChild(a);return;
   }
   const a=document.createElement('a');
