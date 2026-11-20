@@ -4,6 +4,74 @@
   const STORAGE = 'ap-rb-v2';
   const $ = (s) => document.querySelector(s);
 
+  function demoState() {
+    return {
+      fullName: 'Abhinav Pachauri',
+      email: 'abc.@gmail.com',
+      phone: '+91-900000000',
+      location: 'Mathura, 281001',
+      portfolio: 'https://portfolio.example.com',
+      linkedin: 'https://linkedin.com/in/sample',
+      github: 'https://github.com/sample',
+      leetcode: 'https://leetcode.com/sample',
+      includeEdu: true,
+      includeExp: true,
+      includeProj: true,
+      includeSkills: true,
+      includeCert: true,
+      includeAch: true,
+      education: [
+        { degree: 'Bachelor of Technology in Computer Science & Engineering', school: 'XYZ University', score: '9.4 CPI', years: '2020-2024' },
+        { degree: 'Intermediate, CBSE Board', school: 'ABC School, Mathura', score: '95%', years: '2019-2020' },
+        { degree: 'High School, CBSE Board', school: 'XYZ School, Mathura', score: '96.5%', years: '2017-2018' }
+      ],
+      experience: [
+        {
+          role: 'Infosys Springboard Internship',
+          org: 'Coding Question Bank',
+          period: 'January 2023 - May 2023',
+          skillsUsed: 'Java, Python and DSA',
+          bullets: 'Created a hands-on question bank to be used for online coding contests'
+        }
+      ],
+      projects: [
+        {
+          name: 'Health Care System',
+          role: 'Data Scientist & Full Stack Developer',
+          period: 'August 2023 - December 2023',
+          link: 'https://healthcare-sample.demo',
+          team: '4',
+          tech: 'EJS, Bootstrap, Node, Express, MongoDB',
+          bullets: 'Model Training & Prediction using Python, Machine Learning, Decision Tree, Sklearn, Flask, React.\nDisease Prediction system using symptoms and also doctor appointment booking.'
+        },
+        {
+          name: 'Social Media',
+          role: 'Full Stack Developer (MERN)',
+          period: 'April 2023 - August 2023',
+          link: 'https://socialmedia-sample.demo',
+          team: 'Individual Project',
+          tech: 'React (Frontend), Express (Server), MySQL (Database)',
+          bullets: 'Social Media Website to allow users to create accounts, post photos, add likes, comments & follow users.'
+        }
+      ],
+      skillsFs: 'HTML, CSS, JavaScript, Bootstrap, MongoDB, Express, React, NodeJS, Flask, MySQL.',
+      skillsLang: 'JAVA, PYTHON, C.',
+      skillsCore: 'SQL, DSA, Machine Learning, Cybersecurity.',
+      skillsTools: 'Git, Github, VS Code, NAGIOS, JIRA, Burp Suite, ZAP, Docker.',
+      skillsSoft: 'Problem solving skills, Efficient Time Management.',
+      certifications: [
+        { text: 'GOLD Badges & Certifications from HackerRank.', link: 'https://hackerrank.com/sample' },
+        { text: 'Certifications from Infosys Springboard in Java, Python, DSA, HTML, CSS, Time Management, Agile.', link: '' }
+      ],
+      achievements: [
+        { text: '1854 contest ratings (Knight) on LeetCode.', link: 'https://leetcode.com/sample' },
+        { text: '1577 (max) rating (Specialist) on CodeForces.', link: 'https://codeforces.com/sample' },
+        { text: '2200+ Contributions on GitHub.', link: 'https://github.com/sample' },
+        { text: 'Freelance tutoring at Tutor.com as part of Trivium Eduservices.', link: '' }
+      ]
+    };
+  }
+
   function emptyState() {
     return {
       fullName: '',
@@ -36,10 +104,12 @@
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE);
-      if (!raw) return emptyState();
-      return Object.assign(emptyState(), JSON.parse(raw));
+      if (!raw) return demoState();
+      const parsed = JSON.parse(raw);
+      if (!parsed.fullName && !parsed.email) return demoState();
+      return Object.assign(emptyState(), parsed);
     } catch (e) {
-      return emptyState();
+      return demoState();
     }
   }
 
@@ -412,7 +482,7 @@
   if ($('#btn-download')) $('#btn-download').addEventListener('click', downloadPdf);
   if ($('#btn-reset')) {
     $('#btn-reset').addEventListener('click', function () {
-      if (!confirm('Clear all resume fields?')) return;
+      if (!confirm('Clear all and restore demo resume?')) return;
       try { localStorage.removeItem(STORAGE); } catch (e) {}
       location.reload();
     });
