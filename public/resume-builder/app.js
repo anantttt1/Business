@@ -23,8 +23,8 @@
       includeCert: true,
       includeAch: true,
       education: [{ degree: '', school: '', score: '', years: '' }],
-      experience: [{ role: '', org: '', period: '', bullets: '' }],
-      projects: [{ name: '', role: '', period: '', link: '', tech: '', bullets: '' }],
+      experience: [{ role: '', org: '', period: '', skillsUsed: '', bullets: '' }],
+      projects: [{ name: '', role: '', period: '', link: '', tech: '', team: '', bullets: '' }],
       skillsFs: '',
       skillsLang: '',
       skillsCore: '',
@@ -154,9 +154,10 @@
     (state.experience || []).forEach(function (ex, i) {
       list.appendChild(
         entryCard('Experience ' + (i + 1), [
-          { label: 'Role / title', value: ex.role, placeholder: 'Intern · Software Engineer', onChange: function (v) { ex.role = v; } },
-          { label: 'Organisation', value: ex.org, placeholder: 'Company name', onChange: function (v) { ex.org = v; } },
-          { label: 'Period', value: ex.period, placeholder: 'Jan 2023 - May 2023', onChange: function (v) { ex.period = v; } },
+          { label: 'Role / title', value: ex.role, placeholder: 'Infosys Springboard Internship', onChange: function (v) { ex.role = v; } },
+          { label: 'Organisation / Project title', value: ex.org, placeholder: 'Coding Question Bank', onChange: function (v) { ex.org = v; } },
+          { label: 'Period', value: ex.period, placeholder: 'January 2023 - May 2023', onChange: function (v) { ex.period = v; } },
+          { label: 'Skills Used', value: ex.skillsUsed, placeholder: 'Java, Python and DSA', onChange: function (v) { ex.skillsUsed = v; } },
           { label: 'Points (one per line)', value: ex.bullets, multiline: true, placeholder: 'What you built or achieved', onChange: function (v) { ex.bullets = v; } }
         ], function () {
           state.experience.splice(i, 1);
@@ -174,11 +175,12 @@
     (state.projects || []).forEach(function (pr, i) {
       list.appendChild(
         entryCard('Project ' + (i + 1), [
-          { label: 'Project name', value: pr.name, onChange: function (v) { pr.name = v; } },
-          { label: 'Your role', value: pr.role, placeholder: 'Full Stack Developer', onChange: function (v) { pr.role = v; } },
-          { label: 'Period', value: pr.period, placeholder: 'Aug 2023 - Dec 2023', onChange: function (v) { pr.period = v; } },
+          { label: 'Project name', value: pr.name, placeholder: 'Health Care System', onChange: function (v) { pr.name = v; } },
+          { label: 'Your role', value: pr.role, placeholder: 'Data Scientist & Full Stack Developer', onChange: function (v) { pr.role = v; } },
+          { label: 'Period', value: pr.period, placeholder: 'August 2023 - December 2023', onChange: function (v) { pr.period = v; } },
           { label: 'Link', value: pr.link, type: 'url', placeholder: 'https://…', onChange: function (v) { pr.link = v; } },
-          { label: 'Technologies', value: pr.tech, placeholder: 'React, Node, MongoDB', onChange: function (v) { pr.tech = v; } },
+          { label: 'Team Size', value: pr.team, placeholder: '4 or Individual', onChange: function (v) { pr.team = v; } },
+          { label: 'Technologies', value: pr.tech, placeholder: 'EJS, Bootstrap, Node, Express, MongoDB', onChange: function (v) { pr.tech = v; } },
           { label: 'Points (one per line)', value: pr.bullets, multiline: true, onChange: function (v) { pr.bullets = v; } }
         ], function () {
           state.projects.splice(i, 1);
@@ -214,7 +216,7 @@
     (state.achievements || []).forEach(function (a, i) {
       list.appendChild(
         entryCard('Achievement ' + (i + 1), [
-          { label: 'Description', value: a.text, placeholder: 'e.g. Knight on LeetCode', onChange: function (v) { a.text = v; } },
+          { label: 'Description', value: a.text, placeholder: 'e.g. 1854 contest rating (Knight) on LeetCode', onChange: function (v) { a.text = v; } },
           { label: 'Link (optional)', value: a.link, type: 'url', onChange: function (v) { a.link = v; } }
         ], function () {
           state.achievements.splice(i, 1);
@@ -247,6 +249,15 @@
     if (next) next.textContent = n === TOTAL ? 'Done ✓' : 'Next →';
   }
 
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function bulletsHtml(text) {
     const lines = String(text || '')
       .split(/\n/)
@@ -254,14 +265,6 @@
       .filter(Boolean);
     if (!lines.length) return '';
     return '<ul class="rb-bullets">' + lines.map(function (l) { return '<li>' + escapeHtml(l) + '</li>'; }).join('') + '</ul>';
-  }
-
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, '&')
-      .replace(/</g, '<')
-      .replace(/>/g, '>')
-      .replace(/"/g, '"');
   }
 
   function linkOrText(url, label) {
@@ -290,8 +293,12 @@
       html += '<div class="rb-sec-title">Education</div>';
       s.education.forEach(function (e) {
         if (!e.degree && !e.school) return;
-        const left = [e.degree, e.school, e.score].filter(Boolean).map(escapeHtml).join(', ');
-        html += '<div class="rb-row"><span>' + left + '</span><span class="rb-muted">' + escapeHtml(e.years || '') + '</span></div>';
+        const leftParts = [];
+        if (e.degree) leftParts.push(escapeHtml(e.degree));
+        if (e.school) leftParts.push(escapeHtml(e.school));
+        if (e.score) leftParts.push('with ' + escapeHtml(e.score));
+        const left = leftParts.join(', ');
+        html += '<div class="rb-row"><span>' + left + '</span><span class="rb-date">' + escapeHtml(e.years || '') + '</span></div>';
       });
     }
 
@@ -299,7 +306,9 @@
       html += '<div class="rb-sec-title">Professional Experience</div>';
       s.experience.forEach(function (e) {
         if (!e.role && !e.org) return;
-        html += '<div class="rb-row"><span><strong>' + escapeHtml(e.role || '') + '</strong>' + (e.org ? ' · ' + escapeHtml(e.org) : '') + '</span><span class="rb-muted">' + escapeHtml(e.period || '') + '</span></div>';
+        html += '<div class="rb-row"><span class="rb-job-title">' + escapeHtml(e.role || '') + '</span><span class="rb-date">' + escapeHtml(e.period || '') + '</span></div>';
+        if (e.org) html += '<div class="rb-sub">' + escapeHtml(e.org) + '</div>';
+        if (e.skillsUsed) html += '<div class="rb-skills-used">Skills Used: ' + escapeHtml(e.skillsUsed) + '</div>';
         html += bulletsHtml(e.bullets);
       });
     }
@@ -308,10 +317,11 @@
       html += '<div class="rb-sec-title">Projects</div>';
       s.projects.forEach(function (p) {
         if (!p.name) return;
-        const title = escapeHtml(p.name) + (p.role ? ' · ' + escapeHtml(p.role) : '');
-        html += '<div class="rb-row"><span><strong>' + title + '</strong></span><span class="rb-muted">' + escapeHtml(p.period || '') + '</span></div>';
-        if (p.link) html += '<div class="rb-muted">Link — ' + linkOrText(p.link, p.link) + '</div>';
-        if (p.tech) html += '<div class="rb-muted">Technologies — ' + escapeHtml(p.tech) + '</div>';
+        html += '<div class="rb-row"><span class="rb-job-title">' + escapeHtml(p.name) + '</span><span class="rb-date">' + escapeHtml(p.period || '') + '</span></div>';
+        if (p.role) html += '<div class="rb-sub">' + escapeHtml(p.role) + '</div>';
+        if (p.link) html += '<div class="rb-meta">Link — ' + linkOrText(p.link, p.link) + '</div>';
+        if (p.team) html += '<div class="rb-meta">Team Size: ' + escapeHtml(p.team) + '</div>';
+        if (p.tech) html += '<div class="rb-meta">Technologies Used — ' + escapeHtml(p.tech) + '</div>';
         html += bulletsHtml(p.bullets);
       });
     }
@@ -442,14 +452,14 @@
   }
   if ($('#btn-add-exp')) {
     $('#btn-add-exp').addEventListener('click', function () {
-      state.experience.push({ role: '', org: '', period: '', bullets: '' });
+      state.experience.push({ role: '', org: '', period: '', skillsUsed: '', bullets: '' });
       save();
       renderExp();
     });
   }
   if ($('#btn-add-proj')) {
     $('#btn-add-proj').addEventListener('click', function () {
-      state.projects.push({ name: '', role: '', period: '', link: '', tech: '', bullets: '' });
+      state.projects.push({ name: '', role: '', period: '', link: '', tech: '', team: '', bullets: '' });
       save();
       renderProj();
     });
