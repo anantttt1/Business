@@ -33,6 +33,16 @@ $$('#services .card').forEach(c=>{
   a.innerHTML=WAI+'Enquire on WhatsApp';
   c.appendChild(a);
 });
+// Terms & Conditions: "View more" / "View less" toggle for the extra terms (#tx)
+const vm=$('#vm'),tx=$('#tx');
+if(vm&&tx)vm.addEventListener('click',()=>{
+  const open=tx.hidden;
+  tx.hidden=!open;
+  vm.setAttribute('aria-expanded',String(open));
+  const svg=vm.querySelector('svg');
+  vm.textContent=open?'View less ':'View more ';
+  if(svg)vm.appendChild(svg);
+});
 const mb=$('#mb'),nv=$('#nv');
 const tg=o=>{if(!nv||!mb)return;nv.classList.toggle('open',o);mb.setAttribute('aria-expanded',o?'true':'false');mb.setAttribute('aria-label',o?'Close menu':'Open menu')};
 if(mb)mb.onclick=()=>tg(!nv.classList.contains('open'));
