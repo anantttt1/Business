@@ -1,7 +1,8 @@
+/* RB-v5-ADAM-DEO-FORM-EMPTY */
 (function () {
   'use strict';
 
-  const STORAGE = 'ap-rb-v4';
+  const STORAGE = 'ap-rb-v5';
   const $ = (s) => document.querySelector(s);
 
   function demoState() {
@@ -98,7 +99,6 @@
   }
 
   const state = load();
-  const hasUserData = !!(state.fullName || state.email);
 
   function save() {
     try { localStorage.setItem(STORAGE, JSON.stringify(state)); } catch (e) {}
