@@ -109,8 +109,3 @@ html:not(.js) .splash{display:none}
 .tm h3{margin-bottom:18px}
 .tm .lk{margin-top:18px}
 
-/* Tools card: decorative panel in the photo slot until a real image is added */
-.pv-tools{display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:8px;padding:14px;
-  background:radial-gradient(120% 90% at 15% 10%,rgba(168,85,247,.32),transparent 60%),radial-gradient(110% 90% at 90% 95%,rgba(255,107,53,.28),transparent 60%),#141218}
-.pv-tools span{padding:6px 13px;border-radius:999px;border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);font-size:.82rem;font-weight:600;line-height:1.2}
-@media(max-width:380px){.pv-tools{gap:6px;padding:10px}.pv-tools span{padding:5px 10px;font-size:.76rem}}
