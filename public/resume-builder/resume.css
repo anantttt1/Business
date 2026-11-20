@@ -1,248 +1,384 @@
-/* Resume Builder — AP Creative Studio
-   Print layout tuned to match classic ATS / Abhinav-style resume */
+/* Resume Builder — side-by-side live preview + Abhinav-style A4 */
 
-.rb-price-line{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:10px;
-  margin:10px 0 0 !important;
-}
-.rb-price-was{
-  font-size:1.05rem;
-  color:var(--mu);
-  text-decoration:line-through;
-  opacity:.8;
-}
-.rb-price-free{
-  font:700 .85rem/1 var(--hf);
-  color:#05210f;
-  background:#4ade80;
-  padding:6px 12px;
-  border-radius:999px;
-}
-.rb-price-note{color:var(--mu);font-size:.9rem}
-.rb-inline-was{text-decoration:line-through;opacity:.7;margin-right:4px}
-.rb-inline-free{
-  font-weight:700;
-  color:#05210f;
-  background:#4ade80;
-  padding:2px 8px;
-  border-radius:999px;
-  font-size:.75rem;
+:root {
+  --rb-blue: #1e3a5f;
+  --rb-ink: #1a1a1a;
 }
 
-.rb-sec-head{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin:0 0 14px;
-  padding:0 0 12px;
-  border-bottom:1px solid var(--bd);
-}
-.rb-sec-head h3{
-  margin:0 !important;
-  padding:0 !important;
-  border:0 !important;
-}
-.rb-toggle{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-size:.82rem;
-  color:var(--mu);
-  cursor:pointer;
-  user-select:none;
-}
-.rb-toggle input{accent-color:#4ade80;width:16px;height:16px}
-
-/* ========== Printable resume (screen preview + print) ========== */
-.rb-print-root{
-  position:fixed;
-  left:-9999px;
-  top:0;
-  width:210mm;
-  background:#fff;
-  color:#111;
-  z-index:-1;
-  pointer-events:none;
-}
-.rb-print-root.is-preview{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  z-index:10000;
-  pointer-events:auto;
-  max-height:92vh;
-  overflow:auto;
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  border-radius:4px;
-  width:min(210mm, 96vw);
-}
-.rb-preview-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  z-index:9999;
-}
-.rb-preview-close{
-  position:fixed;
-  top:14px;
-  right:14px;
-  z-index:10001;
-  min-height:40px;
-  padding:8px 16px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.2);
-  background:#1a1a22;
-  color:#fff;
-  font:600 .9rem inherit;
-  cursor:pointer;
+.rb-body {
+  background: var(--bg, #0c0c10);
+  color: var(--tx, #F5F1F0);
+  min-height: 100vh;
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
 }
 
-/* Abhinav / classic ATS sheet */
-.rb-sheet{
-  font-family:"Times New Roman", Times, Georgia, serif;
-  font-size:11pt;
-  line-height:1.32;
-  color:#1a1a1a;
-  padding:16mm 15mm 14mm;
-  box-sizing:border-box;
-  background:#fff;
-  min-height:277mm;
+.rb-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(12,12,16,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
 }
-.rb-sheet *{box-sizing:border-box}
+.rb-header .nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+.rb-nav {
+  display: flex;
+  gap: 18px;
+  font-size: .9rem;
+}
+.rb-nav a { color: var(--mu, #B6B0B8); text-decoration: none; }
+.rb-nav a:hover { color: var(--tx); }
 
-.rb-name{
-  text-align:center;
-  font-size:18pt;
-  font-weight:700;
-  letter-spacing:.06em;
-  margin:0 0 5px;
-  color:#1e3a5f;
-  text-transform:uppercase;
-  font-family:"Times New Roman", Times, serif;
+.rb-main { padding: 20px 0 60px; }
+.rb-back {
+  display: inline-block;
+  color: var(--mu);
+  text-decoration: none;
+  font-size: .9rem;
+  margin-bottom: 14px;
 }
+.rb-back:hover { color: var(--or, #FF6B35); }
 
-.rb-contact{
-  text-align:center;
-  font-size:9.5pt;
-  color:#222;
-  margin:0 0 2px;
-  font-family:"Times New Roman", Times, serif;
+.rb-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
 }
+.rb-topbar h1 {
+  font-family: "Space Grotesk", var(--hf, sans-serif);
+  font-size: 1.6rem;
+  margin: 4px 0 0;
+}
+.rb-top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-.rb-links{
-  text-align:center;
-  font-size:9.5pt;
-  margin:0 0 10px;
-  color:#1e3a5f;
-  font-family:"Times New Roman", Times, serif;
+.rb-price-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 0;
 }
-.rb-links a{
-  color:#1e3a5f;
-  text-decoration:none;
+.rb-price-was {
+  font-size: 1.05rem;
+  color: var(--mu);
+  text-decoration: line-through;
+  opacity: .8;
 }
-.rb-links a:hover{text-decoration:underline}
+.rb-price-free {
+  font: 700 .85rem/1 var(--hf, sans-serif);
+  color: #05210f;
+  background: #4ade80;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+.rb-price-note { color: var(--mu); font-size: .88rem; }
 
-/* Section titles — blue + underline (Abhinav style) */
-.rb-sec-title{
-  font-size:11pt;
-  font-weight:700;
-  color:#1e3a5f;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-  border-bottom:1.4px solid #1e3a5f;
-  margin:11px 0 5px;
-  padding-bottom:1px;
-  font-family:"Times New Roman", Times, serif;
+/* ===== Two column layout ===== */
+.rb-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
 }
-
-.rb-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:baseline;
-  margin:0 0 1px;
-  font-size:10.5pt;
-}
-.rb-job-title{
-  font-weight:700;
-  color:#111;
-}
-.rb-date{
-  color:#333;
-  font-size:9.5pt;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-.rb-sub{
-  font-size:10pt;
-  color:#222;
-  margin:0 0 1px;
-}
-.rb-skills-used{
-  font-size:9.5pt;
-  color:#333;
-  margin:0 0 2px;
-  font-style:italic;
-}
-.rb-meta{
-  font-size:9.5pt;
-  color:#333;
-  margin:0 0 1px;
-}
-.rb-meta a{
-  color:#1e3a5f;
-  text-decoration:none;
+@media (min-width: 1024px) {
+  .rb-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: start;
+  }
 }
 
-.rb-bullets{
-  margin:1px 0 6px;
-  padding-left:16px;
-  font-size:10pt;
-}
-.rb-bullets li{
-  margin:0 0 1px;
-  line-height:1.28;
+.rb-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.rb-skills-line{
-  margin:0 0 2px;
-  font-size:10pt;
-  line-height:1.3;
+.rb-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 18px 16px;
 }
-.rb-skills-line b{
-  font-weight:700;
+.rb-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--tx);
+}
+.rb-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.rb-card-head .rb-card-title { margin: 0; }
+
+.rb-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .8rem;
+  color: var(--mu);
+  cursor: pointer;
+  user-select: none;
+}
+.rb-toggle input { accent-color: #4ade80; width: 15px; height: 15px; }
+
+.rb-grid2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 520px) {
+  .rb-grid2 { grid-template-columns: 1fr 1fr; }
 }
 
-@media print{
-  body *{visibility:hidden !important}
+.rb-field { display: flex; flex-direction: column; gap: 4px; }
+.rb-field label {
+  font-size: .75rem;
+  color: var(--mu);
+  font-weight: 500;
+}
+.rb-field input,
+.rb-field textarea {
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  padding: 9px 12px;
+  color: var(--tx);
+  font: 400 .9rem/1.3 Inter, system-ui, sans-serif;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.rb-field input:focus,
+.rb-field textarea:focus {
+  border-color: rgba(255,107,53,.5);
+  box-shadow: 0 0 0 3px rgba(255,107,53,.12);
+}
+.rb-field textarea { resize: vertical; min-height: 64px; }
+
+.rb-entry {
+  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.rb-entry-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.rb-entry-head strong { font-size: .85rem; color: var(--tx); }
+.rb-entry-head .rb-rm {
+  font-size: .75rem;
+  padding: 4px 10px;
+  min-height: 28px;
+  border-radius: 8px;
+}
+
+.rb-add {
+  margin-top: 4px;
+  font-size: .85rem !important;
+  padding: 8px 14px !important;
+  min-height: 36px !important;
+}
+
+.rb-status {
+  font-size: .85rem;
+  color: var(--mu);
+  min-height: 1.2em;
+}
+.rb-status.is-err { color: #f87171; }
+.rb-status.is-ok { color: #4ade80; }
+
+/* ===== Live preview column ===== */
+.rb-preview-col { min-width: 0; }
+.rb-preview-sticky {
+  position: sticky;
+  top: 72px;
+}
+.rb-preview-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: .8rem;
+  color: var(--mu);
+  font-weight: 600;
+}
+.rb-preview-hint {
+  font-weight: 400;
+  opacity: .7;
+}
+
+.rb-live-preview {
+  background: #e8e8ec;
+  border-radius: 8px;
+  padding: 16px 12px;
+  max-height: calc(100vh - 100px);
+  overflow: auto;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+
+/* A4 sheet inside live preview */
+.rb-a4 {
+  background: #fff;
+  color: var(--rb-ink);
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+  min-height: 280mm;
+  padding: 14mm 13mm;
+  box-sizing: border-box;
+  box-shadow: 0 8px 30px rgba(0,0,0,.18);
+  border: 1px solid #ccc;
+  font-family: "Times New Roman", Times, Georgia, serif;
+  font-size: 10.5pt;
+  line-height: 1.32;
+}
+
+.rb-a4 .rb-name {
+  text-align: center;
+  font-size: 17pt;
+  font-weight: 700;
+  letter-spacing: .05em;
+  margin: 0 0 4px;
+  color: var(--rb-blue);
+  text-transform: uppercase;
+}
+.rb-a4 .rb-contact {
+  text-align: center;
+  font-size: 9pt;
+  color: #222;
+  margin: 0 0 2px;
+}
+.rb-a4 .rb-links {
+  text-align: center;
+  font-size: 9pt;
+  margin: 0 0 8px;
+  color: var(--rb-blue);
+}
+.rb-a4 .rb-links a {
+  color: var(--rb-blue);
+  text-decoration: none;
+}
+.rb-a4 .rb-links a:hover { text-decoration: underline; }
+
+.rb-a4 .rb-sec-title {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: var(--rb-blue);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-bottom: 1.5px solid var(--rb-blue);
+  margin: 10px 0 4px;
+  padding-bottom: 1px;
+}
+.rb-a4 .rb-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+  margin: 0 0 1px;
+  font-size: 10pt;
+}
+.rb-a4 .rb-job-title { font-weight: 700; color: #111; }
+.rb-a4 .rb-date {
+  color: #333;
+  font-size: 9pt;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.rb-a4 .rb-sub { font-size: 9.5pt; color: #222; margin: 0 0 1px; }
+.rb-a4 .rb-skills-used {
+  font-size: 9pt;
+  color: #333;
+  margin: 0 0 2px;
+  font-style: italic;
+}
+.rb-a4 .rb-meta {
+  font-size: 9pt;
+  color: #333;
+  margin: 0 0 1px;
+}
+.rb-a4 .rb-meta a { color: var(--rb-blue); text-decoration: none; }
+.rb-a4 .rb-bullets {
+  margin: 1px 0 5px;
+  padding-left: 15px;
+  font-size: 9.5pt;
+}
+.rb-a4 .rb-bullets li { margin: 0 0 1px; line-height: 1.28; }
+.rb-a4 .rb-skills-line {
+  margin: 0 0 2px;
+  font-size: 9.5pt;
+  line-height: 1.3;
+}
+.rb-a4 .rb-skills-line b { font-weight: 700; }
+.rb-a4 .rb-empty {
+  text-align: center;
+  color: #888;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: .9rem;
+  padding: 80px 20px;
+}
+
+/* Print root (hidden until print) */
+.rb-print-root {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 210mm;
+  background: #fff;
+  z-index: -1;
+  pointer-events: none;
+}
+.rb-print-root .rb-a4 {
+  box-shadow: none;
+  border: none;
+  max-width: none;
+  width: 100%;
+}
+
+.rb-footer {
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 18px 0;
+  text-align: center;
+  font-size: .8rem;
+  color: var(--mu);
+}
+
+@media print {
+  body * { visibility: hidden !important; }
   .rb-print-root,
-  .rb-print-root *{visibility:visible !important}
-  .rb-print-root{
-    position:absolute !important;
-    left:0 !important;
-    top:0 !important;
-    transform:none !important;
-    width:100% !important;
-    max-height:none !important;
-    overflow:visible !important;
-    box-shadow:none !important;
-    z-index:1 !important;
-    border-radius:0 !important;
+  .rb-print-root * { visibility: visible !important; }
+  .rb-print-root {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    z-index: 1 !important;
   }
-  .rb-preview-overlay,
-  .rb-preview-close{display:none !important}
-  .rb-sheet{
-    padding:12mm 14mm;
-    min-height:auto;
+  .rb-print-root .rb-a4 {
+    padding: 10mm 12mm;
+    min-height: auto;
   }
-  @page{
-    size:A4;
-    margin:10mm 12mm;
-  }
+  @page { size: A4; margin: 8mm 10mm; }
+}
+
+/* Mobile: preview below form */
+@media (max-width: 1023px) {
+  .rb-preview-sticky { position: static; }
+  .rb-live-preview { max-height: none; }
 }
