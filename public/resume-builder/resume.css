@@ -1,5 +1,4 @@
-/* Resume Builder — side-by-side live preview + Abhinav-style A4
-   Form scrolls independently; preview stays fixed on desktop */
+/* Resume Builder v3 — sticky preview + form scrolls with page */
 
 :root {
   --rb-blue: #1e3a5f;
@@ -18,7 +17,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(12,12,16,.95);
+  background: rgba(12,12,16,.96);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
@@ -28,15 +27,11 @@
   justify-content: space-between;
   padding: 12px 0;
 }
-.rb-nav {
-  display: flex;
-  gap: 18px;
-  font-size: .9rem;
-}
+.rb-nav { display: flex; gap: 18px; font-size: .9rem; }
 .rb-nav a { color: var(--mu, #B6B0B8); text-decoration: none; }
 .rb-nav a:hover { color: var(--tx); }
 
-.rb-main { padding: 16px 0 24px; }
+.rb-main { padding: 16px 0 40px; }
 .rb-back {
   display: inline-block;
   color: var(--mu);
@@ -52,7 +47,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 .rb-topbar h1 {
   font-family: "Space Grotesk", var(--hf, sans-serif);
@@ -83,51 +78,15 @@
 }
 .rb-price-note { color: var(--mu); font-size: .85rem; }
 
-/* ===== Two column layout — form scrolls, preview fixed ===== */
 .rb-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 24px;
+  align-items: start;
 }
-
 @media (min-width: 1024px) {
   .rb-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-    align-items: start;
-    height: calc(100vh - 160px);
-    min-height: 480px;
-  }
-  .rb-form-col {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 8px;
-    max-height: 100%;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,.2) transparent;
-  }
-  .rb-form-col::-webkit-scrollbar { width: 6px; }
-  .rb-form-col::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.18);
-    border-radius: 4px;
-  }
-  .rb-preview-col {
-    height: 100%;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  .rb-preview-sticky {
-    position: static;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-  .rb-live-preview {
-    flex: 1;
-    max-height: none;
-    min-height: 0;
-    overflow: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 1.05fr);
   }
 }
 
@@ -142,7 +101,6 @@
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 14px;
   padding: 16px 14px;
-  flex-shrink: 0;
 }
 .rb-card-title {
   font-size: .95rem;
@@ -236,12 +194,28 @@
   font-size: .82rem;
   color: var(--mu);
   min-height: 1.2em;
-  flex-shrink: 0;
 }
 .rb-status.is-err { color: #f87171; }
 .rb-status.is-ok { color: #4ade80; }
 
 .rb-preview-col { min-width: 0; }
+.rb-preview-sticky { position: relative; }
+@media (min-width: 1024px) {
+  .rb-preview-sticky {
+    position: sticky;
+    top: 72px;
+    max-height: calc(100vh - 88px);
+    display: flex;
+    flex-direction: column;
+  }
+  .rb-live-preview {
+    flex: 1;
+    min-height: 0;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+  }
+}
+
 .rb-preview-label {
   display: flex;
   align-items: center;
@@ -252,10 +226,7 @@
   font-weight: 600;
   flex-shrink: 0;
 }
-.rb-preview-hint {
-  font-weight: 400;
-  opacity: .7;
-}
+.rb-preview-hint { font-weight: 400; opacity: .7; }
 
 .rb-live-preview {
   background: #e8e8ec;
@@ -272,7 +243,7 @@
   width: 100%;
   max-width: 210mm;
   margin: 0 auto;
-  min-height: 260mm;
+  min-height: 240mm;
   padding: 12mm 12mm;
   box-sizing: border-box;
   box-shadow: 0 8px 28px rgba(0,0,0,.16);
@@ -303,10 +274,7 @@
   margin: 0 0 7px;
   color: var(--rb-blue);
 }
-.rb-a4 .rb-links a {
-  color: var(--rb-blue);
-  text-decoration: none;
-}
+.rb-a4 .rb-links a { color: var(--rb-blue); text-decoration: none; }
 .rb-a4 .rb-links a:hover { text-decoration: underline; }
 
 .rb-a4 .rb-sec-title {
@@ -403,14 +371,11 @@
     width: 100% !important;
     z-index: 1 !important;
   }
-  .rb-print-root .rb-a4 {
-    padding: 10mm 12mm;
-  }
+  .rb-print-root .rb-a4 { padding: 10mm 12mm; }
   @page { size: A4; margin: 8mm 10mm; }
 }
 
 @media (max-width: 1023px) {
-  .rb-layout { height: auto; }
-  .rb-form-col { overflow: visible; max-height: none; }
+  .rb-preview-sticky { position: relative; top: auto; max-height: none; }
   .rb-live-preview { max-height: 70vh; }
 }
