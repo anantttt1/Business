@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const STORAGE = 'ap-rb-v2';
+  const STORAGE = 'ap-rb-v3';
   const $ = (s) => document.querySelector(s);
 
   function demoState() {
@@ -74,28 +74,14 @@
 
   function emptyState() {
     return {
-      fullName: '',
-      email: '',
-      phone: '',
-      location: '',
-      portfolio: '',
-      linkedin: '',
-      github: '',
-      leetcode: '',
-      includeEdu: true,
-      includeExp: true,
-      includeProj: true,
-      includeSkills: true,
-      includeCert: true,
-      includeAch: true,
+      fullName: '', email: '', phone: '', location: '',
+      portfolio: '', linkedin: '', github: '', leetcode: '',
+      includeEdu: true, includeExp: true, includeProj: true,
+      includeSkills: true, includeCert: true, includeAch: true,
       education: [{ degree: '', school: '', score: '', years: '' }],
       experience: [{ role: '', org: '', period: '', skillsUsed: '', bullets: '' }],
       projects: [{ name: '', role: '', period: '', link: '', tech: '', team: '', bullets: '' }],
-      skillsFs: '',
-      skillsLang: '',
-      skillsCore: '',
-      skillsTools: '',
-      skillsSoft: '',
+      skillsFs: '', skillsLang: '', skillsCore: '', skillsTools: '', skillsSoft: '',
       certifications: [{ text: '', link: '' }],
       achievements: [{ text: '', link: '' }]
     };
@@ -116,9 +102,7 @@
   const state = load();
 
   function save() {
-    try {
-      localStorage.setItem(STORAGE, JSON.stringify(state));
-    } catch (e) {}
+    try { localStorage.setItem(STORAGE, JSON.stringify(state)); } catch (e) {}
   }
 
   function setStatus(msg, isErr) {
@@ -131,18 +115,12 @@
 
   function escapeHtml(s) {
     return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   function bulletsHtml(text) {
-    const lines = String(text || '')
-      .split(/\n/)
-      .map(function (l) { return l.trim(); })
-      .filter(Boolean);
+    const lines = String(text || '').split(/\n/).map(function (l) { return l.trim(); }).filter(Boolean);
     if (!lines.length) return '';
     return '<ul class="rb-bullets">' + lines.map(function (l) {
       return '<li>' + escapeHtml(l) + '</li>';
@@ -152,8 +130,7 @@
   function linkOrText(url, label) {
     if (!url) return '';
     const safe = escapeHtml(url);
-    const lab = label || safe;
-    return '<a href="' + safe + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(lab) + '</a>';
+    return '<a href="' + safe + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(label || safe) + '</a>';
   }
 
   function buildResumeHtml() {
@@ -162,7 +139,6 @@
     if (!name && !s.email) {
       return '<div class="rb-a4"><div class="rb-empty">Start typing on the left — your resume appears here live.</div></div>';
     }
-
     const contactParts = [s.email, s.phone, s.location].filter(Boolean).map(escapeHtml);
     const linkParts = [];
     if (s.portfolio) linkParts.push(linkOrText(s.portfolio, 'Portfolio'));
@@ -228,8 +204,7 @@
     }
 
     if (s.includeCert && (s.certifications || []).some(function (c) { return c.text; })) {
-      html += '<div class="rb-sec-title">Certifications</div>';
-      html += '<ul class="rb-bullets">';
+      html += '<div class="rb-sec-title">Certifications</div><ul class="rb-bullets">';
       s.certifications.forEach(function (c) {
         if (!c.text) return;
         html += '<li>' + escapeHtml(c.text) + (c.link ? ' — ' + linkOrText(c.link, 'Link') : '') + '</li>';
@@ -238,8 +213,7 @@
     }
 
     if (s.includeAch && (s.achievements || []).some(function (a) { return a.text; })) {
-      html += '<div class="rb-sec-title">Achievements</div>';
-      html += '<ul class="rb-bullets">';
+      html += '<div class="rb-sec-title">Achievements</div><ul class="rb-bullets">';
       s.achievements.forEach(function (a) {
         if (!a.text) return;
         html += '<li>' + escapeHtml(a.text) + (a.link ? ' — ' + linkOrText(a.link, 'Link') : '') + '</li>';
@@ -263,9 +237,7 @@
     if (!el) return;
     el.value = state[key] || '';
     el.addEventListener('input', function () {
-      state[key] = el.value;
-      save();
-      updateLive();
+      state[key] = el.value; save(); updateLive();
     });
   }
 
@@ -274,9 +246,7 @@
     if (!el) return;
     el.checked = !!state[key];
     el.addEventListener('change', function () {
-      state[key] = el.checked;
-      save();
-      updateLive();
+      state[key] = el.checked; save(); updateLive();
     });
   }
 
@@ -312,9 +282,7 @@
       }
       input.value = f.value || '';
       input.addEventListener('input', function () {
-        f.onChange(input.value);
-        save();
-        updateLive();
+        f.onChange(input.value); save(); updateLive();
       });
       field.appendChild(lab);
       field.appendChild(input);
@@ -329,16 +297,11 @@
     list.textContent = '';
     (state.education || []).forEach(function (ed, i) {
       list.appendChild(entryCard('Education ' + (i + 1), [
-        { label: 'Degree / course', value: ed.degree, placeholder: 'Bachelor of Technology in Computer Science & Engineering', onChange: function (v) { ed.degree = v; } },
-        { label: 'School / college', value: ed.school, placeholder: 'XYZ University', onChange: function (v) { ed.school = v; } },
+        { label: 'Degree / course', value: ed.degree, placeholder: 'B.Tech in CSE', onChange: function (v) { ed.degree = v; } },
+        { label: 'School / college', value: ed.school, placeholder: 'University name', onChange: function (v) { ed.school = v; } },
         { label: 'Score / CPI', value: ed.score, placeholder: '9.4 CPI or 95%', onChange: function (v) { ed.score = v; } },
         { label: 'Years', value: ed.years, placeholder: '2020-2024', onChange: function (v) { ed.years = v; } }
-      ], function () {
-        state.education.splice(i, 1);
-        save();
-        renderEdu();
-        updateLive();
-      }));
+      ], function () { state.education.splice(i, 1); save(); renderEdu(); updateLive(); }));
     });
   }
 
@@ -352,13 +315,8 @@
         { label: 'Organisation / subtitle', value: ex.org, placeholder: 'Coding Question Bank', onChange: function (v) { ex.org = v; } },
         { label: 'Period', value: ex.period, placeholder: 'January 2023 - May 2023', onChange: function (v) { ex.period = v; } },
         { label: 'Skills Used', value: ex.skillsUsed, placeholder: 'Java, Python and DSA', onChange: function (v) { ex.skillsUsed = v; } },
-        { label: 'Points (one per line)', value: ex.bullets, multiline: true, placeholder: 'Created a hands-on question bank…', onChange: function (v) { ex.bullets = v; } }
-      ], function () {
-        state.experience.splice(i, 1);
-        save();
-        renderExp();
-        updateLive();
-      }));
+        { label: 'Points (one per line)', value: ex.bullets, multiline: true, placeholder: 'What you built…', onChange: function (v) { ex.bullets = v; } }
+      ], function () { state.experience.splice(i, 1); save(); renderExp(); updateLive(); }));
     });
   }
 
@@ -369,18 +327,13 @@
     (state.projects || []).forEach(function (pr, i) {
       list.appendChild(entryCard('Project ' + (i + 1), [
         { label: 'Project name', value: pr.name, placeholder: 'Health Care System', onChange: function (v) { pr.name = v; } },
-        { label: 'Your role', value: pr.role, placeholder: 'Data Scientist & Full Stack Developer', onChange: function (v) { pr.role = v; } },
-        { label: 'Period', value: pr.period, placeholder: 'August 2023 - December 2023', onChange: function (v) { pr.period = v; } },
+        { label: 'Your role', value: pr.role, placeholder: 'Full Stack Developer', onChange: function (v) { pr.role = v; } },
+        { label: 'Period', value: pr.period, placeholder: 'Aug 2023 - Dec 2023', onChange: function (v) { pr.period = v; } },
         { label: 'Link', value: pr.link, type: 'url', placeholder: 'https://…', onChange: function (v) { pr.link = v; } },
-        { label: 'Team Size', value: pr.team, placeholder: '4 or Individual Project', onChange: function (v) { pr.team = v; } },
-        { label: 'Technologies', value: pr.tech, placeholder: 'EJS, Bootstrap, Node, Express, MongoDB', onChange: function (v) { pr.tech = v; } },
+        { label: 'Team Size', value: pr.team, placeholder: '4 or Individual', onChange: function (v) { pr.team = v; } },
+        { label: 'Technologies', value: pr.tech, placeholder: 'React, Node, MongoDB', onChange: function (v) { pr.tech = v; } },
         { label: 'Points (one per line)', value: pr.bullets, multiline: true, onChange: function (v) { pr.bullets = v; } }
-      ], function () {
-        state.projects.splice(i, 1);
-        save();
-        renderProj();
-        updateLive();
-      }));
+      ], function () { state.projects.splice(i, 1); save(); renderProj(); updateLive(); }));
     });
   }
 
@@ -390,14 +343,9 @@
     list.textContent = '';
     (state.certifications || []).forEach(function (c, i) {
       list.appendChild(entryCard('Certification ' + (i + 1), [
-        { label: 'Description', value: c.text, placeholder: 'GOLD Badges & Certifications from HackerRank', onChange: function (v) { c.text = v; } },
+        { label: 'Description', value: c.text, placeholder: 'Gold badges on HackerRank', onChange: function (v) { c.text = v; } },
         { label: 'Link (optional)', value: c.link, type: 'url', onChange: function (v) { c.link = v; } }
-      ], function () {
-        state.certifications.splice(i, 1);
-        save();
-        renderCert();
-        updateLive();
-      }));
+      ], function () { state.certifications.splice(i, 1); save(); renderCert(); updateLive(); }));
     });
   }
 
@@ -407,14 +355,9 @@
     list.textContent = '';
     (state.achievements || []).forEach(function (a, i) {
       list.appendChild(entryCard('Achievement ' + (i + 1), [
-        { label: 'Description', value: a.text, placeholder: '1854 contest ratings (Knight) on LeetCode', onChange: function (v) { a.text = v; } },
+        { label: 'Description', value: a.text, placeholder: 'Knight on LeetCode', onChange: function (v) { a.text = v; } },
         { label: 'Link (optional)', value: a.link, type: 'url', onChange: function (v) { a.link = v; } }
-      ], function () {
-        state.achievements.splice(i, 1);
-        save();
-        renderAch();
-        updateLive();
-      }));
+      ], function () { state.achievements.splice(i, 1); save(); renderAch(); updateLive(); }));
     });
   }
 
@@ -448,36 +391,26 @@
   bindToggle('sec-cert', 'includeCert');
   bindToggle('sec-ach', 'includeAch');
 
-  if ($('#btn-add-edu')) {
-    $('#btn-add-edu').addEventListener('click', function () {
-      state.education.push({ degree: '', school: '', score: '', years: '' });
-      save(); renderEdu(); updateLive();
-    });
-  }
-  if ($('#btn-add-exp')) {
-    $('#btn-add-exp').addEventListener('click', function () {
-      state.experience.push({ role: '', org: '', period: '', skillsUsed: '', bullets: '' });
-      save(); renderExp(); updateLive();
-    });
-  }
-  if ($('#btn-add-proj')) {
-    $('#btn-add-proj').addEventListener('click', function () {
-      state.projects.push({ name: '', role: '', period: '', link: '', tech: '', team: '', bullets: '' });
-      save(); renderProj(); updateLive();
-    });
-  }
-  if ($('#btn-add-cert')) {
-    $('#btn-add-cert').addEventListener('click', function () {
-      state.certifications.push({ text: '', link: '' });
-      save(); renderCert(); updateLive();
-    });
-  }
-  if ($('#btn-add-ach')) {
-    $('#btn-add-ach').addEventListener('click', function () {
-      state.achievements.push({ text: '', link: '' });
-      save(); renderAch(); updateLive();
-    });
-  }
+  if ($('#btn-add-edu')) $('#btn-add-edu').addEventListener('click', function () {
+    state.education.push({ degree: '', school: '', score: '', years: '' });
+    save(); renderEdu(); updateLive();
+  });
+  if ($('#btn-add-exp')) $('#btn-add-exp').addEventListener('click', function () {
+    state.experience.push({ role: '', org: '', period: '', skillsUsed: '', bullets: '' });
+    save(); renderExp(); updateLive();
+  });
+  if ($('#btn-add-proj')) $('#btn-add-proj').addEventListener('click', function () {
+    state.projects.push({ name: '', role: '', period: '', link: '', tech: '', team: '', bullets: '' });
+    save(); renderProj(); updateLive();
+  });
+  if ($('#btn-add-cert')) $('#btn-add-cert').addEventListener('click', function () {
+    state.certifications.push({ text: '', link: '' });
+    save(); renderCert(); updateLive();
+  });
+  if ($('#btn-add-ach')) $('#btn-add-ach').addEventListener('click', function () {
+    state.achievements.push({ text: '', link: '' });
+    save(); renderAch(); updateLive();
+  });
 
   if ($('#btn-download')) $('#btn-download').addEventListener('click', downloadPdf);
   if ($('#btn-reset')) {
