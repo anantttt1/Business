@@ -1,9 +1,12 @@
-// POST /api/enquiry — receives the popup's JSON, validates it, forwards it to the existing Google Form's
-// `formResponse` endpoint and answers { ok: true } ONLY when Google's reply proves the response was recorded.
+// POST /api/enquiry — receives the popup's JSON, validates it, hands it to the configured backend and answers
+// { ok: true } ONLY when that backend's reply proves the enquiry was saved.
+//   'sheet' : Google Apps Script inside the Google Sheet (integrations/google-sheet/) — confirmed by an echoed id
+//   'form'  : the existing Google Form's formResponse endpoint (only for a form that needs no Google sign-in)
 //
-// Why a server hop instead of posting from the browser: a cross-origin POST to docs.google.com can only be sent
-// "no-cors", which returns an opaque response, so the page can never know whether Google accepted it.
-// Here the server can read Google's reply, so success is confirmed instead of assumed.
+// Why a server hop instead of posting from the browser: a cross-origin POST to Google can only be sent
+// "no-cors", which returns an opaque response, so the page can never know whether it was accepted.
+// Here the server can read the reply, so success is confirmed instead of assumed.
+import { randomUUID } from 'node:crypto';
 import { json, readBody, rateLimit, clientIp } from './_lib/http.js';
 import {
   FORM_ID,
@@ -11,7 +14,7 @@ import {
   EXTRA_PARAMS,
   PHONE_FORMAT,
   CONFIRMATION_MARKERS,
-  isConfigured,
+  activeBackend,
 } from './_lib/enquiry-form.js';
 
 const MAX_BODY_BYTES = 16 * 1024;
@@ -120,6 +123,25 @@ export function classifyGoogleResponse({ status, location = '', body = '' }) {
   return 'unconfirmed';
 }
 
+// Apps Script reply -> verdict. Success needs HTTP 200, JSON, ok === true AND the very request id we sent echoed back
+// (so a sign-in page, an error page or someone else's reply can never count as saved).
+export function classifySheetResponse({ status, body = '', id }) {
+  if (status === 404) return 'not_found';
+  if (status === 401 || status === 403) return 'login_required';
+  if (status === 429 || status >= 500) return 'upstream';
+  if (status !== 200) return 'unconfirmed';
+  let j;
+  try {
+    j = JSON.parse(body);
+  } catch {
+    return /accounts\.google\.com|ServiceLogin/i.test(body) ? 'login_required' : 'unconfirmed';
+  }
+  if (j && j.ok === true && j.id === id) return 'ok';
+  if (j && (j.error === 'busy' || j.error === 'verify_failed')) return 'upstream';
+  if (j && j.error) return 'rejected';
+  return 'unconfirmed';
+}
+
 // Content hashes of enquiries Google already confirmed: a double-click or a retry after a timeout must not add a
 // second row. Best effort (memory of one serverless instance), the browser also disables the button while sending.
 const recent = globalThis.__AP_ENQ_RECENT__ || (globalThis.__AP_ENQ_RECENT__ = new Map());
@@ -145,8 +167,11 @@ function fail(res, code, extra = {}) {
 }
 
 export default async function handler(req, res) {
+  // GET = "is the enquiry backend set up?" The popup asks this once per page view and only takes over the CTA buttons
+  // when it is, so until the Google Sheet receiver is configured the buttons keep working exactly as before.
+  if (req.method === 'GET') return json(res, 200, { ready: Boolean(activeBackend()) });
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+    res.setHeader('Allow', 'GET, POST');
     return json(res, 405, { ok: false, code: 'method' });
   }
 
@@ -179,8 +204,9 @@ export default async function handler(req, res) {
   const { errors, values } = validate(input);
   if (Object.keys(errors).length) return fail(res, 'invalid', { fields: errors });
 
-  if (!isConfigured()) {
-    console.error('[enquiry] not configured: Google Form entry ids are not verified yet (api/_lib/enquiry-form.js)');
+  const backend = activeBackend();
+  if (!backend) {
+    console.error('[enquiry] not configured: set ENQUIRY_SCRIPT_URL + ENQUIRY_SCRIPT_SECRET in Vercel (see integrations/google-sheet/README.md)');
     return fail(res, 'not_configured');
   }
 
@@ -188,6 +214,46 @@ export default async function handler(req, res) {
   const seen = recent.get(print);
   if (seen && Date.now() - seen < 10 * 60_000) return json(res, 200, { ok: true, duplicate: true });
 
+  // Request id: made by the browser once per attempt and kept across retries, so a retry after a timeout is
+  // recognised by the sheet instead of creating a second row.
+  const rid = /^[A-Za-z0-9_-]{8,64}$/.test(String(input.id || '')) ? String(input.id) : randomUUID();
+
+  const { verdict, status } = backend === 'sheet' ? await sendToSheet(values, rid) : await sendToForm(values);
+
+  if (verdict !== 'ok') {
+    // Never log answers (personal data); the verdict and the upstream HTTP status are enough to debug.
+    console.error('[enquiry] not confirmed:', backend, verdict, 'upstream status', status);
+    return fail(res, verdict);
+  }
+
+  recent.set(print, Date.now());
+  if (recent.size > 500) for (const [k, t] of recent) if (Date.now() - t > 10 * 60_000) recent.delete(k);
+  return json(res, 200, { ok: true });
+}
+
+async function sendToSheet(values, id) {
+  // The test override only exists outside Vercel, so it can never redirect production traffic.
+  const url = (!process.env.VERCEL && process.env.ENQUIRY_TEST_SCRIPT_URL) || String(process.env.ENQUIRY_SCRIPT_URL).trim();
+  let verdict = 'upstream';
+  let status = 0;
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8', Accept: 'application/json' },
+      // Apps Script answers a POST with a 302 to its result page; following it is the documented way to read the reply.
+      redirect: 'follow',
+      body: JSON.stringify({ secret: process.env.ENQUIRY_SCRIPT_SECRET, id, ...values }),
+      signal: AbortSignal.timeout(GOOGLE_TIMEOUT_MS),
+    });
+    status = r.status;
+    verdict = classifySheetResponse({ status, body: (await r.text()).slice(0, 100_000), id });
+  } catch {
+    verdict = 'upstream';
+  }
+  return { verdict, status };
+}
+
+async function sendToForm(values) {
   const params = new URLSearchParams();
   for (const [key, f] of Object.entries(FIELDS)) {
     if (f.entry && values[key]) params.append('entry.' + f.entry, values[key]);
@@ -213,17 +279,8 @@ export default async function handler(req, res) {
     status = r.status;
     const text = (await r.text()).slice(0, 400_000);
     verdict = classifyGoogleResponse({ status, location: r.headers.get('location') || '', body: text });
-  } catch (e) {
+  } catch {
     verdict = 'upstream';
   }
-
-  if (verdict !== 'ok') {
-    // Never log answers (personal data); the verdict and Google's HTTP status are enough to debug.
-    console.error('[enquiry] not confirmed:', verdict, 'google status', status);
-    return fail(res, verdict);
-  }
-
-  recent.set(print, Date.now());
-  if (recent.size > 500) for (const [k, t] of recent) if (Date.now() - t > 10 * 60_000) recent.delete(k);
-  return json(res, 200, { ok: true });
+  return { verdict, status };
 }

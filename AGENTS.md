@@ -24,12 +24,11 @@ but nothing new gets published either. These rules keep builds green.
    folder and `vite.config.ts` are the old React version and are not deployed. `public/terms.html` and
    `public/privacy.html` are static text, so update them by hand when policies change.
 7. **Do not undo other people's changes.** `git fetch` and rebase/merge before pushing.
-8. **Enquiry popup (Google Form).** The popup lives in `public/enquiry.js` + `public/enquiry.css`; any element with
-   `data-enquiry` opens it (the `href` stays as a no-JavaScript fallback). Answers go to `/api/enquiry`
-   (`api/enquiry.js`), which posts to the EXISTING Google Form's `formResponse` URL and only returns `ok: true` after
-   Google's reply proves the response was recorded. The form id, `entry.<id>` mapping, required flags and the
-   `VERIFIED` switch are in `api/_lib/enquiry-form.js`; the dropdown/radio texts in `public/enquiry.js` (`SERVICES`,
-   `TIMELINES`, `SHOWCASE`) must match the form's own options exactly. Never guess entry ids: read them from the live
-   form's `FB_PUBLIC_LOAD_DATA_`, then set `VERIFIED = true`. Until then the API answers `not_configured` and the popup
-   shows an error with a WhatsApp fallback instead of a fake success. Do not edit the Google Form's questions
-   without updating that mapping.
+8. **Enquiry popup.** The popup lives in `public/enquiry.js` + `public/enquiry.css`; any element with `data-enquiry`
+   opens it (its `href` stays as the fallback). It only takes the buttons over after `GET /api/enquiry` answers
+   `{ready:true}`; until a backend is configured the buttons behave as before. Answers go to `POST /api/enquiry`
+   (`api/enquiry.js`), which answers `ok:true` only after the backend confirms the save. Backends
+   (`api/_lib/enquiry-form.js`): **sheet** (active when the Vercel env vars `ENQUIRY_SCRIPT_URL` and
+   `ENQUIRY_SCRIPT_SECRET` are set; Google Apps Script in the Google Sheet, `integrations/google-sheet/`, setup in its
+   README) and **form** (dormant: posts to the existing Google Form's `formResponse`; the form currently requires Google
+   sign-in, so no website can submit to it). Never guess Google Form entry ids and never put the secret in the repo.

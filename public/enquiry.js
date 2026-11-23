@@ -8,8 +8,8 @@
   window.__apEnquiry = true;
 
   /* ---- Choices shown in the popup ----------------------------------------------------------------------------
-   * These texts are written into the Google Form as-is, so they must match the form's own option texts EXACTLY
-   * (Google rejects an answer that is not one of the options). Keep in sync with the live form. */
+   * These texts are saved as typed. (Only if /api/enquiry is ever switched to posting into a Google Form directly
+   * must they match that form's own option texts exactly - see api/_lib/enquiry-form.js.) */
   var SERVICES = [
     'Personal / Professional Portfolio Website',
     'Professional Resume Creation',
@@ -110,6 +110,16 @@
 
   var root, box, form, alertBox, alertText, submitBtn, countEl;
   var lastFocus = null, closing = null, sending = false, inerted = [];
+  // One request id per enquiry. It is kept when a send fails or times out, so pressing "Send" again is recognised by
+  // the sheet as the same enquiry (no duplicate row); it changes when the answers change or after a success.
+  var rid = '', lastSig = '';
+  function newRid() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    var a = new Uint8Array(16), i, out = '';
+    try { crypto.getRandomValues(a); } catch (e) { for (i = 0; i < 16; i++) a[i] = Math.floor(Math.random() * 256); }
+    for (i = 0; i < 16; i++) out += (a[i] < 16 ? '0' : '') + a[i].toString(16);
+    return out;
+  }
 
   function build() {
     if (root) return;
@@ -309,6 +319,10 @@
     });
     if (bad) { focusField(bad); return; }
 
+    var sig = JSON.stringify(ORDER.map(function (k) { return v[k]; }));
+    if (!rid || sig !== lastSig) { rid = newRid(); lastSig = sig; }
+    v.id = rid;
+
     sending = true; setBusy(true);
     var ctrl = new AbortController();
     var timer = setTimeout(function () { ctrl.abort(); }, 20000);
@@ -340,6 +354,7 @@
 
   function onSuccess(v) {
     var first = (v.fullName || '').trim().split(/\s+/)[0];
+    rid = ''; lastSig = '';
     form.reset();
     countEl.textContent = '0/' + LIMITS.requirements;
     ORDER.forEach(clearError);
@@ -350,17 +365,26 @@
   }
 
   /* ---- wiring ---------------------------------------------------------------------------------------------------- */
+  // The buttons are only taken over once the server says the enquiry backend is set up; until then (or if the check
+  // fails) they keep their normal link behaviour, so visitors are never sent into a popup that cannot submit.
+  var ready = false;
+  function fromHash() { if (ready && location.hash === '#enquiry') open(null); }
+  try {
+    fetch('/api/enquiry', { method: 'GET', headers: { Accept: 'application/json' }, cache: 'no-store', credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { ready = !!(j && j.ready === true); fromHash(); })
+      .catch(function () {});
+  } catch (err) {}
+
   document.addEventListener('click', function (e) {
-    if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!ready || e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var t = e.target.closest && e.target.closest('[data-enquiry]');
     if (!t) return;
     e.preventDefault();
     open(t, t.getAttribute('data-enquiry-service') || '');
   });
   // Deep link: /#enquiry opens the popup (handy for emails and QR codes)
-  function fromHash() { if (location.hash === '#enquiry') open(null); }
   addEventListener('hashchange', fromHash);
-  if (document.readyState !== 'loading') fromHash(); else document.addEventListener('DOMContentLoaded', fromHash);
 
   window.apEnquiry = { open: open, close: close };
 })();

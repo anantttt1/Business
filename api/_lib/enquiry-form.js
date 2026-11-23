@@ -1,8 +1,13 @@
-// Link between the website's enquiry popup and the EXISTING Google Form.
+// Where the website's enquiry popup sends its answers (see api/enquiry.js). Two backends:
 //
-// The form is never edited or recreated: the popup posts to the form's public
-// `formResponse` endpoint (through /api/enquiry, so success can be confirmed server-side)
-// and the answers land in the form's linked Google Sheet as usual.
+//  1. 'sheet' (ACTIVE when the Vercel env vars ENQUIRY_SCRIPT_URL + ENQUIRY_SCRIPT_SECRET are set):
+//     a small Google Apps Script inside the Google Sheet appends a row and confirms it
+//     (integrations/google-sheet/). Needed because the existing Google Form requires visitors to sign in
+//     to Google, which no website can do on their behalf. The Google Form itself is never touched.
+//
+//  2. 'form' (dormant fallback, used only if the env vars are absent AND VERIFIED is true below):
+//     posts to the EXISTING Google Form's public `formResponse` endpoint. This only works for a form that
+//     does not require sign-in, and the entry ids must be read from the live form.
 //
 // !! Entry IDs must be copied from the live form, never guessed !!
 // A wrong ID silently drops an answer or makes Google reject the whole response.
@@ -10,8 +15,8 @@
 // Each question is an array whose last block holds `[[<entry id>, ...options]]`;
 // <entry id> is the number that goes after `entry.` (see README of the enquiry popup in AGENTS.md).
 //
-// Until every required `entry` below is filled in and `VERIFIED` is set to true, /api/enquiry
-// refuses to submit ("not_configured"), so the popup can never show a fake success.
+// With neither backend configured, /api/enquiry refuses to submit ("not_configured"), so the popup can
+// never show a fake success.
 
 export const FORM_ID = '1FAIpQLSf5Bs0ByBb_Lyh8sYrb45H7F8ogLMBPqyZqHuCDZx1WUbKTPg';
 
@@ -56,3 +61,12 @@ export function isConfigured() {
   // Every REQUIRED field needs a real entry id; optional ones may stay null (they are then not sent).
   return Object.values(FIELDS).every((f) => !f.required || /^\d{4,}$/.test(String(f.entry)));
 }
+
+const SCRIPT_URL_RE = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
+
+// Which backend answers enquiries right now: 'sheet', 'form' or null (= not configured).
+export function activeBackend(env = process.env) {
+  if (env.ENQUIRY_SCRIPT_URL && env.ENQUIRY_SCRIPT_SECRET && SCRIPT_URL_RE.test(env.ENQUIRY_SCRIPT_URL.trim())) return 'sheet';
+  return isConfigured() ? 'form' : null;
+}
+export { SCRIPT_URL_RE };
